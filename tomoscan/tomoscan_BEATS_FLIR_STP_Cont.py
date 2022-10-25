@@ -22,11 +22,16 @@ import numpy as np
 import math
 from epics import PV
 import threading
+import re 
+import json
+import shutil
+
 
 from tomoscan import data_management as dm
 from tomoscan import TomoScanCont
 from tomoscan import log
 from SEDSS.SEDSupplements import CLIMessage, CLIInputReq
+
 
 EPSILON = .001
 
@@ -172,6 +177,34 @@ class TomoScanBEATSFlirStpCont(TomoScanCont):
             self.epics_pvs['CamTriggerSource'].put('Software', wait=True)
             self.epics_pvs['CamImageMode'].put('Multiple')            
             self.epics_pvs['CamNumImages'].put(num_images, wait=True)
+    def initSEDPathFile(self): 
+        """
+        This method is used to set the experimintal file name in compliance 
+        with SESAME Experimintal Data (SED) Writer (SEDW)
+        """
+        # =================== SED file name and path section ==========================
+
+        self.SEDBasePath = "/home/hdfData" # this path should be in compliance with the path in SEDW
+        
+        SEDPathPV = "BEATS:SEDPath"
+        SEDFileNamePV = "BEATS:SEDFileName"
+        SEDTimeStampPV = "BEATS:SEDTimeStamp"
+
+        self.SEDTimeStamp = str(time.strftime("%Y%m%dT%H%M%S"))
+
+        self.SEDFileName = self.epics_pvs["FPFileName"].get(as_string=True)
+        if not re.match(r'\S', self.SEDFileName): #To check a line whether it starts with a non-space character or not.
+            self.SEDFileName = "BEATS"
+        self.SEDFileName = self.SEDFileName + "-" + self.SEDTimeStamp
+        CLIMessage("SED File Nmae:: {}".format(self.SEDFileName), "I")
+        self.SEDPath = self.SEDBasePath + "/" + self.SEDFileName
+        
+        PV(SEDTimeStampPV).put(self.SEDTimeStamp, wait=True)
+        PV(SEDFileNamePV).put(self.SEDFileName, wait=True)
+        PV(SEDPathPV).put(self.SEDPath, wait=True)
+
+        self.epics_pvs['FilePath'].put(self.SEDPath, wait=True)
+        #==============================================================================
 
     def begin_scan(self):
         """Performs the operations needed at the very start of a scan.
@@ -183,13 +216,7 @@ class TomoScanBEATSFlirStpCont(TomoScanCont):
         - Opens the front-end shutter.
         """
         log.info('begin scan')
-        self.start_time = time.time()
-
-        # Set data directory | to be cutomized in the future. 
-        #file_path = self.epics_pvs['DetectorTopDir'].get(as_string=True) + self.epics_pvs['ExperimentYearMonth'].get(as_string=True) + os.path.sep + self.epics_pvs['UserLastName'].get(as_string=True) + os.path.sep
-        file_path = "/home/hdfData/"
-        self.epics_pvs['FilePath'].put(file_path, wait=True)
-
+        self.initSEDPathFile()
         # Call the base class method
         super().begin_scan()
         
@@ -243,6 +270,7 @@ class TomoScanBEATSFlirStpCont(TomoScanCont):
         - Add theta to the raw data file. 
         - Copy raw data to data analysis computer.   
         """
+        log.info('end scan')
 
         if self.return_rotation == 'Yes':
             # Reset rotation position by mod 360 , the actual return 
@@ -255,65 +283,54 @@ class TomoScanBEATSFlirStpCont(TomoScanCont):
             self.epics_pvs['Rotation'].put(current_angle, wait=True)
             self.epics_pvs['RotationSet'].put('Use', wait=True)
 
+        
+        
+        full_file_name = self.SEDPath + "/" + self.SEDFileName
+        
+
+        log.info('data save location: %s', full_file_name)
+        config_file_root = os.path.splitext(full_file_name)[0]
+        try:
+            self.save_configuration(full_file_name + '.config')
+        except FileNotFoundError:
+            log.error('config file write error')
+            self.epics_pvs['ScanStatus'].put('Config File Write Error')
+
+
         super().end_scan()
   
         self.close_shutter()
         # Stop the file plugin
         self.epics_pvs['FPCapture'].put('Done')
         self.wait_pv(self.epics_pvs['FPCaptureRBV'], 0)
-        # Add theta in the hdf file
-        # self.add_theta()
 
-        # Copy raw data to data analysis computer    
-        if self.epics_pvs['CopyToAnalysisDir'].get():
-            log.info('Automatic data trasfer to data analysis computer is enabled.')
-            full_file_name = self.epics_pvs['FPFullFileName'].get(as_string=True)
-            remote_analysis_dir = self.epics_pvs['RemoteAnalysisDir'].get(as_string=True)
-            dm.scp(full_file_name, remote_analysis_dir)
-        else:
-            log.warning('Automatic data trasfer to data analysis computer is disabled.')
-    def add_theta(self):
-        """Add theta at the end of a scan.
+    # adding theta to the experimintal file is managed by SEDW
+    def save_configuration(self, file_name):
+        """Saves the current configuration PVs to a file.
+
+        A new dictionary is created, containing the key for each PV in the ``config_pvs`` dictionary
+        and the current value of that PV.  This dictionary is written to the file in JSON format.
+
+        Parameters
+        ----------
+        file_name : str
+            The name of the file to save to.
         """
-        log.info('add theta')
-
-        full_file_name = self.epics_pvs['FPFullFileName'].get(as_string=True)
-        if os.path.exists(full_file_name):
-            try:                
-                with h5py.File(full_file_name, "a") as f:
-                    if self.theta is not None:                        
-                        unique_ids = f['/defaults/NDArrayUniqueId']
-                        hdf_location = f['/defaults/HDF5FrameLocation']
-                        total_dark_fields = self.num_dark_fields * ((self.dark_field_mode in ('Start', 'Both')) + (self.dark_field_mode in ('End', 'Both')))
-                        total_flat_fields = self.num_flat_fields * ((self.flat_field_mode in ('Start', 'Both')) + (self.flat_field_mode in ('End', 'Both')))                        
-                        
-                        proj_ids = unique_ids[hdf_location[:] == b'/exchange/data']
-                        flat_ids = unique_ids[hdf_location[:] == b'/exchange/data_white']
-                        dark_ids = unique_ids[hdf_location[:] == b'/exchange/data_dark']
-
-                        # create theta dataset in hdf5 file
-                        if len(proj_ids) > 0:
-                            theta_ds = f.create_dataset('/exchange/theta', (len(proj_ids),))
-                            theta_ds[:] = self.theta[proj_ids - proj_ids[0]]
-
-                        # warnings that data is missing
-                        if len(proj_ids) != len(self.theta):
-                            log.warning(f'There are {len(self.theta) - len(proj_ids)} missing data frames')
-                            missed_ids = [ele for ele in range(len(self.theta)) if ele not in proj_ids-proj_ids[0]]
-                            missed_theta = self.theta[missed_ids]
-                            # log.warning(f'Missed ids: {list(missed_ids)}')
-                            log.warning(f'Missed theta: {list(missed_theta)}')
-                        if len(flat_ids) != total_flat_fields:
-                            log.warning(f'There are {total_flat_fields - len(flat_ids)} missing flat field frames')
-                        if (len(dark_ids) != total_dark_fields):
-                            log.warning(f'There are {total_dark_fields - len(dark_ids)} missing dark field frames')
-            except:
-                log.error('Add theta: Failed accessing: %s', full_file_name)
-                traceback.print_exc(file=sys.stdout)
-
-        else:
-            log.error('Failed adding theta. %s file does not exist', full_file_name)
-
+        print("*****************************", file_name)
+        config = {}
+        for key in self.config_pvs:
+            config[key] = self.config_pvs[key].get(as_string=True)
+            print ("KEY   value", key, config[key])
+        print (".........................")
+        try:
+            print("+++++++++++++++++++++++++++++++++++++", file_name)
+            out_file = f = open("/home/hdfData/config.config", mode='w', encoding='utf-8')
+            print("------------------------------------------", file_name)
+            json.dump(config, out_file, indent=2)
+            out_file.close()
+            shutil.move ("/home/hdfData/config.config", file_name)
+        except (PermissionError, FileNotFoundError) as error:
+            self.epics_pvs['ScanStatus'].put('Error writing configuration')
     def wait_pv(self, epics_pv, wait_val, timeout=-1):
         """Wait on a pv to be a value until max_timeout (default forever)
            delay for pv to change
@@ -377,3 +394,4 @@ class TomoScanBEATSFlirStpCont(TomoScanCont):
             if timeout > 0:
                 if elapsed_time >= timeout:
                    exit()
+

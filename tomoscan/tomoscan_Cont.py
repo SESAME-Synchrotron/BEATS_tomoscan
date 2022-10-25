@@ -106,15 +106,6 @@ class TomoScanCont(TomoScan):
 
         - Calls the base class method.
         """
-        log.info('end scan')
-        full_file_name = self.epics_pvs['FPFullFileName'].get(as_string=True)
-        log.info('data save location: %s', full_file_name)
-        config_file_root = os.path.splitext(full_file_name)[0]
-        try:
-            self.save_configuration(config_file_root + '.config')
-        except FileNotFoundError:
-            log.error('config file write error')
-            self.epics_pvs['ScanStatus'].put('Config File Write Error')
 
         # Put the camera back in FreeRun mode and acquiring
         self.set_trigger_mode('FreeRun', 1)
