@@ -1,0 +1,2 @@
+file "tomoScan_settings.req", P=$(P), R=$(R)
+file "tomoScan_BEATS_FLIR_STP_Cont_settings.req", P=$(P), R=$(R)

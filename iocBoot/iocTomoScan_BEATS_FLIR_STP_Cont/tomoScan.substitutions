@@ -1,0 +1,13 @@
+file "$(TOP)/db/tomoScan.template"
+{
+pattern
+{  P,      R,      CAMERA,  FILE_PLUGIN,      ROTATION,              SAMPLE_X,      SAMPLE_Y,              CLOSE_SHUTTER,        CLOSE_VALUE,        OPEN_SHUTTER,         OPEN_VALUE}
+{tomoscanBEATS:, FlirStpCont:, FLIR:, FLIR:HDF1:,  I09R1-MO-MC2:OH-VCM-STP-TRSY1,  IOC:m2,  IOC:m3,  shutterIOC:A_shutter:close.VAL,          1,            shutterIOC:A_shutter:open.VAL,      1}
+}
+
+file "$(TOP)/db/tomoScan_BEATS_FLIR_STP_Cont.template"
+{
+pattern
+{  P,      R,          BEAM_READY,    READY_VALUE, CLOSE_FAST_SHUTTER,        CLOSE_FAST_VALUE,   OPEN_FAST_SHUTTER,        OPEN_FAST_VALUE,      SHUTTER_STATUS,}
+{tomoscanBEATS:, FlirStpCont:, BEAMREADY:ShutterPermit,    1,     IOC:m4,          41,          IOC:m4,         41,        PA:BEATS:STA_A_FES_OPEN_PL, }
+}

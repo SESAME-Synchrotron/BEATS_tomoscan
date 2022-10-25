@@ -905,6 +905,18 @@ class TomoScan():
                 'Mono16': 30.0
             }
             readout = readout_times[pixel_format]/1000.
+        if camera_model == 'Oryx ORX-10G-71S7M':
+            pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True)
+            readout_margin = 1.05
+            readout_times = {
+                'Mono8': 8.93,
+                'Mono10p': 8.93,
+                'Mono10Packed': 8.93,
+                'Mono12p': 11.5,
+                'Mono12Packed': 11.5,
+                'Mono16': 17.24
+            }
+            readout = readout_times[pixel_format]/1000.
         if camera_model == 'Q-12A180-Fm/CXP-6':
             pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True) 
             readout_times = {
