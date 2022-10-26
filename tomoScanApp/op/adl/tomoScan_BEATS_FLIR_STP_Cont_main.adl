@@ -1,14 +1,14 @@
 
 file {
-	name="/opt/epics/synApps/support/BEATS_tomoscan/tomoScanApp/op/adl/tomoScan.adl"
-	version=030109
+	name="/home/beams19/USERTXM/epics/synApps/support/tomoscan/tomoScanApp/op/adl/tomoScan.adl"
+	version=030111
 }
 display {
 	object {
-		x=91
-		y=65
-		width=700
-		height=797
+		x=425
+		y=1309
+		width=699
+		height=861
 	}
 	clr=14
 	bclr=4
@@ -660,8 +660,8 @@ text {
 rectangle {
 	object {
 		x=5
-		y=555
-		width=690
+		y=554
+		width=703
 		height=70
 	}
 	"basic attribute" {
@@ -672,7 +672,7 @@ rectangle {
 rectangle {
 	object {
 		x=250
-		y=561
+		y=560
 		width=200
 		height=20
 	}
@@ -683,7 +683,7 @@ rectangle {
 text {
 	object {
 		x=275
-		y=561
+		y=560
 		width=150
 		height=20
 	}
@@ -696,7 +696,7 @@ text {
 rectangle {
 	object {
 		x=305
-		y=635
+		y=634
 		width=90
 		height=20
 	}
@@ -707,7 +707,7 @@ rectangle {
 text {
 	object {
 		x=314
-		y=635
+		y=634
 		width=72
 		height=20
 	}
@@ -720,7 +720,7 @@ text {
 "message button" {
 	object {
 		x=250
-		y=595
+		y=594
 		width=120
 		height=20
 	}
@@ -735,7 +735,7 @@ text {
 "message button" {
 	object {
 		x=375
-		y=595
+		y=594
 		width=120
 		height=20
 	}
@@ -751,7 +751,7 @@ text {
 text {
 	object {
 		x=15
-		y=595
+		y=594
 		width=130
 		height=20
 	}
@@ -763,7 +763,7 @@ text {
 "text entry" {
 	object {
 		x=150
-		y=595
+		y=594
 		width=70
 		height=20
 	}
@@ -778,9 +778,9 @@ text {
 rectangle {
 	object {
 		x=5
-		y=630
+		y=629
 		width=690
-		height=190
+		height=220
 	}
 	"basic attribute" {
 		clr=14
@@ -790,7 +790,7 @@ rectangle {
 "text update" {
 	object {
 		x=580
-		y=595
+		y=594
 		width=100
 		height=20
 	}
@@ -807,7 +807,7 @@ rectangle {
 text {
 	object {
 		x=515
-		y=595
+		y=594
 		width=60
 		height=20
 	}
@@ -819,7 +819,7 @@ text {
 text {
 	object {
 		x=65
-		y=790
+		y=813
 		width=130
 		height=20
 	}
@@ -831,7 +831,7 @@ text {
 text {
 	object {
 		x=85
-		y=665
+		y=664
 		width=110
 		height=20
 	}
@@ -843,7 +843,7 @@ text {
 "text update" {
 	object {
 		x=201
-		y=665
+		y=664
 		width=400
 		height=20
 	}
@@ -859,7 +859,7 @@ text {
 text {
 	object {
 		x=55
-		y=765
+		y=764
 		width=140
 		height=20
 	}
@@ -871,7 +871,7 @@ text {
 text {
 	object {
 		x=75
-		y=740
+		y=739
 		width=120
 		height=20
 	}
@@ -883,7 +883,7 @@ text {
 "text update" {
 	object {
 		x=201
-		y=740
+		y=739
 		width=100
 		height=20
 	}
@@ -899,7 +899,7 @@ text {
 "text update" {
 	object {
 		x=200
-		y=765
+		y=764
 		width=100
 		height=20
 	}
@@ -915,7 +915,7 @@ text {
 text {
 	object {
 		x=35
-		y=690
+		y=689
 		width=160
 		height=20
 	}
@@ -927,7 +927,7 @@ text {
 "text update" {
 	object {
 		x=201
-		y=690
+		y=689
 		width=100
 		height=20
 	}
@@ -943,7 +943,7 @@ text {
 text {
 	object {
 		x=75
-		y=715
+		y=714
 		width=120
 		height=20
 	}
@@ -955,7 +955,7 @@ text {
 "text update" {
 	object {
 		x=201
-		y=715
+		y=714
 		width=100
 		height=20
 	}
@@ -971,7 +971,7 @@ text {
 "text update" {
 	object {
 		x=199
-		y=790
+		y=813
 		width=100
 		height=20
 	}
@@ -997,6 +997,22 @@ text {
 	}
 	textix="File directory"
 }
+"text entry" {
+	object {
+		x=160
+		y=500
+		width=530
+		height=20
+	}
+	control {
+		chan="$(P)$(R)FilePath"
+		clr=14
+		bclr=51
+	}
+	format="string"
+	limits {
+	}
+}
 text {
 	object {
 		x=15
@@ -1021,6 +1037,35 @@ text {
 		clr=14
 		bclr=51
 	}
+	format="string"
+	limits {
+	}
+}
+text {
+	object {
+		x=570
+		y=475
+		width=70
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Exists:"
+}
+"text update" {
+	object {
+		x=645
+		y=475
+		width=40
+		height=20
+	}
+	monitor {
+		chan="$(P)$(R)FilePathExists"
+		clr=14
+		bclr=2
+	}
+	clrmod="alarm"
 	format="string"
 	limits {
 	}
@@ -1123,7 +1168,7 @@ menu {
 }
 text {
 	object {
-		x=25
+		x=10
 		y=260
 		width=130
 		height=20
@@ -1131,41 +1176,11 @@ text {
 	"basic attribute" {
 		clr=14
 	}
-	textix="X in "
-}
-"text entry" {
-	object {
-		x=73
-		y=260
-		width=100
-		height=20
-	}
-	control {
-		chan="$(P)$(R)SampleInX"
-		clr=14
-		bclr=51
-	}
-	limits {
-	}
-}
-"text entry" {
-	object {
-		x=73
-		y=285
-		width=100
-		height=20
-	}
-	control {
-		chan="$(P)$(R)SampleOutX"
-		clr=14
-		bclr=51
-	}
-	limits {
-	}
+	textix="Top X in "
 }
 text {
 	object {
-		x=15
+		x=10
 		y=285
 		width=140
 		height=20
@@ -1173,11 +1188,11 @@ text {
 	"basic attribute" {
 		clr=14
 	}
-	textix="X out"
+	textix="Top X out"
 }
 text {
 	object {
-		x=183
+		x=178
 		y=285
 		width=140
 		height=20
@@ -1185,41 +1200,11 @@ text {
 	"basic attribute" {
 		clr=14
 	}
-	textix="Y out "
-}
-"text entry" {
-	object {
-		x=245
-		y=285
-		width=100
-		height=20
-	}
-	control {
-		chan="$(P)$(R)SampleOutY"
-		clr=14
-		bclr=51
-	}
-	limits {
-	}
-}
-"text entry" {
-	object {
-		x=245
-		y=260
-		width=100
-		height=20
-	}
-	control {
-		chan="$(P)$(R)SampleInY"
-		clr=14
-		bclr=51
-	}
-	limits {
-	}
+	textix="Top Z out"
 }
 text {
 	object {
-		x=193
+		x=178
 		y=260
 		width=130
 		height=20
@@ -1227,7 +1212,7 @@ text {
 	"basic attribute" {
 		clr=14
 	}
-	textix="Y in"
+	textix="Top Z in"
 }
 text {
 	object {
@@ -1308,19 +1293,115 @@ text {
 	}
 	textix="Flat value"
 }
+"text entry" {
+	object {
+		x=101
+		y=260
+		width=73
+		height=20
+	}
+	control {
+		chan="$(P)$(R)SampleInX"
+		clr=14
+		bclr=51
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=101
+		y=285
+		width=73
+		height=20
+	}
+	control {
+		chan="$(P)$(R)SampleOutX"
+		clr=14
+		bclr=51
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=278
+		y=285
+		width=73
+		height=20
+	}
+	control {
+		chan="$(P)$(R)SampleOutY"
+		clr=14
+		bclr=51
+	}
+	limits {
+	}
+}
+"text entry" {
+	object {
+		x=278
+		y=260
+		width=73
+		height=20
+	}
+	control {
+		chan="$(P)$(R)SampleInY"
+		clr=14
+		bclr=51
+	}
+	limits {
+	}
+}
+menu {
+	object {
+		x=611
+		y=450
+		width=80
+		height=20
+	}
+	control {
+		chan="$(P)$(R)CollectMicroCTdata"
+		clr=14
+		bclr=51
+	}
+}
+text {
+	object {
+		x=471
+		y=453
+		width=150
+		height=15
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Collect MicroCT"
+}
+text {
+	object {
+		x=54
+		y=789
+		width=140
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Last file name"
+}
 "text update" {
 	object {
-		x=160
-		y=500
-		width=530
+		x=200
+		y=789
+		width=490
 		height=20
 	}
 	monitor {
-		chan="$(P)$(R)FilePath"
+		chan="32idcSP1:HDF1:FileName_RBV"
 		clr=14
-		bclr=2
+		bclr=51
 	}
-	clrmod="alarm"
 	format="string"
 	limits {
 	}

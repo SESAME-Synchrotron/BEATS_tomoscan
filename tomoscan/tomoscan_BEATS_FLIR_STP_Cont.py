@@ -192,7 +192,7 @@ class TomoScanBEATSFlirStpCont(TomoScanCont):
 
         self.SEDTimeStamp = str(time.strftime("%Y%m%dT%H%M%S"))
 
-        self.SEDFileName = self.epics_pvs["FPFileName"].get(as_string=True)
+        self.SEDFileName = self.epics_pvs["FileName"].get(as_string=True)
         if not re.match(r'\S', self.SEDFileName): #To check a line whether it starts with a non-space character or not.
             self.SEDFileName = "BEATS"
         self.SEDFileName = self.SEDFileName + "-" + self.SEDTimeStamp
@@ -316,16 +316,11 @@ class TomoScanBEATSFlirStpCont(TomoScanCont):
         file_name : str
             The name of the file to save to.
         """
-        print("*****************************", file_name)
         config = {}
         for key in self.config_pvs:
             config[key] = self.config_pvs[key].get(as_string=True)
-            print ("KEY   value", key, config[key])
-        print (".........................")
         try:
-            print("+++++++++++++++++++++++++++++++++++++", file_name)
             out_file = f = open("/home/hdfData/config.config", mode='w', encoding='utf-8')
-            print("------------------------------------------", file_name)
             json.dump(config, out_file, indent=2)
             out_file.close()
             shutil.move ("/home/hdfData/config.config", file_name)
