@@ -53,6 +53,7 @@ class TomoScanBEATSFlirStpCont(TomoScanCont):
         # set BEATS TomoScan xml files
         self.epics_pvs['CamNDAttributesFile'].put('ADZMQ_BEATS_FLIR_STP_Cont_DetectorAttributes.xml')
         self.epics_pvs['FPXMLFileName'].put('ADZMQ_BEATS_FLIR_STP_Cont_Layout.xml')
+        self.control_pvs['CamExposureAuto'].put(0) # set exposure auto off
         PV("FLIR:ZMQ1:EnableCallbacks").put(1)
         # Enable auto-increment on file writer
         self.epics_pvs['FPAutoIncrement'].put('Yes')
@@ -196,7 +197,6 @@ class TomoScanBEATSFlirStpCont(TomoScanCont):
         if not re.match(r'\S', self.SEDFileName): #To check a line whether it starts with a non-space character or not.
             self.SEDFileName = "BEATS"
         self.SEDFileName = self.SEDFileName + "-" + self.SEDTimeStamp
-        CLIMessage("SED File Nmae:: {}".format(self.SEDFileName), "I")
         self.SEDPath = self.SEDBasePath + "/" + self.SEDFileName
         
         PV(SEDTimeStampPV).put(self.SEDTimeStamp, wait=True)
