@@ -11,7 +11,7 @@ Action List:
 
    Classes
    -------
-    TomoScanBEATSFlirStpCont 
+    TomoScanBEATSFlirMicosCont 
 """
 import time
 import os
@@ -35,7 +35,7 @@ from SEDSS.SEDSupplements import CLIMessage, CLIInputReq
 
 EPSILON = .001
 
-class TomoScanBEATSFlirStpCont(TomoScanCont):
+class TomoScanBEATSFlirMicosCont(TomoScanCont):
     """Derived class used for tomography scanning with EPICS for BEATS 
 
     Parameters
@@ -51,8 +51,8 @@ class TomoScanBEATSFlirStpCont(TomoScanCont):
         super().__init__(pv_files, macros)
 
         # set BEATS TomoScan xml files
-        self.epics_pvs['CamNDAttributesFile'].put('ADZMQ_BEATS_FLIR_STP_Cont_DetectorAttributes.xml')
-        self.epics_pvs['FPXMLFileName'].put('ADZMQ_BEATS_FLIR_STP_Cont_Layout.xml')
+        self.epics_pvs['CamNDAttributesFile'].put('ADZMQ_BEATS_FLIR_MICOS_Cont_DetectorAttributes.xml')
+        self.epics_pvs['FPXMLFileName'].put('ADZMQ_BEATS_FLIR_MICOS_Cont_Layout.xml')
         self.control_pvs['CamExposureAuto'].put(0) # set exposure auto off
         PV("FLIR:ZMQ1:EnableCallbacks").put(1)
         # Enable auto-increment on file writer

@@ -13,6 +13,9 @@ import numpy as np
 from tomoscan import TomoScan
 from tomoscan import log
 from epics import PV
+from datetime import timedelta
+from SEDSS.SEDSupplements import CLIMessage, CLIInputReq
+
 
 class TomoScanCont(TomoScan):
     """Derived class used for tomography scanning with EPICS implementing continuous software based scan
@@ -169,17 +172,44 @@ class TomoScanCont(TomoScan):
     def set_motor_speed(self): 
         
         # Compute the time for each frame.
-        frame_time = self.compute_frame_time()
+        #frame_time = self.compute_frame_time()
+        frame_time = self.exposure_time
         log.info("Frame time: {}".format(frame_time))
+        CLIMessage("frame_time ::::::: {}".format(frame_time), "E")
+
+
 
         # Set motor speed.
         self.motor_speed = self.rotation_step / frame_time
+        #self.motor_speed = self.rotation_step / self.exposure_time
         self.epics_pvs["RotationSpeed"].put(self.motor_speed, wait =True) 
         log.info("Rotation speed: {}".format(self.motor_speed))
+        CLIMessage("self.motor_speed ::::::: {}".format(self.motor_speed), "E")
 
         # Compute projections time.
-        self.collect_projections_time =  self.num_angles * frame_time
-        log.info("Collect Projections Time: {}".format(self.collect_projections_time))
+        #self.collect_projections_time =  self.num_angles * frame_time
+        #log.info("Collect Projections Time: {}".format(self.collect_projections_time))
+
+        ############# Above is anas's section 
+        #self.epics_pvs['RotationSpeed'].put(self.max_rotation_speed)
+
+        # time_per_angle = self.compute_frame_time()
+        # CLIMessage("time per angle::::::: {}".format(time_per_angle), "E")
+        # speed = self.rotation_step / time_per_angle
+        # CLIMessage("speed: :::::: {}".format(speed), "E")
+
+        
+        # steps_per_deg = abs(round(1./self.rotation_resolution, 0))
+        # CLIMessage("steps_per_deg::::::: {}".format(steps_per_deg), "E")
+
+        # self.motor_speed = math.floor((speed * steps_per_deg)) / steps_per_deg
+        # CLIMessage("self.motor_speed::::::: {}".format(self.motor_speed), "E")
+        # self.epics_pvs['RotationSpeed'].put(self.motor_speed, wait =True)
+        # time.sleep(.5)
+        # # Need to read back the actual motor speed because the requested speed might be outside the allowed range
+        # self.motor_speed = self.epics_pvs['RotationSpeed'].get()
+
+        # CLIMessage("Accepted motro speed::::::: {}".format(self.motor_speed), "E")
     
     def go_start_position(self): 
         # Put the motor at approparate start position to accelarate and be in a steady speed.
@@ -191,9 +221,9 @@ class TomoScanCont(TomoScan):
         # Make taxi distance an integer number of measurement.
         # Add 4.5 to ensure that we are really up to speed.
         if self.rotation_step > 0:
-            taxi_dist = math.ceil(accel_dist / self.rotation_step + 4.5) * self.rotation_step 
+            taxi_dist = math.ceil(accel_dist / self.rotation_step + 20) * self.rotation_step 
         else:
-            taxi_dist = math.floor(accel_dist / self.rotation_step - 4.5) * self.rotation_step 
+            taxi_dist = math.floor(accel_dist / self.rotation_step - 20) * self.rotation_step 
 
         if self.camera_response_time <= motorACCLTime:
             self.abort_scan()
@@ -204,7 +234,8 @@ class TomoScanCont(TomoScan):
             log.info("Start position: {}, Stop position: {}".format(self.start_position, self.end_position))
             self.epics_pvs['RotationSpeed'].put(self.max_rotation_speed)
             self.epics_pvs["Rotation"].put(self.start_position, wait =True)
-            self.epics_pvs['RotationSpeed'].put(self.motor_speed)
+            CLIMessage("motor_speed jj ::::::::::::: {}".format(self.motor_speed), "E")
+            self.epics_pvs['RotationSpeed'].put(self.motor_speed, wait =True)
 
     def rotate(self):
 
@@ -221,3 +252,40 @@ class TomoScanCont(TomoScan):
         frame_time = self.compute_frame_time()
         collection_time = frame_time * self.num_angles
         self.wait_camera_done(collection_time + 30.0)
+
+    # def update_status(self, start_time):
+    #     """
+    #     When called updates ``ImagesCollected``, ``ImagesSaved``, ``ElapsedTime``, and ``RemainingTime``. 
+
+    #     Parameters
+    #     ----------
+    #     start_time : time
+
+    #         Start time to calculate elapsed time.
+
+    #     Returns
+    #     -------
+    #     elapsed_time : float
+
+    #         Elapsed time to be used for time out.
+    #     """
+    #     #num_collected  = self.epics_pvs['CamNumImagesCounter'].value
+    #     num_collected   = PV("FLIR:cam1:NumImagesCounter_RBV").get()
+    #     num_images     = self.epics_pvs['CamNumImages'].value
+    #     num_saved      = PV("BEATS:WRITER:NumSaved").get()
+    #     num_saved      += 1 # writer starts from 0  
+    #     current_time = time.time()
+    #     elapsed_time = current_time - start_time
+    #     remaining_time = (elapsed_time * (num_images - num_collected) /
+    #                       max(float(num_collected), 1))
+    #     collect_progress = str(num_collected) + '/' + str(num_images)
+    #     log.info('Collected --------------------------------------- %s', collect_progress)
+    #     self.epics_pvs['ImagesCollected'].put(collect_progress)
+    #     save_progress = str(num_saved) + '/' + str(self.total_images)
+    #     log.info('Saved %s', save_progress)
+    #     self.epics_pvs['ImagesSaved'].put(save_progress)
+    #     self.epics_pvs['ElapsedTime'].put(str(timedelta(seconds=int(elapsed_time))))
+    #     self.epics_pvs['RemainingTime'].put(str(timedelta(seconds=int(remaining_time))))
+
+    #     return elapsed_time
+
