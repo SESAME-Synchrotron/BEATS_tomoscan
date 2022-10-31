@@ -304,6 +304,7 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
         # Stop the file plugin
         self.epics_pvs['FPCapture'].put('Done')
         self.wait_pv(self.epics_pvs['FPCaptureRBV'], 0)
+        self.control_pvs['RotationStop'].put(1) # stops the motor. 
 
     # adding theta to the experimintal file is managed by SEDW
     def save_configuration(self, file_name):

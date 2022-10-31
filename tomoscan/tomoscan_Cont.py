@@ -175,9 +175,6 @@ class TomoScanCont(TomoScan):
         #frame_time = self.compute_frame_time()
         frame_time = self.exposure_time
         log.info("Frame time: {}".format(frame_time))
-        CLIMessage("frame_time ::::::: {}".format(frame_time), "E")
-
-
 
         # Set motor speed.
         self.motor_speed = self.rotation_step / frame_time
