@@ -181,7 +181,6 @@ class TomoScanCont(TomoScan):
         #self.motor_speed = self.rotation_step / self.exposure_time
         self.epics_pvs["RotationSpeed"].put(self.motor_speed, wait =True) 
         log.info("Rotation speed: {}".format(self.motor_speed))
-        CLIMessage("self.motor_speed ::::::: {}".format(self.motor_speed), "E")
 
         # Compute projections time.
         #self.collect_projections_time =  self.num_angles * frame_time
@@ -231,7 +230,6 @@ class TomoScanCont(TomoScan):
             log.info("Start position: {}, Stop position: {}".format(self.start_position, self.end_position))
             self.epics_pvs['RotationSpeed'].put(self.max_rotation_speed)
             self.epics_pvs["Rotation"].put(self.start_position, wait =True)
-            CLIMessage("motor_speed jj ::::::::::::: {}".format(self.motor_speed), "E")
             self.epics_pvs['RotationSpeed'].put(self.motor_speed, wait =True)
 
     def rotate(self):
@@ -249,7 +247,42 @@ class TomoScanCont(TomoScan):
         frame_time = self.compute_frame_time()
         collection_time = frame_time * self.num_angles
         self.wait_camera_done(collection_time + 30.0)
+    
+    def update_status(self, start_time):
+        """
+        When called updates ``ImagesCollected``, ``ImagesSaved``, ``ElapsedTime``, and ``RemainingTime``. 
 
+        Parameters
+        ----------
+        start_time : time
+
+            Start time to calculate elapsed time.
+
+        Returns
+        -------
+        elapsed_time : float
+
+            Elapsed time to be used for time out.
+        """
+        num_collected  = self.epics_pvs['CamNumImagesCounter'].value
+        num_images     = self.epics_pvs['CamNumImages'].value
+        #num_saved      = self.epics_pvs['FPNumCaptured'].value
+        num_saved      = PV("BEATS:WRITER:NumSaved").get()
+        num_to_save     = self.total_images
+        current_time = time.time()
+        elapsed_time = current_time - start_time
+        remaining_time = (elapsed_time * (num_images - num_collected) /
+                          max(float(num_collected), 1))
+        collect_progress = str(num_collected) + '/' + str(num_images)
+        log.info('Collected %s', collect_progress)
+        self.epics_pvs['ImagesCollected'].put(collect_progress)
+        save_progress = str(num_saved) + '/' + str(num_to_save)
+        log.info('Saved %s', save_progress)
+        self.epics_pvs['ImagesSaved'].put(save_progress)
+        self.epics_pvs['ElapsedTime'].put(str(timedelta(seconds=int(elapsed_time))))
+        self.epics_pvs['RemainingTime'].put(str(timedelta(seconds=int(remaining_time))))
+
+        return elapsed_time
     # def update_status(self, start_time):
     #     """
     #     When called updates ``ImagesCollected``, ``ImagesSaved``, ``ElapsedTime``, and ``RemainingTime``. 
