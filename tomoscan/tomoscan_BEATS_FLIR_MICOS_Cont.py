@@ -56,9 +56,9 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
         self.control_pvs['CamExposureAuto'].put(0) # set exposure auto off
         PV("FLIR:ZMQ1:EnableCallbacks").put(1)
         # Enable auto-increment on file writer
-        self.epics_pvs['FPAutoIncrement'].put('Yes')
+        #self.epics_pvs['FPAutoIncrement'].put('Yes')
         # Set standard file template on file writer
-        self.epics_pvs['FPFileTemplate'].put("%s%s_%3.3d.h5", wait=True)
+        #self.epics_pvs['FPFileTemplate'].put("%s%s_%3.3d.h5", wait=True)
         # Disable over writing warning
         self.epics_pvs['OverwriteWarning'].put('Yes')
         log.setup_custom_logger("./tomoscan.log")
@@ -215,6 +215,25 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
         - Calls the base class method.
         - Opens the front-end shutter.
         """
+
+        """
+        FLIR Oryx ORX-10G-71S7M camera or its driver does not support capturing one fram with continous 
+        trigger mode. this makes the SEDWritter unstaible as it needs to know how many frames are going to 
+        be recevied.... however that's why this part of the code has been added. 
+        """
+        if  self.epics_pvs['NumAngles'].get() == 1: 
+            self.epics_pvs['NumAngles'].put(2, wait=True)
+            log.info("replace number of angles to 2 instead of 1")
+        
+        if self.epics_pvs['NumDarkFields'].get() == 1:
+            self.epics_pvs['NumDarkFields'].put(2)
+            log.info("replace number of dark fields to 2 instead of 1")
+
+        if self.epics_pvs['NumFlatFields'].get() == 1: 
+            self.epics_pvs['NumFlatFields'].put(2)
+            log.info("replace number of flat fields to 2 instead of 1")
+            
+
         log.info('begin scan')
         #self.update_status()
         self.initSEDPathFile()
@@ -302,8 +321,9 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
   
         self.close_shutter()
         # Stop the file plugin
-        self.epics_pvs['FPCapture'].put('Done')
-        self.wait_pv(self.epics_pvs['FPCaptureRBV'], 0)
+        #self.epics_pvs['FPCapture'].put('Done')
+        #print(self.epics_pvs['FPCapture'])
+        #self.wait_pv(self.epics_pvs['FPCaptureRBV'], 0)
         self.control_pvs['RotationStop'].put(1) # stops the motor. 
 
     # adding theta to the experimintal file is managed by SEDW

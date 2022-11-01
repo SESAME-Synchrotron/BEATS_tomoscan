@@ -83,10 +83,6 @@ class TomoScanCont(TomoScan):
         # Call the base class method
         super().begin_scan()
         time.sleep(0.1)
-
-        # self.epics_pvs['FPNumCapture'].put(self.total_images, wait=True)
-        # self.epics_pvs['FPCapture'].put('Capture')
-
         # Write h5 file by writer.
         PV("BEATS:WRITER:NumCapture").put(self.total_images)
 
@@ -266,7 +262,6 @@ class TomoScanCont(TomoScan):
         """
         num_collected  = self.epics_pvs['CamNumImagesCounter'].value
         num_images     = self.epics_pvs['CamNumImages'].value
-        #num_saved      = self.epics_pvs['FPNumCaptured'].value
         num_saved      = PV("BEATS:WRITER:NumSaved").get()
         num_to_save     = self.total_images
         current_time = time.time()
