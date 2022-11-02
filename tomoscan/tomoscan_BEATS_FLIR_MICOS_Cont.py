@@ -149,12 +149,12 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
         """
         camera_model = self.epics_pvs['CamModel'].get(as_string=True)
         if(camera_model=='Oryx ORX-10G-71S7M'):        
-            self.set_trigger_mode_grasshopper(trigger_mode, num_images)
+            self.set_trigger_mode_ORX_10G_71S7M(trigger_mode, num_images)
         else:
             log.error('Camera is not supported')
             exit(1)
 
-    def set_trigger_mode_grasshopper(self, trigger_mode, num_images):
+    def set_trigger_mode_ORX_10G_71S7M(self, trigger_mode, num_images):
 
         self.epics_pvs['CamAcquire'].put('Done') ###
         self.wait_pv(self.epics_pvs['CamAcquire'], 0) ###
@@ -178,6 +178,7 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
             self.epics_pvs['CamTriggerSource'].put('Software', wait=True)
             self.epics_pvs['CamImageMode'].put('Multiple')            
             self.epics_pvs['CamNumImages'].put(num_images, wait=True)
+    
     def initSEDPathFile(self): 
         """
         This method is used to set the experimintal file name in compliance 
