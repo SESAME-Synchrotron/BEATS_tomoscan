@@ -213,9 +213,9 @@ class TomoScanCont(TomoScan):
         # Make taxi distance an integer number of measurement.
         # Add 4.5 to ensure that we are really up to speed.
         if self.rotation_step > 0:
-            taxi_dist = math.ceil(accel_dist / self.rotation_step + 1) * self.rotation_step 
+            taxi_dist = math.ceil(accel_dist / self.rotation_step + 5) * self.rotation_step 
         else:
-            taxi_dist = math.floor(accel_dist / self.rotation_step - 1) * self.rotation_step 
+            taxi_dist = math.floor(accel_dist / self.rotation_step - 5) * self.rotation_step 
 
         if self.camera_response_time <= motorACCLTime:
             self.abort_scan()
