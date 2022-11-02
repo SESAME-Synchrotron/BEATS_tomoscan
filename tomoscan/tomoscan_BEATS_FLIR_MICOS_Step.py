@@ -406,6 +406,30 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
         # Add theta in the hdf file
         # self.add_theta()
 
+    def save_configuration(self, file_name):
+        """Saves the current configuration PVs to a file.
+
+        A new dictionary is created, containing the key for each PV in the ``config_pvs`` dictionary
+        and the current value of that PV.  This dictionary is written to the file in JSON format.
+
+        Parameters
+        ----------
+        file_name : str
+            The name of the file to save to.
+        """
+        file_name = self.SEDPath + "/" + self.SEDFileName + ".config"
+
+        config = {}
+        for key in self.config_pvs:
+            config[key] = self.config_pvs[key].get(as_string=True)
+        try:
+            out_file = f = open("/home/hdfData/config.config", mode='w', encoding='utf-8')
+            json.dump(config, out_file, indent=2)
+            out_file.close()
+            shutil.move ("/home/hdfData/config.config", file_name)
+        except (PermissionError, FileNotFoundError) as error:
+            self.epics_pvs['ScanStatus'].put('Error writing configuration')
+
     def wait_pv(self, epics_pv, wait_val, timeout=-1):
         """Wait on a pv to be a value until max_timeout (default forever)
            delay for pv to change
