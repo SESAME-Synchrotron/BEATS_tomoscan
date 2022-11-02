@@ -8,7 +8,7 @@ display {
 		x=149
 		y=65
 		width=700
-		height=831
+		height=797
 	}
 	clr=14
 	bclr=4
@@ -947,7 +947,7 @@ text {
 }
 text {
 	object {
-		x=35
+		x=75
 		y=710
 		width=120
 		height=20
@@ -956,6 +956,7 @@ text {
 		clr=14
 	}
 	textix="Overall saved images - SEDW"
+	align="horiz. right"
 }
 "text update" {
 	object {
