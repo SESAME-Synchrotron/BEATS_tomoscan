@@ -78,25 +78,7 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
 
         log.setup_custom_logger("./tomoscan.log")
     
-    def pv_callback_32id(self, pvname=None, value=None, char_value=None, **kw):
-        """Callback function that is called by pyEpics when certain EPICS PVs are changed
-        
-        """
-        log.debug('pv_callback_32id pvName=%s, value=%s, char_value=%s', pvname, value, char_value)       
-        if (pvname.find('EnergySet') != -1) and value==1:
-            thread = threading.Thread(target=self.energy_change, args=())
-            thread.start()
-            
-
-    def pv_callback_step(self, pvname=None, value=None, char_value=None, **kw):
-        """Callback function that is called by pyEpics when certain EPICS PVs are changed
-        
-        """
-
-        log.debug('pv_callback_step pvName=%s, value=%s, char_value=%s', pvname, value, char_value)       
-        if (pvname.find('StartEnergyChange') != -1) and (value == 1):
-            self.energy_change()        
-                    
+    
     def open_frontend_shutter(self):
         """Opens the shutters to collect flat fields or projections.
 
@@ -351,22 +333,6 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
             time.sleep(0.5)
 
         time.sleep(0.5)
-        # repeat = 0 
-        # while PV("BEATS:WRITER:Ready").get() != 1: 
-        #     CLIMessage("Waiting BEATS Writer | it is busey writing a file!!", "IO")
-        #     if repeat == 0: 
-        #         log.warning("BEATS Writer is busey writing a file")
-        #         repeat = 1
-
-    def energy_change(self):
-        """Change energy trhough TXMOptics"""
-        energy = self.epics_pvs['Energy'].get() 
-        print(f'**************Pass to txmoptics')
-        self.epics_pvs['TXMEnergy'].put(energy,wait=True)
-        self.epics_pvs['TXMEnergySet'].put(1,wait=True)        
-        time.sleep(1)
-        self.epics_pvs['EnergySet'].put(0)
-        
 
     def end_scan(self):
         """Performs the operations needed at the very end of a scan.
@@ -401,8 +367,8 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
         self.close_shutter()
 
         # Stop the file plugin
-        self.epics_pvs['FPCapture'].put('Done')
-        self.wait_pv(self.epics_pvs['FPCaptureRBV'], 0)
+        #self.epics_pvs['FPCapture'].put('Done')
+        #self.wait_pv(self.epics_pvs['FPCaptureRBV'], 0)
         # Add theta in the hdf file
         # self.add_theta()
 
@@ -411,11 +377,6 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
 
         A new dictionary is created, containing the key for each PV in the ``config_pvs`` dictionary
         and the current value of that PV.  This dictionary is written to the file in JSON format.
-
-        Parameters
-        ----------
-        file_name : str
-            The name of the file to save to.
         """
         file_name = self.SEDPath + "/" + self.SEDFileName + ".config"
 
@@ -426,6 +387,7 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
             out_file = f = open("/home/hdfData/config.config", mode='w', encoding='utf-8')
             json.dump(config, out_file, indent=2)
             out_file.close()
+            time.sleep(.1)
             shutil.move ("/home/hdfData/config.config", file_name)
         except (PermissionError, FileNotFoundError) as error:
             self.epics_pvs['ScanStatus'].put('Error writing configuration')
