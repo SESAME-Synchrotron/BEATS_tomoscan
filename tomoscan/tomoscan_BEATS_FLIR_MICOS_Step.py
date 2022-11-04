@@ -20,7 +20,7 @@ import re
 import json
 import shutil
 
-
+from datetime import timedelta
 from tomoscan import data_management as dm
 from tomoscan.tomoscan_step import TomoScanSTEP
 from tomoscan import log
@@ -302,7 +302,42 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
         self.writerCheck()
         # Opens the front-end shutter
         self.open_frontend_shutter()
-        
+    
+    def update_status(self, start_time):
+        """
+        When called updates ``ImagesCollected``, ``ImagesSaved``, ``ElapsedTime``, and ``RemainingTime``. 
+
+        Parameters
+        ----------
+        start_time : time
+
+            Start time to calculate elapsed time.
+
+        Returns
+        -------
+        elapsed_time : float
+
+            Elapsed time to be used for time out.
+        """
+        num_collected  = self.epics_pvs['CamNumImagesCounter'].value
+        num_images     = self.epics_pvs['CamNumImages'].value
+        num_saved      = PV("BEATS:WRITER:NumSaved").get()
+        num_to_save     = self.total_images
+        current_time = time.time()
+        elapsed_time = current_time - start_time
+        remaining_time = (elapsed_time * (num_images - num_collected) /
+                          max(float(num_collected), 1))
+        collect_progress = str(num_collected) + '/' + str(num_images)
+        log.info('Collected %s', collect_progress)
+        self.epics_pvs['ImagesCollected'].put(collect_progress)
+        save_progress = str(num_saved) + '/' + str(num_to_save)
+        log.info('Saved %s', save_progress)
+        self.epics_pvs['ImagesSaved'].put(save_progress)
+        self.epics_pvs['ElapsedTime'].put(str(timedelta(seconds=int(elapsed_time))))
+        self.epics_pvs['RemainingTime'].put(str(timedelta(seconds=int(remaining_time))))
+
+        return elapsed_time
+
     def writerCheck(self): 
         repeat = 0
         while PV("BEATS:WRITER:Status").get() != 1: 

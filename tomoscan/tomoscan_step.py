@@ -14,6 +14,8 @@ from datetime import timedelta
 from tomoscan.tomoscan import TomoScan
 from tomoscan import log
 
+from epics import PV
+
 class TomoScanSTEP(TomoScan):
     """Derived class used for tomography scanning with EPICS implementing step scan
 
@@ -82,31 +84,11 @@ class TomoScanSTEP(TomoScan):
         super().begin_scan()
         
         # Set angles for the interlaced scan
-        if(self.epics_pvs['InterlacedScan'].get(as_string=True)=='Yes'):
-            interlacedfilename = self.epics_pvs['InterlacedFileName'].get(as_string=True)
-            try:
-                self.theta = np.load(interlacedfilename)                
-                # update angles and number of frames to be captured and collected
-                self.total_images -= self.num_angles-len(self.theta)
-                self.num_angles = len(self.theta)                
-                # print some information about angles
-                stheta = np.sort(self.theta)
-                log.info('file with interlaced angles %s', interlacedfilename)
-                log.info('loaded %d interlaced angles',self.num_angles)
-                log.info('min angle %f',stheta[0])
-                log.info('max angle %f',stheta[-1])
-                log.info('min distance between neigbouring sorted angles %f',np.amin(np.abs(stheta[1::2]-stheta[::2])))
-                log.info('max distance between neigbouring sorted angles %f',np.amax(np.abs(stheta[1::2]-stheta[::2])))                
-            except:
-                log.error('%s file with interlaced angles is not valid', interlacedfilename)
-                self.theta = []
-                self.abort_scan()
-                return                
-        else:
-                self.theta = self.rotation_start + np.arange(self.num_angles) * self.rotation_step
+        
+        self.theta = self.rotation_start + np.arange(self.num_angles) * self.rotation_step
 
-        self.epics_pvs['FPNumCapture'].put(self.total_images, wait=True)
-        self.epics_pvs['FPCapture'].put('Capture')
+        #self.epics_pvs['FPNumCapture'].put(self.total_images, wait=True)
+        #self.epics_pvs['FPCapture'].put('Capture')
 
     def end_scan(self):
         """Performs the operations needed at the very end of a scan.
@@ -126,7 +108,7 @@ class TomoScanSTEP(TomoScan):
         log.info('end scan')
         # Save the configuration
         # Strip the extension from the FullFileName and add .config
-        full_file_name = self.epics_pvs['FPFullFileName'].get(as_string=True)
+        full_file_name = PV("BEATS:SEDPath").get(as_string=True)
         log.info('data save location: %s', full_file_name)
         config_file_root = os.path.splitext(full_file_name)[0]
         self.save_configuration(config_file_root + '.config')
