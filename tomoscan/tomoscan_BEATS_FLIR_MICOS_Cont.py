@@ -350,9 +350,11 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
             out_file = f = open("/home/hdfData/config.config", mode='w', encoding='utf-8')
             json.dump(config, out_file, indent=2)
             out_file.close()
+            time.sleep(.1)
             shutil.move ("/home/hdfData/config.config", file_name)
         except (PermissionError, FileNotFoundError) as error:
             self.epics_pvs['ScanStatus'].put('Error writing configuration')
+            
     def wait_pv(self, epics_pv, wait_val, timeout=-1):
         """Wait on a pv to be a value until max_timeout (default forever)
            delay for pv to change
