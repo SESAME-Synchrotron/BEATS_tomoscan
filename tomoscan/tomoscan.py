@@ -127,6 +127,7 @@ class TomoScan():
         self.control_pvs['PortNameRBV']            = PV(camera_prefix + 'PortName_RBV')
         self.control_pvs['CamNDAttributesFile']    = PV(camera_prefix + 'NDAttributesFile')
         self.control_pvs['CamNDAttributesMacros']  = PV(camera_prefix + 'NDAttributesMacros')
+        self.control_pvs['CamArrayCounter']        = PV(camera_prefix + 'ArrayCounter_RBV')
 
         # If this is a Point Grey camera then assume we are running ADSpinnaker
         # and create some PVs specific to that driver
@@ -146,7 +147,8 @@ class TomoScan():
                 self.control_pvs['GC_ExposureAuto'] = PV(camera_prefix + 'GC_ExposureAuto')
             if model.find('Oryx ORX-10G-71S7M') != -1:
                 self.control_pvs['CamExposureAuto'] = PV(camera_prefix + 'ExposureAuto')
-
+        elif (manufacturer.find('pco.edge CLHS') != -1):
+            self.control_pvs['CamAcquirePeriod'] = PV(camera_prefix + 'AcquirePeriod')
 
         if (manufacturer.find('Adimec') != -1):
             self.control_pvs['CamExposureMode']            = PV(camera_prefix + 'ExposureMode')
@@ -546,10 +548,14 @@ class TomoScan():
         exposure_time : float, optional
             The exposure time to use. If None then the value of the ``ExposureTime`` PV is used.
         """
+        camera_model = self.epics_pvs['CamModel'].get(as_string=True)
+
         if not self.scan_is_running:
             if exposure_time is None:
                 exposure_time = self.epics_pvs['ExposureTime'].value
             self.epics_pvs['CamAcquireTime'].put(exposure_time, wait=True, timeout = 10.0)
+            self.epics_pvs['CamAcquirePeriod'].put(exposure_time, wait=True, timeout = 10.0)
+
             
 
     def set_scan_exposure_time(self, exposure_time=None):
@@ -923,6 +929,13 @@ class TomoScan():
                 'Mono16': 17.24
             }
             readout = readout_times[pixel_format]/1000.
+        if camera_model == 'pco.edge CLHS':
+            #pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True)
+            readout_margin = 1.05
+            readout_times = {
+                'Mono16': 10
+            }
+            readout = readout_times["Mono16"]/1000.
         if camera_model == 'Q-12A180-Fm/CXP-6':
             pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True) 
             readout_times = {

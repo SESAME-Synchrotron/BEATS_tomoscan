@@ -81,6 +81,7 @@ class TomoScanCont(TomoScan):
         """
         log.info('begin scan')
         # Call the base class method
+        self.epics_pvs['FPFileTemplate'].put("%s%s_%3.3d.h5") # sets FP template 
         super().begin_scan()
         time.sleep(0.1)
         # Write h5 file by writer.
@@ -151,10 +152,12 @@ class TomoScanCont(TomoScan):
         # Camera response time calculation: 
         counter = 0
         self.set_trigger_mode("Internal", self.num_angles)
-        camera_counter = PV("FLIR:cam1:ArrayCounter_RBV").get()
+        #camera_counter = PV("FLIR:cam1:ArrayCounter_RBV").get()
+        camera_counter = self.epics_pvs["CamArrayCounter"].get()
         self.camera_response_time = time.time()
         self.epics_pvs["CamAcquire"].put("Acquire")
-        while PV("FLIR:cam1:ArrayCounter_RBV").get()== camera_counter: 
+        #while PV("FLIR:cam1:ArrayCounter_RBV").get()== camera_counter: 
+        while self.epics_pvs["CamArrayCounter"].get() == camera_counter: 
             pass
         timeNow = time.time()
         self.camera_response_time = timeNow - self.camera_response_time
