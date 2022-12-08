@@ -1,0 +1,17 @@
+<?xml version="1.0" standalone="no" ?>
+<!-- Attributes -->
+<Attributes>
+    
+    <Attribute name="HDF5FrameLocation"             type="EPICS_PV"     source="tomoscanBEATS:PcoMicosStep:HDF5Location"                dbrtype="DBR_STRING"  description="Where to store frame in HDF5 file"/>
+
+    <!--
+        Attributes added by MZ
+    -->
+    <Attribute name="NDArrayTimeStamp"                  type="EPICS_PV"     source="TEST-PCO:ZMQ1:TimeStamp_RBV"             dbrtype="DBR_NATIVE"  description="ZMQ plugin time stamp"/>
+    <Attribute name="FrameExecutionTime"                  type="EPICS_PV"     source="TEST-PCO:image1:ExecutionTime_RBV"             dbrtype="DBR_NATIVE"  description="Frame execution time"/>
+
+    <Attribute name="ZMQTimeStamp"                  type="EPICS_PV"     source="TEST-PCO:ZMQ1:TimeStamp_RBV"             dbrtype="DBR_NATIVE"  description="ZMQ Time Stamp"/>
+
+    <Attribute name="theta_readout"                  type="EPICS_PV"     source="micos:m1.RBV"             dbrtype="DBR_NATIVE"  description="Theta readout"/>
+
+</Attributes>
