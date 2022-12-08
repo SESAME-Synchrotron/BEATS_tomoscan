@@ -147,7 +147,7 @@ class TomoScan():
                 self.control_pvs['GC_ExposureAuto'] = PV(camera_prefix + 'GC_ExposureAuto')
             if model.find('Oryx ORX-10G-71S7M') != -1:
                 self.control_pvs['CamExposureAuto'] = PV(camera_prefix + 'ExposureAuto')
-        elif (manufacturer.find('pco.edge CLHS') != -1):
+        elif (manufacturer.find('PCO') != -1):
             self.control_pvs['CamAcquirePeriod'] = PV(camera_prefix + 'AcquirePeriod')
 
         if (manufacturer.find('Adimec') != -1):
