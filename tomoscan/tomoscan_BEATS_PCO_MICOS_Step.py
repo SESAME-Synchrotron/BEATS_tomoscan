@@ -209,10 +209,8 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
             self.epics_pvs['CamTriggerMode'].put(4, wait=True)
             #self.wait_pv(self.epics_pvs['CamTriggerMode'], 1)
             self.prepareTriggeringSource()
-            print("*******************")
     
     def prepareTriggeringSource (self):
-        print ("---------------------0")
         PV("FG:SetFunctionCH1").put("SQU") # square function 
         PV("FG:SetWaveformPeriodCH1").put(0.02) # waveform period
         PV("FG:SetBurstPeriodCH1").put(0.021) # Burst period. 
@@ -522,7 +520,6 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
             time.sleep(2)
             self.epics_pvs['HDF5Location'].put(self.epics_pvs['HDF5ProjectionLocation'].value)
             self.epics_pvs['FrameType'].put('Projection')
-            print ("------------------")
 
             start_time = time.time()
             stabilization_time = self.epics_pvs['StabilizationTime'].get()
