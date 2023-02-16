@@ -206,7 +206,7 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
             self.epics_pvs['CamTriggerMode'].put(4, wait=True)     # VN: For PG we need to switch to On to be able to switch to readout overlap mode                                                              
             self.epics_pvs['CamImageMode'].put('Multiple')            
             self.epics_pvs['CamNumImages'].put(self.num_angles, wait=True)
-            self.epics_pvs['CamTriggerMode'].put(4, wait=True)
+            # self.epics_pvs['CamTriggerMode'].put(4, wait=True)
             #self.wait_pv(self.epics_pvs['CamTriggerMode'], 1)
             self.prepareTriggeringSource()
     
@@ -230,7 +230,7 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         """
         # =================== SED file name and path section ==========================
 
-        self.SEDBasePath = "/home/hdfData" # this path should be in compliance with the path in SEDW
+        self.SEDBasePath = "/PETRA/SED/BEATS/IH" # this path should be in compliance with the path in SEDW
         
         SEDPathPV = "BEATS:SEDPath"
         SEDFileNamePV = "BEATS:SEDFileName"
@@ -294,7 +294,7 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
 
         # Set data directory
         # file_path = self.epics_pvs['DetectorTopDir'].get(as_string=True) + self.epics_pvs['ExperimentYearMonth'].get(as_string=True) + os.path.sep + self.epics_pvs['UserLastName'].get(as_string=True) + os.path.sep
-        file_path = "/home/hdfData/"
+        file_path = "/PETRA/SED/BEATS/IH"
 
         self.epics_pvs['FilePath'].put(file_path, wait=True)
 
@@ -420,11 +420,11 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         for key in self.config_pvs:
             config[key] = self.config_pvs[key].get(as_string=True)
         try:
-            out_file = f = open("/home/hdfData/config.config", mode='w', encoding='utf-8')
+            out_file = f = open("/PETRA/SED/BEATS/IH/config.config", mode='w', encoding='utf-8')
             json.dump(config, out_file, indent=2)
             out_file.close()
             time.sleep(.1)
-            shutil.move ("/home/hdfData/config.config", file_name)
+            shutil.move ("/PETRA/SED/BEATS/IH/config.config", file_name)
         except (PermissionError, FileNotFoundError) as error:
             self.epics_pvs['ScanStatus'].put('Error writing configuration')
 
@@ -529,7 +529,7 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
                     log.info('angle %d: %f', k, self.theta[k])
                     self.epics_pvs['Rotation'].put(self.theta[k], wait=True)            
                     time.sleep(stabilization_time)
-                    #self.epics_pvs['CamTriggerSoftware'].put(1)    
+                    # self.epics_pvs['CamTriggerSoftware'].put(1)    
                     PV("FG:BurstTrigCH1").put(1)
                     self.wait_pv(self.epics_pvs['CamNumImagesCounter'], k+1, 60)
                     self.update_status(start_time)
