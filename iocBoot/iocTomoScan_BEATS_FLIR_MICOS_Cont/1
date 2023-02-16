@@ -1,0 +1,53 @@
+# .bashrc
+
+export EPICS_BASE=/opt/epics/epics-base
+export EPICS_HOST_ARCH=$(${EPICS_BASE}/startup/EpicsHostArch)
+export PATH=${EPICS_BASE}/bin/${EPICS_HOST_ARCH}:${PATH}
+
+#export EPICS_BASE='/opt/epics/base'
+#export EPICS_HOST_ARCH=linux-x86_64
+
+export PATH=${PATH}:/opt/qtcreator-4.13.3/bin/
+
+export QWT_ROOT=/usr/local/qwt-6.1.3
+export QWT_INCLUDE_PATH=${QWT_ROOT}/include
+export QE_TARGET_DIR=/usr/local/epics-qt
+export PATH=${EPICS_BASE}/bin/$EPICS_HOST_ARCH:${QE_TARGET_DIR}/bin/${EPICS_HOST_ARCH}:/usr/lib64/qt5/bin:${PATH}
+
+export LD_LIBRARY_PATH=${EPICS_BASE}/lib/${EPICS_HOST_ARCH}:/usr/local/qwt-6.1.3/lib:${QE_TARGET_DIR}/lib/${EPICS_HOST_ARCH}:${QE_TARGET_DIR}/lib/${EPICS_HOST_ARCH}/designer
+
+export QT_PLUGIN_PATH=${QT_PLUGIN_PATH}:${QWT_ROOT}/plugins:$QE_TARGET_DIR/lib/$EPICS_HOST_ARCH
+
+export EPICS_CA_ADDR_LIST="10.1.50.255 10.1.32.30 10.3.5.255"
+export EPICS_CA_AUTO_ADDR_LIST=NO
+
+
+# User specific aliases and functions
+alias beats='cd /opt/epics/synApps/support/tomoscan/iocBoot/iocTomoScan_BEATS_Step'
+
+alias BEATS_DAQ_Control_Monitor='cd && /root/bin/BEATS_DAQ_Control_Monitor'
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+alias p3='source /opt/SW/venv3.9/bin/activate'
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+# added by Anaconda3 5.3.1 installer
+# >>> conda init >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$(CONDA_REPORT_ERRORS=false '/opt/SW/Anaconda3/bin/conda' shell.bash hook 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    \eval "$__conda_setup"
+else
+    if [ -f "/opt/SW/Anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/opt/SW/Anaconda3/etc/profile.d/conda.sh"
+        CONDA_CHANGEPS1=false conda activate base
+    else
+        \export PATH="/opt/SW/Anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda init <<<
