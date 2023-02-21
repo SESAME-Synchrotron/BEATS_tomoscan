@@ -1,6 +1,6 @@
 
 file {
-	name="/home/epics/support/tomoscan/tomoScanApp/op/adl/tomoScan_2BM_full.adl"
+	name="/opt/epics/synApps/support/BEATS_tomoscan/tomoScanApp/op/adl/tomoScan_BEATS_PCO_MICOS_Cont_full.adl"
 	version=030109
 }
 display {

@@ -1,6 +1,6 @@
 
 file {
-	name="/home/beams/7BMB/epics/synApps/support/tomoscan/tomoScanApp/op/adl/tomoScan_7BM_energy.adl"
+	name="/opt/epics/synApps/support/BEATS_tomoscan/tomoScanApp/op/adl/tomoScan_BEATS_PCO_MICOS_Step_energy.adl"
 	version=030111
 }
 display {

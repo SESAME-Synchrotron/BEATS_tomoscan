@@ -1,6 +1,6 @@
 
 file {
-	name="/opt/epics/synApps/support/BEATS_tomoscan/tomoScanApp/op/adl/tomoScan_BEATS_FLIR_STP_Cont_experiment.adl"
+	name="/opt/epics/synApps/support/BEATS_tomoscan/tomoScanApp/op/adl/tomoScan_BEATS_PCO_MICOS_Step_experiment.adl"
 	version=030111
 }
 display {
