@@ -205,6 +205,21 @@ record(bo, "$(P)$(R)CopyToAnalysisDir")
    field(ONAM, "Yes")
 }
 
+#############################
+# Experiment shutter control
+############################
+record(stringout, "$(P)$(R)ExposureShutterPVName")
+{
+	field(VAL,  "$(EXPOSURE_SHUTTER)")
+}
+record(mbbo, "$(P)$(R)UseExposureShutter")
+{
+   field(ZRVL, "0")
+   field(ZRST, "No")
+   field(ONVL, "1")
+   field(ONST, "Yes")
+}
+
 ######################
 # Fast shutter control
 ######################

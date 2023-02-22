@@ -8,6 +8,8 @@ pattern
 file "$(TOP)/db/tomoScan_BEATS_PCO_MICOS_Step.template"
 {
 pattern
-{  P,      R,          BEAM_READY,    READY_VALUE, CLOSE_FAST_SHUTTER,        CLOSE_FAST_VALUE,   OPEN_FAST_SHUTTER,        OPEN_FAST_VALUE,      SHUTTER_STATUS,}
-{tomoscanBEATS:, PcoMicosStep:, BEAMREADY:ShutterPermit,    1,     IOC:m4,          41,          IOC:m4,         41,        PA:BEATS:STA_A_FES_OPEN_PL, }
+{  
+P,      	R,             BEAM_READY,                 READY_VALUE, CLOSE_FAST_SHUTTER, CLOSE_FAST_VALUE, OPEN_FAST_SHUTTER, OPEN_FAST_VALUE, SHUTTER_STATUS,             EXPOSURE_SHUTTER,}
+{
+tomoscanBEATS:, PcoMicosStep:, BEAMREADY:ShutterPermit,    1,           IOC:m4,             41,               IOC:m4,            41,              PA:BEATS:STA_A_FES_OPEN_PL, I10EH-SHUTTER:command,}
 }

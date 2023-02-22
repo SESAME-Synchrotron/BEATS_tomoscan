@@ -62,6 +62,12 @@ $(P)$(R)ExperimentYearMonth
 $(P)$(R)RemoteAnalysisDir
 $(P)$(R)CopyToAnalysisDir
 
+##########################
+# Exposure shutter control
+##########################
+$(P)$(R)ExposureShutterPVName
+$(P)$(R)UseExposureShutter
+
 ######################
 # Fast shutter control
 ######################
