@@ -1,8 +1,4 @@
-# This script creates an object of type TomoScan2BM for doing tomography scans at APS beamline 2-BM-A
-# To run this script type the following:
-#     python -i start_tomoscan_2bm.py
-# The -i is needed to keep Python running, otherwise it will create the object and exit
+# This script creates an object of type TomoScan_BEATS_FLIR_MICOS_Step for doing tomography scans at BEATS beamline 
+
 from tomoscan.tomoscan_BEATS_FLIR_MICOS_Step import TomoScanBEATSFlirMicosStep
-ts = TomoScanBEATSFlirMicosStep(["../../db/tomoScan_settings.req",
-                  "../../db/tomoScan_BEATS_FLIR_MICOS_Step_settings.req"], 
-                 {"$(P)":"tomoscanBEATS:", "$(R)":"FlirMicosStep:"})
+ts = TomoScanBEATSFlirMicosStep("../../configurations/pvlist.json",["../../db/tomoScan_settings.req", "../../db/tomoScan_BEATS_FLIR_MICOS_Step_settings.req"], {"$(P)":"tomoscanBEATS:", "$(R)":"FlirMicosStep:"})

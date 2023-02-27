@@ -5,7 +5,7 @@ tomography continuous scanning with EPICS at BEATS beamline
 Notes: 
 
 Action List: 
-1. To adapt BEATS shutter in the future, currently virtual shutter is eing used. 
+1. To adapt BEATS shutter in the future, currently virtual shutter is being used. 
 2. To adapt motion system in the future, currently motorSim is being used.
 
    Classes
@@ -47,11 +47,12 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
         reading the pv_files
     """
 
-    def __init__(self, pv_files, macros):
+    def __init__(self, configFile, pv_files, macros):
         super().__init__(pv_files, macros)
 
+        self.configFile = configFile
         # read json pvlist (hard coded PVs)        
-        file = open("/opt/SW/venv3.9/lib/python3.9/site-packages/tomoscan-0.1-py3.9.egg/configurations/pvlist.json")
+        file = open(configFile)
         self.pvlist = json.load(file)
 
         # set BEATS TomoScan xml files

@@ -51,11 +51,12 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         reading the pv_files
     """
 
-    def __init__(self, pv_files, macros):
+    def __init__(self, configFile, pv_files, macros):
         super().__init__(pv_files, macros)
 
+        self.configFile = configFile
         # read json pvlist (hard coded PVs)        
-        file = open("/opt/SW/venv3.9/lib/python3.9/site-packages/tomoscan-0.1-py3.9.egg/configurations/pvlist.json")
+        file = open(configFile)
         self.pvlist = json.load(file)
 
         # set TomoScan xml files        
