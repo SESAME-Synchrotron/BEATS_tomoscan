@@ -7,7 +7,6 @@ Notes:
 Action List: 
 1. To adapt BEATS shutter in the future, currently virtual shutter is eing used. 
 2. To adapt motion system in the future, currently motorSim is being used.
-3. Automatic file pathes to be defined in the future. (GPFS).
 
    Classes
    -------
@@ -26,11 +25,12 @@ import re
 import json
 import shutil
 
-
+from datetime import timedelta
 from tomoscan import data_management as dm
 from tomoscan import TomoScanCont
 from tomoscan import log
-from SEDSS.SEDSupplements import CLIMessage, CLIInputReq
+from SEDSS.SEDSupplements import CLIMessage, UIMessage
+from SEDSS.SEDSupport import fileName
 
 
 EPSILON = .001
@@ -50,21 +50,30 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
     def __init__(self, pv_files, macros):
         super().__init__(pv_files, macros)
 
+        # read json pvlist (hard coded PVs)        
+        file = open("/opt/SW/venv3.9/lib/python3.9/site-packages/tomoscan-0.1-py3.9.egg/configurations/pvlist.json")
+        self.pvlist = json.load(file)
+
         # set BEATS TomoScan xml files
-        self.epics_pvs['CamNDAttributesFile'].put('ADZMQ_BEATS_PCO_MICOS_Cont_DetectorAttributes.xml')
-        self.epics_pvs['FPXMLFileName'].put('ADZMQ_BEATS_PCO_MICOS_Cont_Layout.xml')
+        self.epics_pvs['CamNDAttributesFile'].put(self.pvlist['XMLFiles']['detectorAttributes']['PcoMicosContAttr'])
+        self.epics_pvs['FPXMLFileName'].put(self.pvlist['XMLFiles']['layout']['PcoMicosContLayout'])
         #self.control_pvs['CamExposureAuto'].put(0) # set exposure auto off
-        PV("TEST-PCO:ZMQ1:EnableCallbacks").put(1)
+        
         # Enable auto-increment on file writer
-        #self.epics_pvs['FPAutoIncrement'].put('Yes')
+        self.epics_pvs['FPAutoIncrement'].put('Yes')
+
         # Set standard file template on file writer
-        #self.epics_pvs['FPFileTemplate'].put("%s%s_%3.3d.h5", wait=True)
+        self.epics_pvs['FPFileTemplate'].put("%s%s_%3.3d.h5", wait=True)
+
+        PV(self.pvlist['PVs']['ZMQPVs']['PcoZMQ']).put(1)
+
         # Disable over writing warning
         self.epics_pvs['OverwriteWarning'].put('Yes')
         log.setup_custom_logger("./tomoscan.log")
 
     def open_frontend_shutter(self):
         """Opens the shutters to collect flat fields or projections.
+
         This does the following:
 
         - Checks if we are in testing mode. If we are, do nothing else opens the front-end shutter.
@@ -102,6 +111,7 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
 
     def close_frontend_shutter(self):
         """Closes the shutters to collect dark fields.
+
         This does the following:
 
         - Closes the front-end shutter.
@@ -124,6 +134,7 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
 
     def close_shutter(self):
         """Closes the shutters to collect dark fields.
+
         This does the following:
 
         - Closes the fast shutter.
@@ -136,27 +147,26 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
             self.epics_pvs['CloseFastShutter'].put(value, wait=True)
     
     def set_trigger_mode(self, trigger_mode, num_images):
-        """Sets the PCO trigger mode
+        """ Sets the PCO trigger mode
 
         Parameters
         ----------
         trigger_mode : str
-            Choices are: "FreeRun", "Internal", or "PSOExternal"
+            Choices are: "FreeRun", "Internal", or "Software"
 
         num_images : int
             Number of images to collect.  Ignored if trigger_mode="FreeRun".
             This is used to set the ``NumImages`` PV of the camera.
         """
 
-        self.epics_pvs['CamAcquire'].put('Done') ###
-        self.wait_pv(self.epics_pvs['CamAcquire'], 0) ###
+        self.epics_pvs['CamAcquire'].put('Done') 
+        self.wait_pv(self.epics_pvs['CamAcquire'], 0) 
         log.info('set trigger mode: %s', trigger_mode)
 
         if trigger_mode == 'FreeRun':
             self.epics_pvs['CamImageMode'].put('Continuous', wait=True)
             self.epics_pvs['CamTriggerMode'].put(0, wait=True)
             self.wait_pv(self.epics_pvs['CamTriggerMode'], 0)
-            # self.epics_pvs['CamAcquire'].put('Acquire')
 
         elif trigger_mode == 'Internal':
             self.epics_pvs['CamTriggerMode'].put(0, wait=True)
@@ -173,25 +183,15 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
     
     def initSEDPathFile(self): 
         """
-        This method is used to set the experimintal file name in compliance 
-        with SESAME Experimintal Data (SED) Writer (SEDW)
+        This method is used to set the experimental file name in compliance 
+        with SESAME Experimental Data (SED) Writer (SEDW)
         """
         # =================== SED file name and path section ==========================
 
-        self.SEDBasePath = "/PETRA/SED/BEATS/IH" # this path should be in compliance with the path in SEDW
-        
-        SEDPathPV = "BEATS:SEDPath"
-        SEDFileNamePV = "BEATS:SEDFileName"
-        SEDTimeStampPV = "BEATS:SEDTimeStamp"
-
-        self.SEDTimeStamp = str(time.strftime("%Y%m%dT%H%M%S"))
-
-        self.SEDFileName = self.epics_pvs["FileName"].get(as_string=True)
-        if not re.match(r'\S', self.SEDFileName): #To check a line whether it starts with a non-space character or not.
-            self.SEDFileName = "BEATS"
-        self.SEDFileName = self.SEDFileName + "-" + self.SEDTimeStamp
-        self.SEDPath = self.SEDBasePath + "/" + self.SEDFileName
-        
+        SEDPathPV = self.pvlist['PVs']['writerSuppPVs']['SEDPath']
+        SEDFileNamePV = self.pvlist['PVs']['writerSuppPVs']['SEDFileName']
+        SEDTimeStampPV = self.pvlist['PVs']['writerSuppPVs']['SEDTimeStamp']
+    
         PV(SEDTimeStampPV).put(self.SEDTimeStamp, wait=True)
         PV(SEDFileNamePV).put(self.SEDFileName, wait=True)
         PV(SEDPathPV).put(self.SEDPath, wait=True)
@@ -208,44 +208,40 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
         - Calls the base class method.
         - Opens the front-end shutter.
         """
-
-        """
-        FLIR Oryx ORX-10G-71S7M camera or its driver does not support capturing one fram with continous 
-        trigger mode. this makes the SEDWritter unstaible as it needs to know how many frames are going to 
-        be recevied.... however that's why this part of the code has been added. 
-        """
-        if  self.epics_pvs['NumAngles'].get() == 1: 
-            self.epics_pvs['NumAngles'].put(2, wait=True)
-            log.info("replace number of angles to 2 instead of 1")
         
-        if self.epics_pvs['NumDarkFields'].get() == 1:
-            self.epics_pvs['NumDarkFields'].put(2)
-            log.info("replace number of dark fields to 2 instead of 1")
+        # Check SED file name regex
+        repeats = 0
+        while fileName.SED_h5re(self.epics_pvs["FileName"].get(as_string=True)): 
+            if repeats == 0: 
+                # UIMessage("File Name","The file name is not valid","The file directory is auto generated, please insert the file name without (spaces, extensions, and special characters except dashes)").showWarning()
+                log.error("SED file name is not valid")
+                self.epics_pvs['ScanStatus'].put('spaces, extensions, paths, and special characters except dashes are not allowed)')
+                repeats = 1
+            CLIMessage("The file directory is auto generated, please insert the file name without (spaces, extensions, and special characters except dashes)", "IR")
+            time.sleep(0.5) # checks every .5 second 
 
-        if self.epics_pvs['NumFlatFields'].get() == 1: 
-            self.epics_pvs['NumFlatFields'].put(2)
-            log.info("replace number of flat fields to 2 instead of 1")
-            
+        self.SEDBasePath = self.pvlist['paths']['SEDBasePath'] # this path should be in compliance with the path in SEDW
+        self.SEDPath, self.SEDFileName, self.SEDTimeStamp = fileName.SED_fileName(self.SEDBasePath, self.epics_pvs["FileName"].get(as_string=True), "BEATS") 
+
         self.control_pvs['RotationHLM'].put(99999, wait = True)
-        self.control_pvs['RotationLLM'].put(-99999, wait = True)
-
-            
+        self.control_pvs['RotationLLM'].put(-99999, wait = True)            
 
         log.info('begin scan')
-        #self.update_status()
         self.initSEDPathFile()
         # Call the base class method
         super().begin_scan()
-        
+
+        # Write h5 file by SED writer.
+        PV(self.pvlist['PVs']['writerSuppPVs']['writerImagesNumCaptured']).put(self.total_images)
+
         self.writerCheck()
         # Opens the front-end shutter
         self.open_frontend_shutter()    
 
     def writerCheck(self): 
         repeat = 0
-        while PV("BEATS:WRITER:Status").get() != 1: 
+        while PV(self.pvlist['PVs']['writerSuppPVs']['writerStatus']).get() != 1: 
             if repeat == 0: 
-                #print("\n")
                 log.error("BEATS Writer is not running!!!")
                 self.epics_pvs['ScanStatus'].put('BEATS Writer is not running!!!')
                 repeat = 1
@@ -253,7 +249,7 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
             time.sleep(0.5) # checks every .5 second 
         
         repeat = 0
-        while PV("BEATS:WRITER:NewFileTrigger").get() != 0: 
+        while PV(self.pvlist['PVs']['writerSuppPVs']['writerFileTrigger']).get() != 0: 
             if repeat == 0: 
                 log.warning("Waiting for BEATS writer | there is a file begin written by the writer")
                 self.epics_pvs['ScanStatus'].put('Waiting for BEATS writer')
@@ -261,13 +257,13 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
             CLIMessage("BEATS Writer is busey writing a file. The scan will continue AUTOMATICALLY when the writer is ready again", "IO")
             time.sleep(0.5)
     
-        #Triggers the writer to generat the file and be ready for ZMQ 
-        PV("BEATS:WRITER:NewFileTrigger").put(1) 
+        # Triggers the writer to generate the file and be ready for ZMQ 
+        PV(self.pvlist['PVs']['writerSuppPVs']['writerFileTrigger']).put(1) 
         
         repeat = 0 
-        while PV("BEATS:WRITER:FileCreated").get() != 1:
+        while PV(self.pvlist['PVs']['writerSuppPVs']['writerFileCreated']).get() != 1:
             if repeat == 0: 
-                log.info("Wating for BEATS Writer to preapre the H5 dxFile.") 
+                log.info("Wating for BEATS Writer to prepare the H5 dxFile.") 
                 self.epics_pvs['ScanStatus'].put('Creating H5 dxFile')
                 repeat = 1
             CLIMessage("BEATS Writer | Wating for H5 dxFile creation", "IO")
@@ -276,18 +272,50 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
         time.sleep(0.5)
         print ("\n")
 
+    def update_status(self, start_time):
+        """
+        When called updates ``ImagesCollected``, ``ImagesSaved``, ``ElapsedTime``, and ``RemainingTime``. 
+
+        Parameters
+        ----------
+        start_time : time
+
+            Start time to calculate elapsed time.
+
+        Returns
+        -------
+        elapsed_time : float
+
+            Elapsed time to be used for time out.
+        """
+        num_collected  = self.epics_pvs['CamNumImagesCounter'].value
+        num_images     = self.epics_pvs['CamNumImages'].value
+        num_saved      = PV(self.pvlist['PVs']['writerSuppPVs']['imagesNumSaved']).get()
+        num_to_save     = self.total_images
+        current_time = time.time()
+        elapsed_time = current_time - start_time
+        remaining_time = (elapsed_time * (num_images - num_collected) /
+                          max(float(num_collected), 1))
+        collect_progress = str(num_collected) + '/' + str(num_images)
+        log.info('Collected %s', collect_progress)
+        self.epics_pvs['ImagesCollected'].put(collect_progress)
+        save_progress = str(num_saved) + '/' + str(num_to_save)
+        log.info('Saved %s', save_progress)
+        self.epics_pvs['ImagesSaved'].put(save_progress)
+        self.epics_pvs['ElapsedTime'].put(str(timedelta(seconds=int(elapsed_time))))
+        self.epics_pvs['RemainingTime'].put(str(timedelta(seconds=int(remaining_time))))
+
+        return elapsed_time
+        
     def end_scan(self):
         """Performs the operations needed at the very end of a scan.
 
         This does the following:
         - Reset rotation position by mod 360.
         - Calls the base class method.
-        - Stop the file plugin.
         - Closes shutter.  
-        - Add theta to the raw data file. 
         - Copy raw data to data analysis computer.   
         """
-        log.info('end scan')
 
         if self.return_rotation == 'Yes':
             # Reset rotation position by mod 360 , the actual return 
@@ -298,32 +326,23 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
             current_angle = np.sign(ang)*(np.abs(ang)%360)
             self.epics_pvs['RotationSet'].put('Set', wait=True)
             self.epics_pvs['Rotation'].put(current_angle, wait=True)
-            self.epics_pvs['RotationSet'].put('Use', wait=True)
+            self.epics_pvs['RotationSet'].put('Use', wait=True)        
 
-        
-        
+        log.info('end scan')
+        # Save the configuration
+        # Strip the extension from the FullFileName and add .config
         full_file_name = self.SEDPath + "/" + self.SEDFileName
-        
-
         log.info('data save location: %s', full_file_name)
         config_file_root = os.path.splitext(full_file_name)[0]
-        try:
-            self.save_configuration(full_file_name + '.config')
-        except FileNotFoundError:
-            log.error('config file write error')
-            self.epics_pvs['ScanStatus'].put('Config File Write Error')
-
+        self.save_configuration(config_file_root + '.config')
 
         super().end_scan()
   
         self.close_shutter()
-        # Stop the file plugin
-        #self.epics_pvs['FPCapture'].put('Done')
-        #print(self.epics_pvs['FPCapture'])
-        #self.wait_pv(self.epics_pvs['FPCaptureRBV'], 0)
         self.control_pvs['RotationStop'].put(1) # stops the motor. 
 
-    # adding theta to the experimintal file is managed by SEDW
+    # adding theta to the experimental file is managed by SEDW
+
     def save_configuration(self, file_name):
         """Saves the current configuration PVs to a file.
 
@@ -335,18 +354,21 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
         file_name : str
             The name of the file to save to.
         """
+
         config = {}
         for key in self.config_pvs:
             config[key] = self.config_pvs[key].get(as_string=True)
         try:
-            out_file = f = open("/PETRA/SED/BEATS/IH/config.config", mode='w', encoding='utf-8')
+            out_file = f = open(self.SEDBasePath + "/config.config", mode='w', encoding='utf-8')
             json.dump(config, out_file, indent=2)
             out_file.close()
             time.sleep(.1)
-            shutil.move ("/PETRA/SED/BEATS/IH/config.config", file_name)
+            shutil.move (self.SEDBasePath + "/config.config", file_name)
+
         except (PermissionError, FileNotFoundError) as error:
+            log.error('Error writing configuration file')
             self.epics_pvs['ScanStatus'].put('Error writing configuration')
-            
+
     def wait_pv(self, epics_pv, wait_val, timeout=-1):
         """Wait on a pv to be a value until max_timeout (default forever)
            delay for pv to change
@@ -410,4 +432,3 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
             if timeout > 0:
                 if elapsed_time >= timeout:
                    exit()
-

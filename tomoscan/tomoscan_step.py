@@ -105,20 +105,12 @@ class TomoScanSTEP(TomoScan):
 
         - Calls the base class method.
         """
-        log.info('end scan')
-        # Save the configuration
-        # Strip the extension from the FullFileName and add .config
-        full_file_name = PV("BEATS:SEDPath").get(as_string=True)
-        log.info('data save location: %s', full_file_name)
-        config_file_root = os.path.splitext(full_file_name)[0]
-        self.save_configuration(config_file_root + '.config')
 
         # Put the camera back in FreeRun mode and acquiring
         self.set_trigger_mode('FreeRun', 1)
 
         # Set the rotation speed to maximum
         self.epics_pvs['RotationSpeed'].put(self.max_rotation_speed)
-        # self.cleanup_PSO()
 
         # Move the sample in.  Could be out if scan was aborted while taking flat fields
         self.move_sample_in()
