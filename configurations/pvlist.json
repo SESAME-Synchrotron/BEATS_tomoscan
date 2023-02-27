@@ -1,0 +1,39 @@
+{
+	"PVs":{
+		"writerSuppPVs":{
+			"SEDPath":"BEATS:SEDPath",
+			"SEDFileName":"BEATS:SEDFileName",
+			"SEDTimeStamp":"BEATS:SEDTimeStamp",
+			"imagesNumSaved":"BEATS:WRITER:NumSaved",
+			"writerStatus":"BEATS:WRITER:Status",
+			"writerFileTrigger":"BEATS:WRITER:NewFileTrigger",
+			"writerFileCreated":"BEATS:WRITER:FileCreated", 
+			"writerImagesNumCaptured":"BEATS:WRITER:NumCapture"	
+		},
+
+		"ZMQPVs":{
+			"FlirZMQ":"FLIR:ZMQ1:EnableCallbacks",
+			"PcoZMQ":"TEST-PCO:ZMQ1:EnableCallbacks"
+		}
+	},
+
+	"paths":{
+		"SEDBasePath":"/PETRA/SED/BEATS/IH"
+	},
+
+	"XMLFiles":{
+		"detectorAttributes":{
+			"FlirMicosContAttr":"ADZMQ_BEATS_FLIR_MICOS_Cont_DetectorAttributes.xml",
+			"FlirMicosStepAttr":"ADZMQ_BEATS_FLIR_MICOS_Step_DetectorAttributes.xml",
+			"PcoMicosContAttr":"ADZMQ_BEATS_PCO_MICOS_Cont_DetectorAttributes.xml",
+			"PcoMicosStepAttr":"ADZMQ_BEATS_PCO_MICOS_Step_DetectorAttributes.xml"
+		},
+
+		"layout":{
+			"FlirMicosContLayout":"ADZMQ_BEATS_FLIR_MICOS_Cont_Layout.xml",
+			"FlirMicosStepLayout":"ADZMQ_BEATS_FLIR_MICOS_Step_Layout.xml",
+			"PcoMicosContLayout":"ADZMQ_BEATS_PCO_MICOS_Cont_Layout.xml",
+			"PcoMicosStepLayout":"ADZMQ_BEATS_PCO_MICOS_Step_Layout.xml"
+		}
+	}
+}
