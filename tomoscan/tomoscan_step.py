@@ -84,11 +84,7 @@ class TomoScanSTEP(TomoScan):
         super().begin_scan()
         
         # Set angles for the interlaced scan
-        
         self.theta = self.rotation_start + np.arange(self.num_angles) * self.rotation_step
-
-        #self.epics_pvs['FPNumCapture'].put(self.total_images, wait=True)
-        #self.epics_pvs['FPCapture'].put('Capture')
 
     def end_scan(self):
         """Performs the operations needed at the very end of a scan.
@@ -119,18 +115,12 @@ class TomoScanSTEP(TomoScan):
         super().end_scan()
 
     def collect_projections(self):
-        """Collects projections in fly scan mode.
-
+        """
         This does the following:
-
         - Call the superclass collect_projections() function.
-
         - Set the trigger mode on the camera.
-   
         - Set the camera in acquire mode.
-
         - Starts the camera acquiring in software trigger mode.
-
         - Update scan status.
         """
 

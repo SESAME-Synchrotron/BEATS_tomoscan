@@ -461,8 +461,7 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
                    exit()
 
     def collect_projections(self):
-            """Collects projections in fly scan mode.
-
+            """
             This does the following:
             - Call the superclass collect_projections() function.
             - Set the trigger mode on the camera.

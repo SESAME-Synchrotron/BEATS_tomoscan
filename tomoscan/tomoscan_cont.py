@@ -78,7 +78,6 @@ class TomoScanCont(TomoScan):
         """
         log.info('begin scan')
         # Call the base class method
-        # self.epics_pvs['FPFileTemplate'].put("%s%s_%3.3d.h5") # sets FP template 
         super().begin_scan()
         time.sleep(0.1)
 
@@ -110,8 +109,7 @@ class TomoScanCont(TomoScan):
         super().end_scan()
 
     def collect_projections(self):
-        """Collects projections in fly scan mode.
-
+        """
         This does the following:
         - Sets the scan status message
         - Calls open_shutter()
@@ -124,7 +122,7 @@ class TomoScanCont(TomoScan):
         - Update scan status.
         """
        
-        # Assign the fly scan angular position to theta[]
+        # Assign the continuous scan angular position to theta[]
         self.theta = self.rotation_start + np.arange(self.num_angles) * self.rotation_step
 
         log.info('collect projections ...')
@@ -154,51 +152,23 @@ class TomoScanCont(TomoScan):
         self.camera_response_time = timeNow - self.camera_response_time
         log.info("Camera response time: {}".format(self.camera_response_time))
         self.epics_pvs["CamAcquire"].put("Done")        
-        ###############################################
-        # set motor speed: 
+        
         self.set_motor_speed()
         self.go_start_position() 
 
     def set_motor_speed(self): 
         
         # Compute the time for each frame.
-        #frame_time = self.compute_frame_time()
         frame_time = self.exposure_time
         log.info("Frame time: {}".format(frame_time))
 
         # Set motor speed.
         self.motor_speed = self.rotation_step / frame_time
-        #self.motor_speed = self.rotation_step / self.exposure_time
         self.epics_pvs["RotationSpeed"].put(self.motor_speed, wait =True) 
         log.info("Rotation speed: {}".format(self.motor_speed))
-
-        # Compute projections time.
-        #self.collect_projections_time =  self.num_angles * frame_time
-        #log.info("Collect Projections Time: {}".format(self.collect_projections_time))
-
-        ############# Above is anas's section 
-        #self.epics_pvs['RotationSpeed'].put(self.max_rotation_speed)
-
-        # time_per_angle = self.compute_frame_time()
-        # CLIMessage("time per angle::::::: {}".format(time_per_angle), "E")
-        # speed = self.rotation_step / time_per_angle
-        # CLIMessage("speed: :::::: {}".format(speed), "E")
-
-        
-        # steps_per_deg = abs(round(1./self.rotation_resolution, 0))
-        # CLIMessage("steps_per_deg::::::: {}".format(steps_per_deg), "E")
-
-        # self.motor_speed = math.floor((speed * steps_per_deg)) / steps_per_deg
-        # CLIMessage("self.motor_speed::::::: {}".format(self.motor_speed), "E")
-        # self.epics_pvs['RotationSpeed'].put(self.motor_speed, wait =True)
-        # time.sleep(.5)
-        # # Need to read back the actual motor speed because the requested speed might be outside the allowed range
-        # self.motor_speed = self.epics_pvs['RotationSpeed'].get()
-
-        # CLIMessage("Accepted motro speed::::::: {}".format(self.motor_speed), "E")
     
     def go_start_position(self): 
-        # Put the motor at approparate start position to accelarate and be in a steady speed.
+        # Put the motor at appropriate start position to accelarate and be in a steady speed.
 
         motorACCLTime = self.control_pvs['RotationAccelTime'].get()
         # Get the distance needed for acceleration = 1/2 a t^2 = 1/2 * v * t.
@@ -225,7 +195,6 @@ class TomoScanCont(TomoScan):
     def rotate(self):
 
         log.info("Rotation thread started")
-        # log.info("Start position: {}, Stop position: {}".format(self.start_position, self.end_position))
         self.epics_pvs["Rotation"].put(self.end_position)
 
     def acquire_projections(self):

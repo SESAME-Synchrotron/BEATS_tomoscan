@@ -257,6 +257,10 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
         # Opens the front-end shutter
         self.open_frontend_shutter()    
 
+        self.epics_pvs['ExposureShutter'].put(1, wait=True)
+        log.info('open exposure shutter')
+        time.sleep(0.01)
+        
     def writerCheck(self): 
         repeat = 0
         while PV(self.pvlist['PVs']['writerSuppPVs']['writerStatus']).get() != 1: 
@@ -335,6 +339,9 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
         - Closes shutter.  
         - Copy raw data to data analysis computer.   
         """
+
+        self.epics_pvs['ExposureShutter'].put(0, wait=True)
+        log.info('close exposure shutter')
 
         if self.return_rotation == 'Yes':
             # Reset rotation position by mod 360 , the actual return 
