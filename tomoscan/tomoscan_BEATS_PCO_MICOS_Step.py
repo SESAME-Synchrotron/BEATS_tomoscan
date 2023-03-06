@@ -25,6 +25,7 @@ import re
 import json
 import shutil
 
+import socket
 from datetime import timedelta
 from tomoscan import data_management as dm
 from tomoscan.tomoscan_step import TomoScanSTEP
@@ -34,6 +35,7 @@ from SEDSS.SEDSupport import fileName
 
 
 EPSILON = .001
+
 
 class SampleXError(Exception):
     '''Exception raised when SampleX is not equal to SampleInX
@@ -204,16 +206,18 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
             self.prepareTriggeringSource()
     
     def prepareTriggeringSource (self):
-        PV("FG:SetFunctionCH1").put("SQU") # square function 
-        PV("FG:SetWaveformPeriodCH1").put(0.02) # waveform period
-        PV("FG:SetBurstPeriodCH1").put(0.021) # Burst period. 
-        PV("FG:SetSquareDutyCycleCH1").put(10) # duty cycle 10%
-        PV("FG:SetBurst1").put(1) # enable burst 
-        PV("FG:SetSquareAmplitudeCH1").put(5) # 5 volt 
-        PV("FG:SetSquareOffsetCH1").put(2.5) # offset 2.5 volt, signal 0 - 5 volt on, off
-        PV("FG:SetBurstTrigSourceCH1").put(0) # manual trigger source 
-        PV("FG:SetBurstIdleCH1").put(3) # Bottom 
-        PV("FG:SetOutputStateCH1").put(1) # enable output.
+        # PV("FG:SetFunctionCH1").put("SQU") # square function 
+        # PV("FG:SetWaveformPeriodCH1").put(0.02) # waveform period
+        # PV("FG:SetBurstPeriodCH1").put(0.021) # Burst period. 
+        # PV("FG:SetSquareDutyCycleCH1").put(10) # duty cycle 10%
+        # PV("FG:SetBurst1").put(1) # enable burst 
+        # PV("FG:SetSquareAmplitudeCH1").put(5) # 5 volt 
+        # PV("FG:SetSquareOffsetCH1").put(2.5) # offset 2.5 volt, signal 0 - 5 volt on, off
+        # PV("FG:SetBurstTrigSourceCH1").put(0) # manual trigger source 
+        # PV("FG:SetBurstIdleCH1").put(3) # Bottom 
+        # PV("FG:SetOutputStateCH1").put(1) # enable output.
+        self.IP = self.pvlist['RPTrigServ']['IP']
+        self.PORT = self.pvlist['RPTrigServ']['PORT']
         
     def initSEDPathFile(self): 
         """
@@ -272,6 +276,11 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         self.writerCheck()
         # Opens the front-end shutter
         self.open_frontend_shutter()
+
+        # if not self.epics_pvs['UseExposureShutter'].get():
+        #     self.epics_pvs['ExposureShutter'].put(1, wait=True)
+        #     log.info('Exposure shutter not used')
+        #     log.info('open exposure shutter')
 
     def writerCheck(self): 
         repeat = 0
@@ -351,6 +360,11 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         - Closes shutter.  
         - Copy raw data to data analysis computer.      
         """
+
+        # if not self.epics_pvs['UseExposureShutter'].get():
+        #     self.epics_pvs['ExposureShutter'].put(0, wait=True)
+        #     log.info('close exposure shutter')
+
 
         if self.return_rotation == 'Yes':
             # Reset rotation position by mod 360 , the actual return 
@@ -489,8 +503,20 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
                     log.info('angle %d: %f', k, self.theta[k])
                     self.epics_pvs['Rotation'].put(self.theta[k], wait=True)            
                     time.sleep(stabilization_time)
+                    log.info('open exposure shutter')
+                    # self.epics_pvs['ExposureShutter'].put(1, wait=True)
+                    time.sleep(0.01)
                     # self.epics_pvs['CamTriggerSoftware'].put(1)    
-                    PV("FG:BurstTrigCH1").put(1)
+                    # PV("FG:BurstTrigCH1").put(1)
+                    s = socket.socket()
+                    s.connect((self.IP, int(self.PORT)))
+                    x=time.time()   
+                    log.info('Sending trigger #%d', k)
+                    s.send(str(x).encode('utf-8'))
+                    # time.sleep(self.epics_pvs['Exposuretime'].get())
+                    # self.epics_pvs['ExposureShutter'].put(0, wait=True)
+                    s.close()
+                    log.info('close exposure shutter')
                     self.wait_pv(self.epics_pvs['CamNumImagesCounter'], k+1, 60)
                     self.update_status(start_time)
             

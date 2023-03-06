@@ -35,5 +35,10 @@
 			"PcoMicosContLayout":"ADZMQ_BEATS_PCO_MICOS_Cont_Layout.xml",
 			"PcoMicosStepLayout":"ADZMQ_BEATS_PCO_MICOS_Step_Layout.xml"
 		}
+	},
+
+	"RPTrigServ":{
+		"IP":"10.3.5.111",
+		"PORT":"12345"
 	}
 }
