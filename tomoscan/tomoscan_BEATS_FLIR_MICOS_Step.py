@@ -285,6 +285,11 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
         self.writerCheck()
         # Opens the front-end shutter
         self.open_frontend_shutter()
+
+        if not self.epics_pvs['UseExposureShutter'].get():
+            self.epics_pvs['ExposureShutter'].put(1, wait=True)
+            log.info('Exposure shutter not used')
+            log.info('open exposure shutter')
     
     def writerCheck(self): 
         repeat = 0
@@ -364,6 +369,10 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
         - Closes shutter.  
         - Copy raw data to data analysis computer.      
         """
+
+        if not self.epics_pvs['UseExposureShutter'].get():
+            self.epics_pvs['ExposureShutter'].put(0, wait=True)
+            log.info('close exposure shutter')
 
         if self.return_rotation == 'Yes':
             # Reset rotation position by mod 360 , the actual return 
