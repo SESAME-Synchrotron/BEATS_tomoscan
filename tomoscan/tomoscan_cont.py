@@ -13,7 +13,7 @@ import numpy as np
 from tomoscan import TomoScan
 from tomoscan import log
 from epics import PV
-from SEDSS.SEDSupplements import CLIMessage
+from SEDSS.CLIMessage import CLIMessage
 
 
 class TomoScanCont(TomoScan):

@@ -30,7 +30,8 @@ from datetime import timedelta
 from tomoscan import data_management as dm
 from tomoscan.tomoscan_step import TomoScanSTEP
 from tomoscan import log
-from SEDSS.SEDSupplements import CLIMessage, UIMessage
+from SEDSS.CLIMessage import CLIMessage
+from SEDSS.UIMessage import UIMessage
 from SEDSS.SEDSupport import fileName
 
 
@@ -513,7 +514,7 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
                     x=time.time()   
                     log.info('Sending trigger #%d', k)
                     s.send(str(x).encode('utf-8'))
-                    # time.sleep(self.epics_pvs['Exposuretime'].get())
+                    time.sleep(self.epics_pvs['ExposureTime'].get())
                     # self.epics_pvs['ExposureShutter'].put(0, wait=True)
                     s.close()
                     log.info('close exposure shutter')

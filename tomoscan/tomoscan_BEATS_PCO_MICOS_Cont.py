@@ -29,7 +29,8 @@ from datetime import timedelta
 from tomoscan import data_management as dm
 from tomoscan import TomoScanCont
 from tomoscan import log
-from SEDSS.SEDSupplements import CLIMessage, UIMessage
+from SEDSS.CLIMessage import CLIMessage
+from SEDSS.UIMessage import UIMessage
 from SEDSS.SEDSupport import fileName
 
 

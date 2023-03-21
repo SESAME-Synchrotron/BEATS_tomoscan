@@ -218,6 +218,7 @@ record(mbbo, "$(P)$(R)UseExposureShutter")
    field(ZRST, "No")
    field(ONVL, "1")
    field(ONST, "Yes")
+   field(PINI, "No")
 }
 
 ######################
