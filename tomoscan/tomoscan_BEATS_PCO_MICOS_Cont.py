@@ -55,7 +55,12 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
         # read json pvlist (hard coded PVs)        
         file = open(configFile)
         self.pvlist = json.load(file)
-
+        self.systemInitializations()
+        # Disable over writing warning
+        self.epics_pvs['OverwriteWarning'].put('Yes')
+        log.setup_custom_logger("./tomoscan.log")
+    
+    def systemInitializations(self):
         # set BEATS TomoScan xml files
         self.epics_pvs['CamNDAttributesFile'].put(self.pvlist['XMLFiles']['detectorAttributes']['PcoMicosContAttr'])
         self.epics_pvs['FPXMLFileName'].put(self.pvlist['XMLFiles']['layout']['PcoMicosContLayout'])
@@ -68,10 +73,6 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
         self.epics_pvs['FPFileTemplate'].put("%s%s_%3.3d.h5", wait=True)
 
         PV(self.pvlist['PVs']['ZMQPVs']['PcoZMQ']).put(1)
-
-        # Disable over writing warning
-        self.epics_pvs['OverwriteWarning'].put('Yes')
-        log.setup_custom_logger("./tomoscan.log")
 
     def open_frontend_shutter(self):
         """Opens the shutters to collect flat fields or projections.
@@ -210,6 +211,8 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
         - Calls the base class method.
         - Opens the front-end shutter.
         """
+
+        self.systemInitializations()
         
         # Check SED file name regex
         repeats = 0
