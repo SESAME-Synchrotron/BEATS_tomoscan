@@ -61,7 +61,10 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         # read json pvlist (hard coded PVs)        
         file = open(configFile)
         self.pvlist = json.load(file)
-
+        self.systemInitializations()      
+        log.setup_custom_logger("./tomoscan.log")
+    
+    def systemInitializations(self):
         # set TomoScan xml files        
         self.epics_pvs['CamNDAttributesFile'].put(self.pvlist['XMLFiles']['detectorAttributes']['PcoMicosStepAttr'])
         self.epics_pvs['FPXMLFileName'].put(self.pvlist['XMLFiles']['layout']['PcoMicosStepLayout'])
@@ -76,8 +79,6 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
 
         # Disable over writing warning
         self.epics_pvs['OverwriteWarning'].put('Yes')   
-        log.setup_custom_logger("./tomoscan.log")
-    
     def open_frontend_shutter(self):
         """Opens the shutters to collect flat fields or projections.
 
@@ -248,7 +249,7 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         - Opens the front-end shutter.
         - Turns on data capture.
         """
-        
+        self.systemInitializations()
         # Check SED file name regex        
         repeats = 0
         while fileName.SED_h5re(self.epics_pvs["FileName"].get(as_string=True)): 

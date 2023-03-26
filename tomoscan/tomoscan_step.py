@@ -82,9 +82,28 @@ class TomoScanSTEP(TomoScan):
         log.info('begin scan')
         # Call the base class method
         super().begin_scan()
+
+        self.collect_frames_to_init_det()
         
         # Set angles for the interlaced scan
         self.theta = self.rotation_start + np.arange(self.num_angles) * self.rotation_step
+    
+    def collect_frames_to_init_det(self):
+           """
+           This method collects some frames ahead of each scan in order 
+           to make the camera ready (i.e. let the camera calculate frame dimensions
+            which might be 0 after restarting the camera IOC). 
+            this is mainely needed for the writer to run in perfect conditions
+           """
+           self.set_exposure_time()
+           # Camera response time calculation: 
+           counter = 0
+           self.set_trigger_mode("Internal", self.num_angles)
+           camera_counter = self.epics_pvs["CamArrayCounter"].get()
+           self.epics_pvs["CamAcquire"].put("Acquire")
+           while self.epics_pvs["CamArrayCounter"].get() == camera_counter: 
+               pass
+           self.epics_pvs["CamAcquire"].put("Done")
 
     def end_scan(self):
         """Performs the operations needed at the very end of a scan.
