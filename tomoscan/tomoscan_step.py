@@ -65,9 +65,12 @@ class TomoScanSTEP(TomoScan):
         Calls ``collect_static_frames()`` with the number of images specified
         by the ``NumFlatFields`` PV.
         """
+        self.epics_pvs['ExposureShutter'].put(1, wait=True)
+        time.sleep(0.01)
         log.info('collect flat fields')
         super().collect_flat_fields()
         self.collect_static_frames(self.num_flat_fields)
+        self.epics_pvs['ExposureShutter'].put(0, wait=True)
 
     def begin_scan(self):
         """Performs the operations needed at the very start of a scan.
@@ -158,20 +161,37 @@ class TomoScanSTEP(TomoScan):
         start_time = time.time()
         stabilization_time = self.epics_pvs['StabilizationTime'].get()
         log.info("stabilization time %f s", stabilization_time)
-        for k in range(self.num_angles):
-            if(self.scan_is_running):
-                log.info('angle %d: %f', k, self.theta[k])
-                self.epics_pvs['Rotation'].put(self.theta[k], wait=True)            
-                time.sleep(stabilization_time)
-                log.info('open exposure shutter')
-                # self.epics_pvs['ExposureShutter'].put(1, wait=True)
-                time.sleep(0.01)
-                self.epics_pvs['CamTriggerSoftware'].put(1)    
-                time.sleep(self.epics_pvs['ExposureTime'].get())
-                # self.epics_pvs['ExposureShutter'].put(0, wait=True)
-                log.info('close exposure shutter')
-                self.wait_pv(self.epics_pvs['CamNumImagesCounter'], k+1, 60)
-                self.update_status(start_time)
+
+        if self.epics_pvs['UseExposureShutter'].get():
+            for k in range(self.num_angles):
+                if(self.scan_is_running):
+                    log.info('angle %d: %f', k, self.theta[k])
+                    self.epics_pvs['Rotation'].put(self.theta[k], wait=True)            
+                    time.sleep(stabilization_time)
+                    log.info('open exposure shutter')
+                    self.epics_pvs['ExposureShutter'].put(1, wait=True)
+                    time.sleep(0.01)
+                    self.epics_pvs['CamTriggerSoftware'].put(1)    
+                    time.sleep(self.epics_pvs['ExposureTime'].get())
+                    self.epics_pvs['ExposureShutter'].put(0, wait=True)
+                    log.info('close exposure shutter')
+                    self.wait_pv(self.epics_pvs['CamNumImagesCounter'], k+1, 60)
+                    self.update_status(start_time)
+        else:
+            for k in range(self.num_angles):
+                if(self.scan_is_running):
+                    log.info('angle %d: %f', k, self.theta[k])
+                    self.epics_pvs['Rotation'].put(self.theta[k], wait=True)            
+                    time.sleep(stabilization_time)
+                    # log.info('open exposure shutter')
+                    # self.epics_pvs['ExposureShutter'].put(1, wait=True)
+                    # time.sleep(0.01)
+                    self.epics_pvs['CamTriggerSoftware'].put(1)    
+                    # time.sleep(self.epics_pvs['ExposureTime'].get())
+                    # self.epics_pvs['ExposureShutter'].put(0, wait=True)
+                    # log.info('close exposure shutter')
+                    self.wait_pv(self.epics_pvs['CamNumImagesCounter'], k+1, 60)
+                    self.update_status(start_time)
         
         # wait until the last frame is saved (not needed)
         time.sleep(0.5)        

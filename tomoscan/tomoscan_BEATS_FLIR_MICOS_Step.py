@@ -79,81 +79,48 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
         
         # Disable over writing warning
         self.epics_pvs['OverwriteWarning'].put('Yes')    
-    def open_frontend_shutter(self):
-        """Opens the shutters to collect flat fields or projections.
+
+    def open_shutter(self):
+        """Opens the combined stopper shutter to collect flat fields or projections.
 
         This does the following:
 
-        - Checks if we are in testing mode. If we are, do nothing else opens the 2-BM-A front-end shutter.
-
+        - Opens the combined stopper shutter.
         """
         if self.epics_pvs['Testing'].get():
             log.warning('In testing mode, so not opening shutters.')
-        else:
-            # Open front-end shutter
+        else: 
             if not self.epics_pvs['OpenShutter'] is None:
                 pv = self.epics_pvs['OpenShutter']
                 value = self.epics_pvs['OpenShutterValue'].get(as_string=True)
                 status = self.epics_pvs['ShutterStatus'].get(as_string=True)
-                log.info('shutter status: %s', status)
-                log.info('open shutter: %s, value: %s', pv, value)
+                log.info('combined stopper shutter status: %s', status)
+                log.info('open combined stopper shutter: %s, value: %s', pv, value)
                 self.epics_pvs['OpenShutter'].put(value, wait=True)
-                self.wait_frontend_shutter_open()
-                # self.wait_pv(self.epics_pvs['ShutterStatus'], 1)
+                self.wait_combined_stopper_shutter_open()
                 status = self.epics_pvs['ShutterStatus'].get(as_string=True)
-                log.info('shutter status: %s', status)
+                log.info('combined stopper shutter status: %s', status)
 
-    def open_shutter(self):
-        """Opens the shutters to collect flat fields or projections.
-
+    def close_shutter(self):
+        """Closes the combined stopper shutter to collect dark fields.
+        
         This does the following:
 
-        - Opens the fast shutter.
-        """
-
-        if not self.epics_pvs['OpenFastShutter'] is None:
-            pv = self.epics_pvs['OpenFastShutter']
-            value = self.epics_pvs['OpenFastShutterValue'].get(as_string=True)
-            log.info('open fast shutter: %s, value: %s', pv, value)
-            self.epics_pvs['OpenFastShutter'].put(value, wait=True)
-
-    def close_frontend_shutter(self):
-        """Closes the shutters to collect dark fields.
-
-        This does the following:
-
-        - Closes the front-end shutter.
-
+        - Closes the combined stopper shutter.
         """
         if self.epics_pvs['Testing'].get():
             log.warning('In testing mode, so not opening shutters.')
-        else:
-            # Close the front-end shutter
+        else: 
             if not self.epics_pvs['CloseShutter'] is None:
                 pv = self.epics_pvs['CloseShutter']
                 value = self.epics_pvs['CloseShutterValue'].get(as_string=True)
                 status = self.epics_pvs['ShutterStatus'].get(as_string=True)
-                log.info('shutter status: %s', status)
-                log.info('close shutter: %s, value: %s', pv, value)
+                log.info('combined stopper shutter status: %s', status)
+                log.info('close combined stopper shutter: %s, value: %s', pv, value)
                 self.epics_pvs['CloseShutter'].put(value, wait=True)
-                self.wait_pv(self.epics_pvs['ShutterStatus'], 0)
+                self.wait_combined_stopper_shutter_close()
                 status = self.epics_pvs['ShutterStatus'].get(as_string=True)
-                log.info('shutter status: %s', status)
-
-    def close_shutter(self):
-        """Closes the shutters to collect dark fields.
-        
-        This does the following:
-
-        - Closes the fast shutter.
-        """
-
-        # Close fast shutter
-        if not self.epics_pvs['CloseFastShutter'] is None:
-            pv = self.epics_pvs['CloseFastShutter']
-            value = self.epics_pvs['CloseFastShutterValue'].get(as_string=True)
-            log.info('close fast shutter: %s, value: %s', pv, value)
-            self.epics_pvs['CloseFastShutter'].put(value, wait=True)
+                log.info('combined stopper shutter status: %s', status)
 
     def step_scan(self):
         """Control of Sample X position
@@ -286,8 +253,6 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
         PV(self.pvlist['PVs']['writerSuppPVs']['writerImagesNumCaptured']).put(self.total_images)
 
         self.writerCheck()
-        # Opens the front-end shutter
-        self.open_frontend_shutter()
 
         if not self.epics_pvs['UseExposureShutter'].get():
             self.epics_pvs['ExposureShutter'].put(1, wait=True)
@@ -448,8 +413,8 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
             else:
                 return True
  
-    def wait_frontend_shutter_open(self, timeout=-1):
-        """Waits for the front end shutter to open, or for ``abort_scan()`` to be called.
+    def wait_combined_stopper_shutter_open(self, timeout=-1):
+        """Waits for the combined stopper shutter to open, or for ``abort_scan()`` to be called.
 
         While waiting this method periodically tries to open the shutter..
 
@@ -468,7 +433,7 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
 
         start_time = time.time()
         pv = self.epics_pvs['OpenShutter']
-        value = self.epics_pvs['OpenShutterValue'].get(as_string = True)
+        value = self.epics_pvs['OpenShutterStatusValue'].get(as_string = True)
         log.info('open shutter: %s, value: %s', pv, value)
         elapsed_time = 0
         while True:
@@ -477,12 +442,51 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
                 return
             if not self.scan_is_running:
                 exit()
-            value = self.epics_pvs['OpenShutterValue'].get()
+            value = self.epics_pvs['OpenShutterStatusValue'].get()
             time.sleep(1.0)
             current_time = time.time()
             elapsed_time = current_time - start_time
             log.warning("Waiting on shutter to open: %f s", elapsed_time)
-            self.epics_pvs['OpenShutter'].put(value, wait=True)
+            # self.epics_pvs['OpenShutter'].put(value, wait=True)
+            if timeout > 0:
+                if elapsed_time >= timeout:
+                   exit()
+
+    def wait_combined_stopper_shutter_close(self, timeout=-1):
+        """Waits for the combined stopper shutter to close, or for ``abort_scan()`` to be called.
+
+        While waiting this method periodically tries to close the shutter..
+
+        Parameters
+        ----------
+        timeout : float
+            The maximum number of seconds to wait before raising a ShutterTimeoutError exception.
+
+        Raises
+        ------
+        ScanAbortError
+            If ``abort_scan()`` is called
+        ShutterTimeoutError
+            If the close shutter has not completed within timeout value.
+        """
+
+        start_time = time.time()
+        pv = self.epics_pvs['CloseShutter']
+        value = self.epics_pvs['CloseShutterStatusValue'].get(as_string = True)
+        log.info('close combined stopper shutter: %s, value: %s', pv, value)
+        elapsed_time = 0
+        while True:
+            if self.epics_pvs['ShutterStatus'].get() == int(value):
+                log.warning("Shutter is close in %f s", elapsed_time)
+                return
+            if not self.scan_is_running:
+                exit()
+            value = self.epics_pvs['CloseShutterStatusValue'].get()
+            time.sleep(1.0)
+            current_time = time.time()
+            elapsed_time = current_time - start_time
+            log.warning("Waiting on shutter to close: %f s", elapsed_time)
+            # self.epics_pvs['CloseShutter'].put(value, wait=True)
             if timeout > 0:
                 if elapsed_time >= timeout:
                    exit()

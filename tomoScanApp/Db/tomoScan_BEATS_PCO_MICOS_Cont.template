@@ -1,5 +1,5 @@
-# Database for EPICS PVS for tomography data collection software at APS 2-BM
-# It contains the PVs that are required by the tomoscan_13bm derived class,
+# Database for EPICS PVS for tomography data collection software at SESAME BEATS 
+# It contains the PVs that are required by the tomoscan_BEATS_PCO_MICOS_Cont derived class,
 # as well as additional PVs used for metadata about the scan that are stored
 # both in the configuration files written by tomoscan, and in the
 # files written by areaDetector file plugin.
@@ -205,37 +205,21 @@ record(bo, "$(P)$(R)CopyToAnalysisDir")
    field(ONAM, "Yes")
 }
 
-######################
-# Fast shutter control
-######################
-
-record(stringout, "$(P)$(R)CloseFastShutterPVName")
+#############################
+# Experiment shutter control
+############################
+record(stringout, "$(P)$(R)ExposureShutterPVName")
 {
-   field(VAL,  "$(CLOSE_FAST_SHUTTER)")
+   field(VAL,  "$(EXPOSURE_SHUTTER)")
 }
 
-record(stringout, "$(P)$(R)CloseFastShutterValue")
+record(mbbo, "$(P)$(R)UseExposureShutter")
 {
-   field(VAL,  "$(CLOSE_FAST_VALUE)")
-}
-
-record(stringout, "$(P)$(R)OpenFastShutterPVName")
-{
-   field(VAL,  "$(OPEN_FAST_SHUTTER)")
-}
-
-record(stringout, "$(P)$(R)OpenFastShutterValue")
-{
-   field(VAL,  "$(OPEN_FAST_VALUE)")
-}
-
-################
-# Shutter status
-################
-
-record(stringout, "$(P)$(R)ShutterStatusPVName")
-{
-   field(VAL,  "$(SHUTTER_STATUS)")
+   field(ZRVL, "0")
+   field(ZRST, "No")
+   field(ONVL, "1")
+   field(ONST, "Yes")
+   field(PINI, "No")
 }
 
 #################

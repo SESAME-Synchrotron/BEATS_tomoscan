@@ -1,7 +1,7 @@
 # This file is used by autosave to determine what PVs to save
 # It is also used by tomoScan to determine what PVs to create
 
-# This is the file for the tomoscan_2bm derived class.
+# This is the file for the tomoscan_BEATS_PCO_MICOS_Cont derived class.
 
 ####################
 # Energy information
@@ -62,18 +62,11 @@ $(P)$(R)ExperimentYearMonth
 $(P)$(R)RemoteAnalysisDir
 $(P)$(R)CopyToAnalysisDir
 
-######################
-# Fast shutter control
-######################
-$(P)$(R)CloseFastShutterPVName
-$(P)$(R)CloseFastShutterValue
-$(P)$(R)OpenFastShutterPVName
-$(P)$(R)OpenFastShutterValue
-
-################
-# Shutter status
-################
-$(P)$(R)ShutterStatusPVName
+##########################
+# Exposure shutter control
+##########################
+$(P)$(R)ExposureShutterPVName
+$(P)$(R)UseExposureShutter
 
 #################
 # Interlaced scan

@@ -21,7 +21,7 @@ record(stringout, "$(P)$(R)FilePluginPVPrefix")
 
 record(stringout, "$(P)$(R)CloseShutterPVName")
 {
-   field(VAL,  "$(CLOSE_SHUTTER)")
+   field(VAL,  "$(CLOSE_COMBINED_STOPPER_SHUTTER)")
 }
 
 record(stringout, "$(P)$(R)CloseShutterValue")
@@ -31,12 +31,31 @@ record(stringout, "$(P)$(R)CloseShutterValue")
 
 record(stringout, "$(P)$(R)OpenShutterPVName")
 {
-   field(VAL,  "$(OPEN_SHUTTER)")
+   field(VAL,  "$(OPEN_COMBINED_STOPPER_SHUTTER)")
 }
 
 record(stringout, "$(P)$(R)OpenShutterValue")
 {
    field(VAL,  "$(OPEN_VALUE)")
+}
+
+################
+# Shutter status
+################
+
+record(stringout, "$(P)$(R)ShutterStatusPVName")
+{
+   field(VAL,  "$(COMBINED_STOPPER_SHUTTER_STATUS)")
+}
+
+record(stringout, "$(P)$(R)CloseShutterStatusValue")
+{
+   field(VAL,  "$(CLOSE_VALUE_STATUS)")
+}
+
+record(stringout, "$(P)$(R)OpenShutterStatusValue")
+{
+   field(VAL,  "$(OPEN_VALUE_STATUS)")
 }
 
 #############################################
