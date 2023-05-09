@@ -165,6 +165,7 @@ class TomoScanCont(TomoScan):
         # Set motor speed.
         self.motor_speed = self.rotation_step / frame_time
         self.epics_pvs["RotationSpeed"].put(self.motor_speed, wait =True) 
+        self.epics_pvs['CalculatedRotSpeed'].put(self.motor_speed, wait =True)
         log.info("Rotation speed: {}".format(self.motor_speed))
     
     def go_start_position(self): 

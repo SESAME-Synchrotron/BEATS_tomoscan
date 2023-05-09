@@ -94,3 +94,8 @@ $(P)$(R)CollectMicroCTdata
 # Image PV Prefix
 #################
 $(P)$(R)ImagePVPrefix
+
+#################
+# Rotary
+#################
+$(P)$(R)CalculatedRotSpeed

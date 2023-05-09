@@ -299,3 +299,14 @@ record(stringout, "$(P)$(R)ImagePVPrefix")
    field(VAL,  "$(IMAGE)")
 }
 
+#################
+# Rotary
+#################
+record(ao, "$(P)$(R)CalculatedRotSpeed")
+{
+  field(DESC, "Calculated Rotation Speed")
+  field(SCAN, "Passive")
+  field(PINI, "NO")
+  field(EGU, "deg/sec")
+}
+
