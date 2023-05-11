@@ -1,14 +1,14 @@
 
 file {
-	name="/opt/epics/synApps/support/BEATS_tomoscan/tomoScanApp/op/adl/tomoScan_BEATS_PCO_MICOS_Step_dm.adl"
-	version=030111
+	name="/opt/epics/synApps/support/BEATS_tomoscan/tomoScanApp/op/adl/tomoScan_BEATS_FLIR_MICOS_Cont_dm.adl"
+	version=030117
 }
 display {
 	object {
-		x=109
-		y=159
-		width=620
-		height=185
+		x=705
+		y=104
+		width=624
+		height=147
 	}
 	clr=14
 	bclr=4
@@ -113,21 +113,8 @@ text {
 }
 text {
 	object {
-		x=78
-		y=51
-		width=140
-		height=20
-	}
-	"basic attribute" {
-		clr=14
-	}
-	textix="Detector top dir"
-	align="horiz. right"
-}
-text {
-	object {
 		x=88
-		y=76
+		y=47
 		width=130
 		height=20
 	}
@@ -140,7 +127,7 @@ text {
 text {
 	object {
 		x=58
-		y=101
+		y=72
 		width=160
 		height=20
 	}
@@ -153,7 +140,7 @@ text {
 text {
 	object {
 		x=88
-		y=126
+		y=97
 		width=130
 		height=20
 	}
@@ -166,23 +153,7 @@ text {
 "text entry" {
 	object {
 		x=223
-		y=51
-		width=380
-		height=20
-	}
-	control {
-		chan="$(P)$(R)DetectorTopDir"
-		clr=14
-		bclr=51
-	}
-	format="string"
-	limits {
-	}
-}
-"text entry" {
-	object {
-		x=223
-		y=76
+		y=47
 		width=380
 		height=20
 	}
@@ -198,7 +169,7 @@ text {
 "text entry" {
 	object {
 		x=223
-		y=101
+		y=72
 		width=380
 		height=20
 	}
@@ -214,7 +185,7 @@ text {
 "text entry" {
 	object {
 		x=223
-		y=126
+		y=97
 		width=380
 		height=20
 	}
@@ -230,7 +201,7 @@ text {
 text {
 	object {
 		x=88
-		y=151
+		y=122
 		width=130
 		height=20
 	}
@@ -243,7 +214,7 @@ text {
 menu {
 	object {
 		x=223
-		y=151
+		y=122
 		width=120
 		height=20
 	}

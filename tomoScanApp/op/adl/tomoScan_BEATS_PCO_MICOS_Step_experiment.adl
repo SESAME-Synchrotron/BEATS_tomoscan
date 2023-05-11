@@ -1,14 +1,14 @@
 
 file {
-	name="/opt/epics/synApps/support/BEATS_tomoscan/tomoScanApp/op/adl/tomoScan_BEATS_PCO_MICOS_Step_experiment.adl"
-	version=030111
+	name="/opt/epics/synApps/support/BEATS_tomoscan/tomoScanApp/op/adl/tomoScan_BEATS_FLIR_MICOS_Cont_experiment.adl"
+	version=030117
 }
 display {
 	object {
-		x=96
-		y=114
-		width=600
-		height=250
+		x=76
+		y=98
+		width=595
+		height=213
 	}
 	clr=14
 	bclr=4
@@ -116,131 +116,16 @@ composite {
 		x=31
 		y=49
 		width=545
-		height=195
+		height=150
 	}
 	"composite name"=""
 	children {
 		composite {
 			object {
-				x=31
-				y=49
-				width=150
-				height=195
-			}
-			"composite name"=""
-			children {
-				text {
-					object {
-						x=91
-						y=49
-						width=90
-						height=20
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix="User name"
-					align="horiz. right"
-				}
-				text {
-					object {
-						x=71
-						y=74
-						width=110
-						height=20
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix="Institution"
-					align="horiz. right"
-				}
-				text {
-					object {
-						x=71
-						y=99
-						width=110
-						height=20
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix="ANL badge #"
-					align="horiz. right"
-				}
-				text {
-					object {
-						x=71
-						y=124
-						width=110
-						height=20
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix="User e-mail"
-					align="horiz. right"
-				}
-				text {
-					object {
-						x=41
-						y=149
-						width=140
-						height=20
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix="APS proposal #"
-					align="horiz. right"
-				}
-				text {
-					object {
-						x=31
-						y=174
-						width=150
-						height=20
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix="APS prop. title"
-					align="horiz. right"
-				}
-				text {
-					object {
-						x=81
-						y=199
-						width=100
-						height=20
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix="APS ESAF #"
-					align="horiz. right"
-				}
-				text {
-					object {
-						x=81
-						y=224
-						width=100
-						height=20
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix="User info update"
-					align="horiz. right"
-				}
-			}
-		}
-		composite {
-			object {
 				x=186
 				y=49
 				width=390
-				height=195
+				height=149
 			}
 			"composite name"=""
 			children {
@@ -279,23 +164,7 @@ composite {
 				"text entry" {
 					object {
 						x=186
-						y=99
-						width=390
-						height=20
-					}
-					control {
-						chan="$(P)$(R)UserBadge"
-						clr=14
-						bclr=51
-					}
-					format="string"
-					limits {
-					}
-				}
-				"text entry" {
-					object {
-						x=186
-						y=124
+						y=100
 						width=390
 						height=20
 					}
@@ -311,7 +180,7 @@ composite {
 				"text entry" {
 					object {
 						x=186
-						y=149
+						y=127
 						width=390
 						height=20
 					}
@@ -327,7 +196,7 @@ composite {
 				"text entry" {
 					object {
 						x=186
-						y=174
+						y=152
 						width=390
 						height=20
 					}
@@ -343,23 +212,7 @@ composite {
 				"text entry" {
 					object {
 						x=186
-						y=199
-						width=390
-						height=20
-					}
-					control {
-						chan="$(P)$(R)ESAFNumber"
-						clr=14
-						bclr=51
-					}
-					format="string"
-					limits {
-					}
-				}
-				"text entry" {
-					object {
-						x=186
-						y=224
+						y=178
 						width=390
 						height=20
 					}
@@ -371,6 +224,95 @@ composite {
 					format="string"
 					limits {
 					}
+				}
+			}
+		}
+		composite {
+			object {
+				x=31
+				y=49
+				width=150
+				height=150
+			}
+			"composite name"=""
+			children {
+				text {
+					object {
+						x=91
+						y=49
+						width=90
+						height=20
+					}
+					"basic attribute" {
+						clr=14
+					}
+					textix="User name"
+					align="horiz. right"
+				}
+				text {
+					object {
+						x=71
+						y=74
+						width=110
+						height=20
+					}
+					"basic attribute" {
+						clr=14
+					}
+					textix="Institution"
+					align="horiz. right"
+				}
+				text {
+					object {
+						x=71
+						y=103
+						width=110
+						height=20
+					}
+					"basic attribute" {
+						clr=14
+					}
+					textix="User e-mail"
+					align="horiz. right"
+				}
+				text {
+					object {
+						x=41
+						y=128
+						width=140
+						height=20
+					}
+					"basic attribute" {
+						clr=14
+					}
+					textix=" Proposal #"
+					align="horiz. right"
+				}
+				text {
+					object {
+						x=31
+						y=153
+						width=150
+						height=20
+					}
+					"basic attribute" {
+						clr=14
+					}
+					textix="Title"
+					align="horiz. right"
+				}
+				text {
+					object {
+						x=81
+						y=179
+						width=100
+						height=20
+					}
+					"basic attribute" {
+						clr=14
+					}
+					textix="User info update"
+					align="horiz. right"
 				}
 			}
 		}
