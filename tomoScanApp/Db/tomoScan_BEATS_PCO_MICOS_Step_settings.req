@@ -46,17 +46,14 @@ $(P)$(R)SampleDescription3
 ##################
 $(P)$(R)UserName
 $(P)$(R)UserInstitution
-$(P)$(R)UserBadge
 $(P)$(R)UserEmail
 $(P)$(R)ProposalNumber
 $(P)$(R)ProposalTitle
-$(P)$(R)ESAFNumber
 $(P)$(R)UserInfoUpdate
 
 #################
 # Data management
 #################
-$(P)$(R)DetectorTopDir
 $(P)$(R)UserLastName
 $(P)$(R)ExperimentYearMonth
 $(P)$(R)RemoteAnalysisDir

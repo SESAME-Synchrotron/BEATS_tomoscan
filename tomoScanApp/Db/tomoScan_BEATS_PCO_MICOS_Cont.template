@@ -141,11 +141,6 @@ record(waveform, "$(P)$(R)UserInstitution")
     field(FTVL, "CHAR")
 }
 
-record(stringout, "$(P)$(R)UserBadge")
-{
-   field(VAL,  "Unknown")
-}
-
 record(stringout, "$(P)$(R)UserEmail")
 {
    field(VAL,  "Unknown")
@@ -164,11 +159,6 @@ record(waveform, "$(P)$(R)ProposalTitle")
     field(FTVL, "CHAR")
 }
 
-record(stringout, "$(P)$(R)ESAFNumber")
-{
-   field(VAL,  "Unknown")
-}
-
 record(stringout, "$(P)$(R)UserInfoUpdate")
 {
    field(VAL,  "Unknown")
@@ -178,12 +168,6 @@ record(stringout, "$(P)$(R)UserInfoUpdate")
 #############################
 # Data management information
 #############################
-
-record(stringout, "$(P)$(R)DetectorTopDir") 
-{
-   field(VAL,  "Unknown")
-}
-
 record(stringout, "$(P)$(R)UserLastName")
 {
    field(VAL,  "Unknown")
