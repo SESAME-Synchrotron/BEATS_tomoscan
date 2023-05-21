@@ -342,16 +342,16 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
             self.epics_pvs['ExposureShutter'].put(0, wait=True)
             log.info('close exposure shutter')
 
-        if self.return_rotation == 'Yes':
-            # Reset rotation position by mod 360 , the actual return 
-            # to start position is handled by super().end_scan()
-            log.info('wait until the stage is stopped')
-            time.sleep(self.epics_pvs['RotationAccelTime'].get()*1.2)                        
-            ang = self.epics_pvs['RotationRBV'].get()
-            current_angle = np.sign(ang)*(np.abs(ang)%360)
-            self.epics_pvs['RotationSet'].put('Set', wait=True)
-            self.epics_pvs['Rotation'].put(current_angle, wait=True)
-            self.epics_pvs['RotationSet'].put('Use', wait=True)
+        # if self.return_rotation == 'Yes':
+        #     # Reset rotation position by mod 360 , the actual return 
+        #     # to start position is handled by super().end_scan()
+        #     log.info('wait until the stage is stopped')
+        #     time.sleep(self.epics_pvs['RotationAccelTime'].get()*1.2)                        
+        #     ang = self.epics_pvs['RotationRBV'].get()
+        #     current_angle = np.sign(ang)*(np.abs(ang)%360)
+        #     self.epics_pvs['RotationSet'].put('Set', wait=True)
+        #     self.epics_pvs['Rotation'].put(current_angle, wait=True)
+        #     self.epics_pvs['RotationSet'].put('Use', wait=True)
 
         log.info('end scan')
         # Save the configuration
@@ -392,7 +392,6 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
         """Wait on a pv to be a value until max_timeout (default forever)
            delay for pv to change
         """
-
         time.sleep(.01)
         start_time = time.time()
         while True:

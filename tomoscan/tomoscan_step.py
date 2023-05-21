@@ -131,7 +131,11 @@ class TomoScanSTEP(TomoScan):
         self.epics_pvs['RotationSpeed'].put(self.max_rotation_speed)
 
         # Move the sample in.  Could be out if scan was aborted while taking flat fields
+        self.epics_pvs['ExposureShutter'].put(0, wait=True)
+        log.info('Close exposure shutter')
         self.move_sample_in()
+        self.epics_pvs['ExposureShutter'].put(1, wait=True)
+        log.info('Open exposure shutter')
 
         # Call the base class method
         super().end_scan()
@@ -186,38 +190,46 @@ class TomoScanSTEP(TomoScan):
                     # log.info('open exposure shutter')
                     # self.epics_pvs['ExposureShutter'].put(1, wait=True)
                     # time.sleep(0.01)
-                    self.epics_pvs['CamTriggerSoftware'].put(1)    
+                    # time.sleep(stabilization_time)   
+                    # print("1- XXXXXX      XXXXXX", stabilization_time)
+                    self.epics_pvs['CamTriggerSoftware'].put(1) 
+                    # time.sleep(stabilization_time)   
                     # time.sleep(self.epics_pvs['ExposureTime'].get())
                     # self.epics_pvs['ExposureShutter'].put(0, wait=True)
                     # log.info('close exposure shutter')
+                    # print ("********************* calling wait_pv *********************")
                     self.wait_pv(self.epics_pvs['CamNumImagesCounter'], k+1, 60)
+                    # print ("********************* wait_pv Done  *********************")
                     self.update_status(start_time)
         
         # wait until the last frame is saved (not needed)
         time.sleep(0.5)        
         self.update_status(start_time)                
 
-    def wait_pv(self, epics_pv, wait_val, timeout=-1):
-        """Wait on a pv to be a value until max_timeout (default forever)
-           delay for pv to change
-        """
+    # def wait_pv(self, epics_pv, wait_val, timeout=-1):
+    #     """Wait on a pv to be a value until max_timeout (default forever)
+    #        delay for pv to change
+    #     """
+    #     pritn ("====== just entered waiting ============")
 
-        time.sleep(.01)
-        start_time = time.time()
-        while True:
-            pv_val = epics_pv.get()
-            if isinstance(pv_val, float):
-                if abs(pv_val - wait_val) < EPSILON:
-                    return True
-            if pv_val != wait_val:
-                if timeout > -1:
-                    current_time = time.time()
-                    diff_time = current_time - start_time
-                    if diff_time >= timeout:
-                        log.error('  *** ERROR: DROPPED IMAGES ***')
-                        log.error('  *** wait_pv(%s, %d, %5.2f reached max timeout. Return False',
-                                      epics_pv.pvname, wait_val, timeout)
-                        return False
-                time.sleep(.01)
-            else:
-                return True
+    #     time.sleep(.01)
+    #     start_time = time.time()
+    #     while True:
+    #         pv_val = epics_pv.get()
+    #         print ("------------ PV waiting in wait_pv func  --- current val: {} -- it should be {}".format(pv_val, wait_val))
+    #         if isinstance(pv_val, float):
+    #             print ("++++++++++++ PV is not float instant")
+    #             if abs(pv_val - wait_val) < EPSILON:
+    #                 return True
+    #         if pv_val != wait_val:
+    #             if timeout > -1:
+    #                 current_time = time.time()
+    #                 diff_time = current_time - start_time
+    #                 if diff_time >= timeout:
+    #                     log.error('  *** ERROR: DROPPED IMAGES ***')
+    #                     log.error('  *** wait_pv(%s, %d, %5.2f reached max timeout. Return False',
+    #                                   epics_pv.pvname, wait_val, timeout)
+    #                     return False
+    #             time.sleep(.01)
+    #         else:
+    #             return True

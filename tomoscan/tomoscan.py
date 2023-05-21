@@ -680,7 +680,8 @@ class TomoScan():
         if self.return_rotation == 'Yes':
             self.epics_pvs['Rotation'].put(self.rotation_start)
         elif self.return_rotation == "Home":
-            self.epics_pvs['RotationHomF'].put(1)
+            self.epics_pvs['Rotation'].put(0)
+            # self.epics_pvs['RotationHomF'].put(1) -- limit switchs are disabled. This does not work in our case
         log.info('Scan complete')
         self.epics_pvs['ScanStatus'].put('Scan complete')
         self.epics_pvs['StartScan'].put(0)
@@ -799,7 +800,11 @@ class TomoScan():
         else:
             self.set_scan_exposure_time()
         self.open_shutter()
+        self.epics_pvs['ExposureShutter'].put(0, wait=True)
+        log.info('Close exposure shutter')
         self.move_sample_out()
+        self.epics_pvs['ExposureShutter'].put(1, wait=True)
+        log.info('Open exposure shutter')
         self.epics_pvs['HDF5Location'].put(self.epics_pvs['HDF5FlatLocation'].value)
         self.epics_pvs['FrameType'].put('FlatField')
 
@@ -825,7 +830,11 @@ class TomoScan():
         self.epics_pvs['ScanStatus'].put('Collecting projections')
         self.set_scan_exposure_time()
         self.open_shutter()
+        self.epics_pvs['ExposureShutter'].put(0, wait=True)
+        log.info('Close exposure shutter')
         self.move_sample_in()
+        self.epics_pvs['ExposureShutter'].put(1, wait=True)
+        log.info('Open exposure shutter')
         self.epics_pvs['HDF5Location'].put(self.epics_pvs['HDF5ProjectionLocation'].value)
         self.epics_pvs['FrameType'].put('Projection')
 

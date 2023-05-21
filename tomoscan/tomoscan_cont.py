@@ -103,8 +103,11 @@ class TomoScanCont(TomoScan):
         self.epics_pvs['RotationSpeed'].put(self.max_rotation_speed)
 
         # Move the sample in.  Could be out if scan was aborted while taking flat fields
+        self.epics_pvs['ExposureShutter'].put(0, wait=True)
+        log.info('Close exposure shutter')
         self.move_sample_in()
-       
+        self.epics_pvs['ExposureShutter'].put(1, wait=True)
+        log.info('Open exposure shutter')
         # Call the base class method
         super().end_scan()
 
