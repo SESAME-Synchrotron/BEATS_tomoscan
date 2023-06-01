@@ -7,7 +7,6 @@ Content
 
 .. toctree::
    :maxdepth: 1
-   Datacollection
    about
    install
    usage
