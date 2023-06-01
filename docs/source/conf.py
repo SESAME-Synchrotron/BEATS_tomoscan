@@ -71,7 +71,7 @@ master_doc = 'index'
 
 # General information about the project.
 Affiliation = u'Argonne National Laboratory'
-project = u'TomoScan'
+project = u'BEATS User Manual'
 copyright = u'2020, ' + Affiliation
 
 # The version info for the project you're documenting, acts as replacement for
@@ -292,7 +292,7 @@ texinfo_documents = [
   project+u' Documentation',
   Affiliation, 
   project, 
-  'TomoScan'),
+  'BEATS User Manual'),
 ]
 
 # Documents to append as an appendix to all manuals.
