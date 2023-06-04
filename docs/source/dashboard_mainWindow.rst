@@ -71,23 +71,9 @@ Following that, the user has the option to choose the scanning technique. Once t
    
 To change the detector type or scanning technique, the current process (TomoScan) must be stopped.
 
-.. note:: All operations will be opened in tmux sessions, to attach any session, write the following commands
-
+.. note:: All operations will be opened in tmux sessions, to attach any session, write the following commands:
    ::
       $ tmux ls
       $ tmux a -t "session name"
       $ Esc, Ctrl b ,d (to de-attach the session) 
 
-.. warning:: There is an interlocking between (Start, Stop, Restart) for all operations, it depends on the status of the IOCs if it is running or not.
-
-.. warning:: If one of the common IOCs is stopped, the other controlling sections will be disabled until all the common IOCs are running.
-
-.. warning:: If the combined stopper shutter has fault or PSS is interlocked, the DAQ Tomoscan is available only on *Testing Mode*.
-
-.. note:: In scanning techniques section, the python server (start button) is disabled until the tomoscan IOC is started. 
-
-.. warning:: There is an interlocking between the scanning techniques, that means the first scanning will be halted automatically if every other scanning is started while the first is still running.
-
-.. warning:: If the detector's IOC is stopped and you select any detector type, you cannot start the scan until the IOC is running.
-
-.. note:: If the GUI is unexpectedly closed and then reopened, selecting one of the detectors will show the current choice if one of the other sections is hidden or disabled.
