@@ -25,29 +25,29 @@ The BEATS Dashboard shown below is divided into three sections for controlling a
    
 
 Controlling Sections:
-* 1) Common IOCs: These are the mandatory EPICS BEATS IOCs for scanning.
+   * 1) Common IOCs: These are the mandatory EPICS BEATS IOCs for scanning.
       -Shutter IOC.
       -Motor IOC.
       -TomoScan Support IOC.
       -Writer Support IOC.
 
-* 2) Detector Type: The available detectors for the scanning.
+   * 2) Detector Type: The available detectors for the scanning.
       -Detector Status (indicate if the (hardware, Software) is connected or not (Power, Ethernet, IOC)).
       -Detector IOC.
       -Detector Driver.
 
-* 3) Scanning Methodology: The available scanning techniques for BEATS beamline.
+   * 3) Scanning Methodology: The available scanning techniques for BEATS beamline.
       -Step Scan:
          * TomoScan IOC.
          * Python Server.
          * writer Server.
-         * MEDM (TomoScan)
+         * MEDM (TomoScan MEDM)
 
       -Continuous Scan:
          * TomoScan IOC.
          * Python Server.
          * writer Server.
-         * MEDM (TomoScan)
+         * MEDM (TomoScan MEDM)
 
 
 Monitoring Sections:
@@ -81,9 +81,7 @@ To change the detector type or scanning technique, the current process (TomoScan
 
 .. warning:: If one of the common IOCs is stopped, the other controlling sections will be disabled until all the common IOCs are running.
 
-.. warning:: If the radiation or photon shutters are closed or PSS is interlocked, the other controlling sections will be disabled until all the common IOCs are running.
-
-.. warning:: If the radiation, photon or combined stopper shutters have faults, the other controlling sections will be disabled until all the common IOCs are running.
+.. warning:: If the combined stopper shutter has fault or PSS is interlocked, the DAQ Tomoscan is available only on *Testing Mode*.
 
 .. note:: In scanning techniques section, the python server (start button) is disabled until the tomoscan IOC is started. 
 
