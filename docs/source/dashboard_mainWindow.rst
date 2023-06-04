@@ -51,11 +51,11 @@ Controlling Sections:
 
 
 Monitoring Sections:
-* A) The detector type and the scanning technique are chosen.
-* B) The online logging (last log).
-* C) Shutters Status.
-* D) Current tomoscan mode.
-* E) The current detector chosen & current rotation stage.
+   * A) The detector type and the scanning technique are chosen.
+   * B) The online logging (last log).
+   * C) Shutters Status.
+   * D) Current tomoscan mode.
+   * E) The current detector chosen & current rotation stage.
 
 Selecting Process
 ------------------
@@ -71,7 +71,8 @@ Following that, the user has the option to choose the scanning technique. Once t
    
 To change the detector type or scanning technique, the current process (TomoScan) must be stopped.
 
-.. note:: All operations will be opened in tmux sessions, to attach any session, write the following commands:
+.. note:: All operations will be opened in tmux sessions, to attach any session, write the following commands
+
    ::
       $ tmux ls
       $ tmux a -t "session name"
