@@ -145,7 +145,7 @@ class TomoScanCont(TomoScan):
         self.set_exposure_time()
         # Camera response time calculation: 
         counter = 0
-        self.set_trigger_mode("Internal", self.num_angles)
+        self.set_trigger_mode("FreeRun", 1)
         camera_counter = self.epics_pvs["CamArrayCounter"].get()
         self.camera_response_time = time.time()
         self.epics_pvs["CamAcquire"].put("Acquire")
@@ -154,15 +154,25 @@ class TomoScanCont(TomoScan):
         timeNow = time.time()
         self.camera_response_time = timeNow - self.camera_response_time
         log.info("Camera response time: {}".format(self.camera_response_time))
-        self.epics_pvs["CamAcquire"].put("Done")        
         
+        try: 
+            self.camera_fps = self.control_pvs['ResultingFPS'].get(timeout=1)
+        except:
+            log.error("Unable to get Camera FPS")
+            self.abort_scan()
+        
+        log.info("Camera FPS: {}".format(self.camera_fps))
+
+        self.epics_pvs["CamAcquire"].put("Done")
+        self.set_trigger_mode("Internal", self.num_angles)
+
         self.set_motor_speed()
         self.go_start_position() 
 
-    def set_motor_speed(self): 
-        
+    def set_motor_speed(self):
         # Compute the time for each frame.
-        frame_time = self.exposure_time
+        ### =========== frame_time = self.exposure_time
+        frame_time = 1/self.camera_fps
         log.info("Frame time: {}".format(frame_time))
 
         # Set motor speed.
@@ -186,6 +196,7 @@ class TomoScanCont(TomoScan):
             taxi_dist = math.floor(accel_dist / self.rotation_step - 5) * self.rotation_step 
 
         if self.camera_response_time <= motorACCLTime:
+            log.error("Camera response time is less than motorACCLTime")
             self.abort_scan()
         else:
             self.start_position = self.rotation_start - taxi_dist 

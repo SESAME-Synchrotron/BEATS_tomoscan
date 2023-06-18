@@ -70,6 +70,7 @@ class TomoScan():
         self.file_name_rbv = None
         self.file_number = None
         self.file_template = None
+        self.camera_fps = None
 
         if not isinstance(pv_files, list):
             pv_files = [pv_files]
@@ -128,7 +129,7 @@ class TomoScan():
         self.control_pvs['CamNDAttributesFile']    = PV(camera_prefix + 'NDAttributesFile')
         self.control_pvs['CamNDAttributesMacros']  = PV(camera_prefix + 'NDAttributesMacros')
         self.control_pvs['CamArrayCounter']        = PV(camera_prefix + 'ArrayCounter_RBV')
-
+        self.control_pvs['ResultingFPS']           = PV(camera_prefix + 'GC_AcqResFrameRate_RBV')
         # If this is a Point Grey camera then assume we are running ADSpinnaker
         # and create some PVs specific to that driver
         manufacturer = self.control_pvs['CamManufacturer'].get(as_string=True)
@@ -389,7 +390,7 @@ class TomoScan():
             line = line.lstrip()
             # Skip lines starting with #
             if line.startswith('#'):
-                continue
+                continue 
             # Skip blank lines
             if line == '':
                 continue
@@ -437,6 +438,7 @@ class TomoScan():
             self.epics_pvs['SampleY'].put(position, wait=True, timeout=600)
 
         if 'SampleOutAngleEnable' in self.epics_pvs:
+            #cur_speed = self.epics_pvs['RotationSpeed'].get()
             if self.epics_pvs['SampleOutAngleEnable'].get() and self.rotation_save != None:
                 if self.max_rotation_speed != None:# max_rotation_speed is not initialized when the scan has not been started            
                     cur_speed = self.epics_pvs['RotationSpeed'].get()
@@ -466,7 +468,7 @@ class TomoScan():
                 self.rotation_save = self.epics_pvs['Rotation'].get()
                 self.epics_pvs['Rotation'].put(angle, wait=True)  
                 if self.max_rotation_speed != None:
-                    self.epics_pvs['RotationSpeed'].put(cur_speed)                        
+                    self.epics_pvs['RotationSpeed'].put(cur_speed)
 
         axis = self.epics_pvs['FlatFieldAxis'].get(as_string=True)        
         log.info('move_sample_out axis: %s', axis)
