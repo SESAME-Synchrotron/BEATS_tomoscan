@@ -2,7 +2,7 @@ file "$(TOP)/db/tomoScan.template"
 {
 pattern
 {P,              R,             CAMERA,    FILE_PLUGIN,    ROTATION, SAMPLE_X, SAMPLE_Y, CLOSE_COMBINED_STOPPER_SHUTTER, CLOSE_VALUE, OPEN_COMBINED_STOPPER_SHUTTER, OPEN_VALUE, COMBINED_STOPPER_SHUTTER_STATUS, CLOSE_VALUE_STATUS, OPEN_VALUE_STATUS}
-{tomoscanBEATS:, PcoMicosCont:, TEST-PCO:, TEST-PCO:HDF1:, I10-EH-MO-MICOS:m1, I10R2-MO-MC2:EH-TMO-STP-TRSX1,   IOC:m3,   I10OH-VA-COMB:setClose,         1,           I10OH-VA-COMB:setOpen,         1,          I10OH-VA-COMB:getStatus, 1,    3}
+{tomoscanBEATS:, PcoMicosCont:, TEST-PCO:, TEST-PCO:HDF1:, I10-EH-MO-MICOS:m1, I10R2-MO-MC2:EH-TMO-STP-TRSX1,   I10R2-MO-MC2:Height:VAL,   I10OH-VA-COMB:setClose,         1,           I10OH-VA-COMB:setOpen,         1,          I10OH-VA-COMB:getStatus, 1,    3}
 }
 
 file "$(TOP)/db/tomoScan_BEATS_PCO_MICOS_Cont.template"
