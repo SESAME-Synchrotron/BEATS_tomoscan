@@ -1,13 +1,13 @@
-BEATS Dashboard 
+BEATS Dashboard
 ===============================
 
-To access the BEATS Dashboard, type the following command: 
+To access the BEATS Dashboard, type the following command:
 ::
 
 	$ BEATS_DAQ_Control_Monitor
 
 
-the main GUI will appear: 
+the main GUI will appear:
 
 .. figure:: /img/dashboard.png
 	:align: center
@@ -19,10 +19,10 @@ The BEATS Dashboard shown below is divided into three sections for controlling a
 
 .. figure:: /img/dashboard_sections.png
 	:align: center
-	:alt: BEATS_DashboardSections 
+	:alt: BEATS_DashboardSections
 
 	*Figure 2: BEATS Dashboard sections*
-	
+
 
 Controlling Sections:
 	* 1) Common IOCs: These are the mandatory EPICS BEATS IOCs for scanning.
@@ -65,20 +65,20 @@ Following that, the user has the option to choose the scanning technique. Once t
 
 .. figure:: /img/dashboard_selectingProcess.png
 	:align: center
-	:alt: BEATS_SelectingProcess 
+	:alt: BEATS_SelectingProcess
 
 	*Figure 3: Selecting Process of Scanning Technique*
-	
+
 To change the detector type or scanning technique, the current process (TomoScan) must be stopped.
 
 .. note:: All operations will be opened in tmux sessions, to attach any session, write the following commands:
-   
+
    ::
-   
-      $ tmux ls
-      $ tmux a -t "session name"
-      $ Esc, Ctrl b, d (to detach the session)
-   
+
+	  $ tmux ls
+	  $ tmux a -t "session name"
+	  $ Esc, Ctrl b, d (to detach the session)
+
 .. warning:: Make sure the TCPServerSocket.py is running on the server.
 
 .. warning:: There is an interlocking between (Start, Stop, Restart) for all operations, depending on the status of the IOCs, whether they are running or not.
