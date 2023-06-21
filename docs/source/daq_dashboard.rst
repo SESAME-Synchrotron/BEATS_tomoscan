@@ -7,8 +7,8 @@ This documentation is targeting scientists and developers.
 
 The dashboard is GUI based which enables users to quickly choose the scanning parameters, and thus saving the time of explaining how to get BEATS experimental data.
 
-Content
--------
+Dashboard
+----------
 .. toctree::
    :maxdepth: 1
 

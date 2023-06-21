@@ -53,13 +53,13 @@ The list below contains the list of python packages needed for the scanning tool
 
 ::
 	
-    pymsgbox
-    pyepics
-    h5py
-    pvapy
-    paramiko
-    colorama
-    PyQt5
+	pymsgbox
+	pyepics
+	h5py
+	pvapy
+	paramiko
+	colorama
+	PyQt5
 
 
 
@@ -95,7 +95,7 @@ Clone the tomoScan DAQ system
 ------------------------------
 
 .. note:: Make sure that the python environment is activated before proceeding with this section 
-
+	
 The scanning tool (BEATS_tomoscan) is available on github. The most recent version can be found on this link: https://github.com/SESAME-Synchrotron/BEATS_tomoscan.git. To clone and run, launch your terminal then do the follwoing: 
 
 ::
@@ -103,19 +103,19 @@ The scanning tool (BEATS_tomoscan) is available on github. The most recent versi
 	$ cd /opt/epics/support 
 	$ git clone git@github.com:SESAME-Synchrotron/BEATS_tomoscan.git
 
-    check configure/RELEASE all the epics directories are correct:
+check configure/RELEASE all the epics directories are correct:
 ::
 
-    $ EPICS_BASE=/opt/epics/base
-    $ SUPPORT=/opt/epics/support
-    $ BUSY=$(SUPPORT)/busy
-    $ AUTOSAVE=$(SUPPORT)/autosave
-    $ ASYN=$(SUPPORT)/asyn
+	$ EPICS_BASE=/opt/epics/base
+	$ SUPPORT=/opt/epics/support
+	$ BUSY=$(SUPPORT)/busy
+	$ AUTOSAVE=$(SUPPORT)/autosave
+	$ ASYN=$(SUPPORT)/asyn
 
-    Run the following commands on BEATS_tomoscan
+Run the following commands on BEATS_tomoscan
 ::
-    $ make
-    $ python setup.py install
+	$ make
+	$ python setup.py install
 
 
 Postrequisites
@@ -123,12 +123,10 @@ Postrequisites
 
 The following should be installed on the computer after installing the BEATS_tomoscan: 
 
-    * BEATS H5 Writer refer to:
-    * PETRA/SED/BEATS/ sharing file system should be mounted on the local station.
-    * BEATS_Dashboard refering to: `<dashboard_install>`_
-    * clone the SEDSS package to this directory as:
-    ::
-        $ cd /${Home}/DAQ/SW/venv3.9/lib/python3.9/site-packages/tomoscan-0.1-py3.9.egg
-        $ git clone git@github.com:SESAME-Synchrotron/SEDSS.git
-
-    
+	* BEATS H5 Writer refer to:
+	* PETRA/SED/BEATS/ sharing file system should be mounted on the local station.
+	* BEATS_Dashboard refering to:  :doc:`dashboard_install`
+	* clone the SEDSS package to this directory as:
+	::
+		$ cd /${Home}/DAQ/SW/venv3.9/lib/python3.9/site-packages/tomoscan-0.1-py3.9.egg
+		$ git clone git@github.com:SESAME-Synchrotron/SEDSS.git

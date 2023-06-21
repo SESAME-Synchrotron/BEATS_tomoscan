@@ -10,8 +10,8 @@ The following should be installed on the computer before running the scanning to
 
 * Linux redhat based OS (This work has been done under CentOS 7.4, however, there should be no reason to not work on other distributions)
 * Python 3.9 
-* QT 4.1.0 based on 5.9.7. :ref:`<dashboard_install:Qt>`
-* Tomoscan refer to: `<BEATS_install>`_
+* QT 4.1.0 based on 5.9.7. :ref:`<dashboard_install#Qt>`
+* Tomoscan refer to: :doc:`BEATS_install`
 * tmux
 
 
