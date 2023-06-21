@@ -63,7 +63,7 @@ The list below contains the list of python packages needed for the scanning tool
 
 
 
-.. _Qt:
+.. _Qt-and-its-libraries:
 
 Qt and its libraries 
 .....................
@@ -96,7 +96,9 @@ Clone the tomoScan DAQ system
 
 .. note:: Make sure that the python environment is activated before proceeding with this section 
 	
+
 The scanning tool (BEATS_tomoscan) is available on github. The most recent version can be found on this link: https://github.com/SESAME-Synchrotron/BEATS_tomoscan.git. To clone and run, launch your terminal then do the follwoing: 
+
 
 ::
 
@@ -125,8 +127,9 @@ The following should be installed on the computer after installing the BEATS_tom
 
 	* BEATS H5 Writer refer to:
 	* PETRA/SED/BEATS/ sharing file system should be mounted on the local station.
-	* BEATS_Dashboard refering to:  :doc:`dashboard_install`
+	* BEATS_Dashboard refering to: :doc:`dashboard_install`
 	* clone the SEDSS package to this directory as:
+
 	::
 		$ cd /${Home}/DAQ/SW/venv3.9/lib/python3.9/site-packages/tomoscan-0.1-py3.9.egg
 		$ git clone git@github.com:SESAME-Synchrotron/SEDSS.git
