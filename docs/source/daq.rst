@@ -7,11 +7,12 @@ EPICS Support for Multidimensional Detectors
 This page is the home of data acquisition system of BEATS that include applications for collecting experimental data from BEATS.
 
 
-Contents
---------
+DAQ System
+------------
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
-   BEATS Dashboard <daq_dashboard>
    TomoScan <daq_tomoscan>
+   BEATS Dashboard <daq_dashboard>
+   

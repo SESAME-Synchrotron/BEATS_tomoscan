@@ -77,6 +77,8 @@ To change the detector type or scanning technique, the current process (TomoScan
       $ tmux a -t "session name"
       $ Esc, Ctrl b ,d (to de-attach the session) 
 
+.. warning:: Make sure the TCPServerSocket.py is running on the server.
+   
 .. warning:: There is an interlocking between (Start, Stop, Restart) for all operations, it depends on the status of the IOCs if it is running or not.
 
 .. warning:: If one of the common IOCs is stopped, the other controlling sections will be disabled until all the common IOCs are running.

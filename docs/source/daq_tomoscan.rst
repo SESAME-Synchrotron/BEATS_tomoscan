@@ -2,11 +2,11 @@
 TomoScan
 ========
 
-Content
--------
+Tomoscan installation reference
+--------------------------------
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 7
 
    about
    install
@@ -15,3 +15,12 @@ Content
    demo
    api
    credits
+
+BEATS Tomoscan
+---------------
+
+.. toctree::
+   :maxdepth: 1
+
+   BEATS_install
+   runScan
