@@ -81,13 +81,14 @@ To change the detector type or scanning technique, the current process (TomoScan
 		$ tmux a -t "session name"
 		$ Esc, Ctrl b, d (to detach the session)
 
-.. warning:: 
 
+------------------------------------------------------------------------------------
+
+.. warning:: 
 	
 	Make sure the TCPServerSocket.py is running on the server.
 
 ------------------------------------------------------------------------------------
-
 
 .. warning:: 
 	
@@ -95,13 +96,11 @@ To change the detector type or scanning technique, the current process (TomoScan
 
 ------------------------------------------------------------------------------------
 
-
 .. warning:: 
 	
 	If one of the common IOCs is stopped, the other controlling sections will be disabled until all the common IOCs are running.
 
 ------------------------------------------------------------------------------------
-
 
 .. warning:: 
 	
@@ -109,13 +108,11 @@ To change the detector type or scanning technique, the current process (TomoScan
 
 ------------------------------------------------------------------------------------
 
-
 .. note:: 
 	
 	In the scanning techniques section, the python server (start button) is disabled until the tomoscan IOC is started.
 
 ------------------------------------------------------------------------------------
-
 
 .. warning:: 
 	
@@ -123,13 +120,11 @@ To change the detector type or scanning technique, the current process (TomoScan
 
 ------------------------------------------------------------------------------------
 
-
 .. warning:: 
 	
 	If the detector's IOC is stopped and you select any detector type, you cannot start the scan until the IOC is running.
 
 ------------------------------------------------------------------------------------
-
 
 .. note:: 
 	
