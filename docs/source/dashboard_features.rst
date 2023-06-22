@@ -2,7 +2,7 @@ Current features and future plans
 =================================
 
 Current featues
----------------
+----------------
 At the moment, the BEATS dashboard has the following features: 
 
 * User friendly GUI

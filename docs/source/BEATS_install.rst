@@ -41,6 +41,7 @@ resource your bashrc:
 
 	source ~/.bashrc
 
+
 Packages and libraries
 -----------------------
 
@@ -63,12 +64,12 @@ The list below contains the list of python packages needed for the scanning tool
 
 
 
-.. _Qt-and-its-libraries:
-
-Qt and its libraries 
+Qt and its libraries
 .....................
 
-	
+.. _Qt-and-its-libraries:
+
+
 	1. Install epics from SESAME's local repo.
 	2. Download Qt creator: https://drive.sesame.org.jo/owncloud/index.php/s/LO3GLyDkPMWZKU9.
 	3. Install qt-creator-opensource-linux-x86_64-4.13.3.run. 
@@ -94,7 +95,8 @@ Qt and its libraries
 Clone the tomoScan DAQ system
 ------------------------------
 
-.. note:: Make sure that the python environment is activated before proceeding with this section 
+.. note:: 
+	Make sure that the python environment is activated before proceeding with this section
 	
 
 The scanning tool (BEATS_tomoscan) is available on github. The most recent version can be found on this link: https://github.com/SESAME-Synchrotron/BEATS_tomoscan.git. To clone and run, launch your terminal then do the follwoing: 
@@ -131,5 +133,6 @@ The following should be installed on the computer after installing the BEATS_tom
 	* clone the SEDSS package to this directory as:
 
 	::
+
 		$ cd /${Home}/DAQ/SW/venv3.9/lib/python3.9/site-packages/tomoscan-0.1-py3.9.egg
 		$ git clone git@github.com:SESAME-Synchrotron/SEDSS.git
