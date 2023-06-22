@@ -63,7 +63,7 @@ The list below contains the list of python packages needed for the scanning tool
 	PyQt5
 
 
-.. _Qt:
+.. _qt:
 
 Qt and its libraries
 .....................
@@ -96,10 +96,12 @@ Clone the tomoScan DAQ system
 
 .. note:: Make sure that the python environment is activated before proceeding with this section.
 
+------------------------------------------------------------------------------------
 
 The scanning tool (BEATS_tomoscan) is available on github. The most recent version can be found on this link: https://github.com/SESAME-Synchrotron/BEATS_tomoscan.git. To clone and run, launch your terminal then do the follwoing:
 
 	::
+
 		$ cd /opt/epics/support
 		$ git clone git@github.com:SESAME-Synchrotron/BEATS_tomoscan.git
 

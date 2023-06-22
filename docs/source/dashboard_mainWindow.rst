@@ -82,18 +82,32 @@ To change the detector type or scanning technique, the current process (TomoScan
 		$ Esc, Ctrl b, d (to detach the session)
 
 .. warning:: Make sure the TCPServerSocket.py is running on the server.
-	
+
+------------------------------------------------------------------------------------
+
 .. warning:: There is an interlocking between (Start, Stop, Restart) for all operations, depending on the status of the IOCs, whether they are running or not.
-	
+
+------------------------------------------------------------------------------------
+
 .. warning:: If one of the common IOCs is stopped, the other controlling sections will be disabled until all the common IOCs are running.
-	
+
+------------------------------------------------------------------------------------
+
 .. warning:: If the combined stopper shutter has a fault or the PSS is interlocked, the DAQ Tomoscan will be available only in *Testing Mode*.
-	
+
+------------------------------------------------------------------------------------
+
 .. note:: In the scanning techniques section, the python server (start button) is disabled until the tomoscan IOC is started.
-	
+
+------------------------------------------------------------------------------------
+
 .. warning:: There is an interlocking between the scanning techniques. This means that if any other scanning is started while the first one is still running, the first scanning will be automatically halted.
-	
+
+------------------------------------------------------------------------------------
+
 .. warning:: If the detector's IOC is stopped and you select any detector type, you cannot start the scan until the IOC is running.
-	
+
+------------------------------------------------------------------------------------
+
 .. note:: If the GUI is unexpectedly closed and then reopened, selecting one of the detectors will show the current choice if one of the other sections is hidden or disabled.
-	
+
