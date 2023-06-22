@@ -10,7 +10,7 @@ The following should be installed on the computer before running the scanning to
 
 * Linux redhat based OS (This work has been done under CentOS 7.4, however, there should be no reason to not work on other distributions)
 * Python 3.9
-* QT 4.1.0 based on 5.9.7. :ref:`Qt <BEATS_install#Qt-and-its-libraries>`
+* QT 4.1.0 based on 5.9.7. :ref:`Qt <BEATS_install#Qt>`
 * Tomoscan refer to: :doc:`BEATS_install`
 * tmux
 
@@ -31,16 +31,11 @@ The BEATS dashboard is available on github. The most recent version can be found
 	$ make
 	$ BEATS_DAQ_Control_Monitor
 
-.. warning:: 
-	If all is fine, you should see the GUI pops up; otherwise, an error occurred during the installation.
-
-.. note:: 
-	Create the hosts names in ``/etc/hosts`` according to ``Scripts/BEATS_GUI_Bash_Start``.
-
-.. note:: 
-	You have to check and edit the directories and hosts in the ``Scripts/`` folder according to your environment.
-
-.. note:: 
-	You have to check the ``EPICS_CA_MAX_ARRAY_BYTES`` and ``EPICS_CA_ADDR_LIST`` in ``.bashrc`` before starting the sacanning process.
-
-
+.. warning:: If all is fine, you should see the GUI pops up; otherwise, an error occurred during the installation.
+	
+.. note:: Create the hosts names in ``/etc/hosts`` according to ``Scripts/BEATS_GUI_Bash_Start``.
+	
+.. note:: You have to check and edit the directories and hosts in the ``Scripts/`` folder according to your environment.
+	
+.. note:: You have to check the ``EPICS_CA_MAX_ARRAY_BYTES`` and ``EPICS_CA_ADDR_LIST`` in ``.bashrc`` before starting the sacanning process.
+	
