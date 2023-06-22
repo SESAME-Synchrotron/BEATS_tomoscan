@@ -22,5 +22,5 @@ BEATS Tomoscan
 .. toctree::
    :maxdepth: 1
 
-   BEATS_install
+   beats_install
    runScan
