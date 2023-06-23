@@ -1,13 +1,6 @@
 BEATS Dashboard
 ================
 
-.. note:: This is a note admonition.
-   This is the second line of the first paragraph.
-
-   - The note contains all indented body elements
-     following.
-   - It includes this bullet list.
-
 To access the BEATS Dashboard, type the following command:
 ::
 
@@ -137,10 +130,4 @@ To change the detector type or scanning technique, the current process (TomoScan
 	
 	If the GUI is unexpectedly closed and then reopened, selecting one of the detectors will show the current choice if one of the other sections is hidden or disabled.
 
-.. note:: This is a note admonition.
-   This is the second line of the first paragraph.
-
-   - The note contains all indented body elements
-     following.
-   - It includes this bullet list.
 
