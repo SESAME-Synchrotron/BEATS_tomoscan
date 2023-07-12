@@ -1,10 +1,10 @@
-Data Acquisition
+Data Acquisition (DAQ)
 =================
 
 EPICS Support for Multidimensional Detectors
 ---------------------------------------------
 
-This page is the home of data acquisition system of BEATS that include applications for collecting experimental data from BEATS.
+This page is the home of the data acquisition (DAQ) system of BEATS. It describes applications for collecting experimental data at the ID10-BEATS beamline of SESAME.
 
 
 DAQ System
