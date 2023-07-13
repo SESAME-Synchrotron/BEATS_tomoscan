@@ -10,6 +10,8 @@ The usable beam size at the sample position is 70 x 15 mm :sup:`2`, with estimat
 
 The beamline endstation is composed of a sample air-bearing tomography manipulator, and of indirect X-ray detectors coupled to sCMOS cameras. Object pixel sizes in the range from 13.0 μm down to 0.65 μm are achieved.
 
+Further information about the BEATS beamline can be found on `Wayforlight.eu <https://www.wayforlight.eu/beamline/26858>`_
+
 The BEATS project
 -----------------
 
