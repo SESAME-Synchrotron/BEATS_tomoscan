@@ -8,7 +8,7 @@ Welcome to ID-10 BEATS. Follow the steps below to setup and perform your first s
 
    1. Setup the beamline <setup>
    2. Mount your sample <sample_mount>
-   3. Search the hutch <search>
+   3. Search the hutch <safety>
    4. Open the shutters <shutters>
    5. Align sample and detector <align>
    6. Collect data <collect_data>
