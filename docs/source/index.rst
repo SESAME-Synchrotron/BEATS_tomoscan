@@ -16,7 +16,7 @@ Content
    Data acquisition <daq>
    Data reconstrunction
    Beamline control <control>
-   Personnel Safety System (PSS) <pss>
+   Safety <safety>
    BEATS computing infrastructure <computing>
 
 
