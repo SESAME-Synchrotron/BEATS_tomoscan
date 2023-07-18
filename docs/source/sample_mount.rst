@@ -10,6 +10,7 @@ Setup your experiment
 1. Mount your sample on top of endstation #1
 2. Turn on the alignment lasers
 3. Use the laptop close to the endstation to:
+
 	1. Pre-align sample on the intersection of the laser planes (you can verify this also moving the ROT stage)
 	2. Pre-align the detector scintillator on the same line
 	3. Set the distance between sample and detector to the desired value
