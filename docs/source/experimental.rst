@@ -4,6 +4,10 @@ Scan setup
 Launch the GUIs and start streaming data
 ----------------------------------------
 
+1. Open the dashboard GUI <dashboard_mainWindow>
+2. 
+
+
 Endstation and detector alignment with the X-ray
 ------------------------------------------------
 
