@@ -14,9 +14,9 @@ Content
    Quickstart <quickstart>
    Apply for beamtime <beamtime>
    Data acquisition <daq>
-   Data reconstrunction
-   Beamline control <control>
+   Data reconstruction
    Safety <safety>
    BEATS computing infrastructure <computing>
+..   Beamline control <control>
 
 

@@ -1,3 +1,6 @@
+.. _dashboard:
+
+
 BEATS Dashboard
 ================
 

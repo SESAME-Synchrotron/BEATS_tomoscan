@@ -70,7 +70,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-Affiliation = u'Argonne National Laboratory'
+Affiliation = u'SESAME'
 project = u'BEATS User Manual'
 copyright = u'2023, ' + Affiliation
 
