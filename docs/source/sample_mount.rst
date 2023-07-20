@@ -1,6 +1,9 @@
 Setup your experiment
 =====================
 
+.. warning::
+	**Collision danger**: Only perform this operation together with the beamline staff. You must always pay attention to the position of endstation, detectors and sample, while performing the alignment. Always move small steps when you are close to the detector!! 
+
 .. figure:: /img/exp_station.png
 	:align: center
 	:alt: BEATS experimental station
@@ -14,6 +17,3 @@ Setup your experiment
 	1. Pre-align sample on the intersection of the laser planes (you can verify this also moving the ROT stage)
 	2. Pre-align the detector scintillator on the same line
 	3. Set the distance between sample and detector to the desired value
-
-.. warning::
-	**Collision danger**: Only perform this operation together with the beamline staff. You must always pay attention to the position of endstation, detectors and sample, while performing the alignment. Always move small steps when you are close to the detector!! 
