@@ -23,6 +23,8 @@ Personnel Safety System (PSS)
 
 Personnel safety system (PSS) operates as an access control system for the shielded enclosed areas to prevent access to dangerous levels of radiation.
 
+.. _hutch search:
+
 Hutch Search Procedure
 ----------------------
 
