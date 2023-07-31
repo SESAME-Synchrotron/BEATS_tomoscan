@@ -1,8 +1,7 @@
-.. _hutch search:
-
 Hutch Search Procedure
-----------------------
+======================
 
+The **Personnel safety system (PSS)** operates as an access control system for the shielded enclosed areas to prevent access to dangerous levels of radiation.
 One of the main PSS procedures is the search of the hutches, with the purpose to make sure that all staff left before the x-ray beam is brought into the hutch. Only when the search is completed (all search buttons have been pressed, confirming that no person has been found in the respective area) and the searcher left the hutch, the beamline shutters can be opened.
 
 .. figure:: /img/PSS_search.jpg

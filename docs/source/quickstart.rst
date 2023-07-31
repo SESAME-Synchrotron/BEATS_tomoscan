@@ -8,7 +8,7 @@ Welcome to ID-10 BEATS. Follow the steps below to setup and perform your first s
 
    1. Setup the beamline <setup>
    2. Setup the endstation <sample_mount>
-   3. Search the hutch `Hutch Search Procedure`_
+   3. Search the hutch <safety/hutch_search>
    4. Open the shutters <vacuum>
    5. Setup the scan <experimental>
    6. Collect data <collect_data>
