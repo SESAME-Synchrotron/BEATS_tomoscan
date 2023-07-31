@@ -1,7 +1,7 @@
 Quick start guide
 =================
 
-Welcome to ID-10 BEATS. Follow the steps below to setup and perform your first scan. Test of :ref:`Search the hutch <hutch search>`.
+Welcome to ID-10 BEATS. Follow the steps below to setup and perform your first scan.
 
 .. toctree::
    :maxdepth: 2
