@@ -12,7 +12,7 @@ Content
    
    About <home_about>
    Quickstart <quickstart>
-   Apply for beamtime <beamtime>
+   General information <general>
    Data acquisition <daq>
    Data reconstruction
    Safety <safety>
