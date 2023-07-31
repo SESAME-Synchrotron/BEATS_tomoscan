@@ -58,6 +58,11 @@ record(stringout, "$(P)$(R)OpenShutterStatusValue")
    field(VAL,  "$(OPEN_VALUE_STATUS)")
 }
 
+record(stringout, "$(P)$(R)RotInternalMaxSpeed")
+{
+   field(VAL,  "$(ROT_INTERNAL_MAX_SPEED)")
+}
+
 #############################################
 # Rotation, sample X and Y translation motors
 #############################################
