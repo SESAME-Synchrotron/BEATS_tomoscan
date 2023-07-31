@@ -58,7 +58,7 @@ record(stringout, "$(P)$(R)OpenShutterStatusValue")
    field(VAL,  "$(OPEN_VALUE_STATUS)")
 }
 
-record(stringout, "$(P)$(R)RotInternalMaxSpeed")
+record(stringout, "$(P)$(R)RotInternalMaxSpeedPVName")
 {
    field(VAL,  "$(ROT_INTERNAL_MAX_SPEED)")
 }

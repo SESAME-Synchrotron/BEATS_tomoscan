@@ -23,7 +23,7 @@ $(P)$(R)OpenShutterValue
 $(P)$(R)ShutterStatusPVName
 $(P)$(R)CloseShutterStatusValue
 $(P)$(R)OpenShutterStatusValue
-
+$(P)$(R)RotInternalMaxSpeedPVName
 #############################################
 # Rotation, sample X and Y translation motors
 #############################################
