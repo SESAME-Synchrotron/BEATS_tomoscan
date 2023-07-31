@@ -195,8 +195,8 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
         self.SEDBasePath = self.pvlist['paths']['SEDBasePath'] # this path should be in compliance with the path in SEDW
         self.SEDPath, self.SEDFileName, self.SEDTimeStamp = fileName.SED_fileName(self.SEDBasePath, self.epics_pvs["FileName"].get(as_string=True), "BEATS") 
 
-        self.control_pvs['RotationHLM'].put(99999, wait = True)
-        self.control_pvs['RotationLLM'].put(-99999, wait = True)            
+        self.control_pvs['RotationHLM'].put(9999999, wait = True)
+        self.control_pvs['RotationLLM'].put(-9999999, wait = True)            
 
         log.info('begin scan')
         self.initSEDPathFile()

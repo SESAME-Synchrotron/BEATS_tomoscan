@@ -442,7 +442,7 @@ class TomoScan():
             if self.epics_pvs['SampleOutAngleEnable'].get() and self.rotation_save != None:
                 if self.max_rotation_speed != None:# max_rotation_speed is not initialized when the scan has not been started            
                     cur_speed = self.epics_pvs['RotationSpeed'].get()
-                    self.epics_pvs['RotationSpeed'].put(self.max_rotation_speed)                                                    
+                    self.epics_pvs['RotationSpeed'].put(self.epics_pvs['RotInternalMaxSpeed'].get())                                                    
                 self.epics_pvs['Rotation'].put(self.rotation_save, wait=True)          
                 if self.max_rotation_speed != None:
                     self.epics_pvs['RotationSpeed'].put(cur_speed)
@@ -462,7 +462,7 @@ class TomoScan():
             if self.epics_pvs['SampleOutAngleEnable'].get():
                 if self.max_rotation_speed != None:# max_rotation_speed is not initialized when the scan has not been started
                     cur_speed = self.epics_pvs['RotationSpeed'].get()
-                    self.epics_pvs['RotationSpeed'].put(self.max_rotation_speed)
+                    self.epics_pvs['RotationSpeed'].put(self.epics_pvs['RotInternalMaxSpeed'].get())
                 angle = self.epics_pvs['SampleOutAngle'].get()
                 log.info('move_sample_out angle: %s', angle)
                 self.rotation_save = self.epics_pvs['Rotation'].get()
@@ -722,7 +722,7 @@ class TomoScan():
             self.begin_scan()
             self.epics_pvs['ScanStatus'].put('Moving rotation axis to start')
             # Move the rotation to the start
-            self.epics_pvs['Rotation'].put(self.rotation_start, wait=True, timeout=600)
+            # self.epics_pvs['Rotation'].put(self.rotation_start, wait=True, timeout=600)
             # Collect the pre-scan dark fields if required
             if (self.num_dark_fields > 0) and (self.dark_field_mode in ('Start', 'Both')):
                 self.collect_dark_fields()
