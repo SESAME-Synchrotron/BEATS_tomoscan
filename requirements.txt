@@ -3,3 +3,4 @@ pyepics
 h5py
 pvapy
 paramiko
+myst-nb
