@@ -100,7 +100,7 @@ class TomoScanCont(TomoScan):
         self.set_trigger_mode('FreeRun', 1)
 
         # Set the rotation speed to maximum
-        self.epics_pvs['RotationSpeed'].put(self.max_rotation_speed)
+        self.epics_pvs['RotationSpeed'].put(self.epics_pvs['RotInternalMaxSpeed'].get())
 
         # Move the sample in.  Could be out if scan was aborted while taking flat fields
         self.epics_pvs['ExposureShutter'].put(0, wait=True)
@@ -203,7 +203,7 @@ class TomoScanCont(TomoScan):
             self.rotation_stop = (self.rotation_start + (self.num_angles - 1) * self.rotation_step)
             self.end_position = self.rotation_stop + taxi_dist * (self.camera_response_time / self.exposure_time) 
             log.info("Start position: {}, Stop position: {}".format(self.start_position, self.end_position))
-            self.epics_pvs['RotationSpeed'].put(self.max_rotation_speed)
+            self.epics_pvs['RotationSpeed'].put(self.epics_pvs['RotInternalMaxSpeed'].get())
             self.epics_pvs["Rotation"].put(self.start_position, wait =True)
             self.epics_pvs['RotationSpeed'].put(self.motor_speed, wait =True)
 

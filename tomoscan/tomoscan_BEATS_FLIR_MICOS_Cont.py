@@ -215,8 +215,8 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
             self.epics_pvs['NumFlatFields'].put(2)
             log.info("replace number of flat fields to 2 instead of 1")
             
-        self.control_pvs['RotationHLM'].put(99999, wait = True)
-        self.control_pvs['RotationLLM'].put(-99999, wait = True)
+        self.control_pvs['RotationHLM'].put(9999999, wait = True)
+        self.control_pvs['RotationLLM'].put(-9999999, wait = True)
 
         log.info('begin scan')
         self.initSEDPathFile()
