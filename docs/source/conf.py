@@ -30,6 +30,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'myst_nb',
     'sphinx.ext.autodoc',
     'sphinx.ext.mathjax',
     'sphinx.ext.todo',
@@ -69,7 +70,7 @@ source_suffix = '.rst'
 # The master toctree document.
 master_doc = 'index'
 
-# General information about the project.
+# -- Project information -----------------------------------------------------
 Affiliation = u'SESAME'
 project = u'BEATS User Manual'
 copyright = u'2023, ' + Affiliation
@@ -121,6 +122,12 @@ pygments_style = 'sphinx'
 # If true, keep warnings as "system message" paragraphs in the built documents.
 #keep_warnings = False
 
+# -- Options for {MyST}NB ----------------------------------------------------
+# Mapping of kernel name: replace with standard python3 kernel
+nb_kernel_rgx_aliases = {"tomopy-source": "python3"}
+
+# To turn off notebook execution
+jupyter_execute_notebooks = "off"
 
 # -- Options for HTML output ----------------------------------------------
 
