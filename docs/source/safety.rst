@@ -6,6 +6,6 @@ This section contains basic safety information required to run your experiments 
 .. toctree::
    :maxdepth: 2
 
-   1. Radiation protection <safety/radiation_protection>
-   2. Hutch search procedure <safety/hutch_search>
+   Radiation protection <safety/radiation_protection>
+   Hutch search procedure <safety/hutch_search>
 
