@@ -12,11 +12,11 @@ The expected dose received by staff members and users must be less than the dose
 .. warning::
     It is strictly prohibited to move, open, make holes, or modify in any way the beamline radiation shielding (i.e. lead, tungsten, polyethylene panels).
 
-.. figure:: /img/chicane.png
+.. figure:: /img/chicanes.jpg
     :align: center
     :alt: radiation shielding chicane
 
-    *(Left) Radiation shielding panel. Modifying in any way the radiation shield is strictly forbidden. (Right) Radiation shielding chicane for user experiments. The chicane can only be opened under the supervision of the beamline personnel.*
+    *Radiation shielding chicanes and radiation monitor at BEATS. Modifying, moving or changing in any way the radiation shield as well as any other safety equipment is strictly forbidden.*
 
 Personnel Safety System (PSS)
 -----------------------------
@@ -25,7 +25,7 @@ Personnel safety system (PSS) operates as an access control system for the shiel
 
 
 Hutch Search Procedure
-----------------------
+======================
 
 One of the main PSS procedures is the search of the hutches, with the purpose to make sure that all staff left before the x-ray beam is brought into the hutch. Only when the search is completed (all search buttons have been pressed, confirming that no person has been found in the respective area) and the searcher left the hutch, the beamline shutters can be opened.
 
