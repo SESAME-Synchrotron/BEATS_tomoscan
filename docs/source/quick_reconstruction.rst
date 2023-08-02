@@ -10,5 +10,5 @@ The notebook uses `TomoPy <https://tomopy.readthedocs.io/en/stable/>`_, and is a
 
    ipynb/BEATS_recon
 
-For further examples and a comprehensive description see `CT reconstruction at BEATS <reconstruction>`_.
+For further examples and a comprehensive description see :doc:`reconstruction`.
 
