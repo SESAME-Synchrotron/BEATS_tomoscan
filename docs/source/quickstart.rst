@@ -12,5 +12,5 @@ Welcome to ID-10 BEATS. Follow the steps below to setup and perform your first s
    4. Open the shutters <vacuum>
    5. Setup the scan <experimental>
    6. Collect data <collect_data>
-   7. Perform 3D reconstruction <reconstruction>
+   7. Reconstruct your data <quick_reconstruction>
    

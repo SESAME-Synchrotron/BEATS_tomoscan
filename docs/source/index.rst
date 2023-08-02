@@ -14,7 +14,7 @@ Content
    Quickstart <quickstart>
    General information <general>
    Data acquisition <daq>
-   Data reconstruction
+   Tomographic reconstruction <reconstruction>
    Safety <safety>
    BEATS computing infrastructure <computing>
 ..   Beamline control <control>
