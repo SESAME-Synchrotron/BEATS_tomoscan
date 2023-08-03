@@ -1,5 +1,4 @@
-========
-TomoScan
+TomoScan  
 ========
 
 Tomoscan installation reference
