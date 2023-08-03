@@ -5,16 +5,7 @@ TomoScan
 Tomoscan installation reference
 --------------------------------
 
-.. toctree::
-   :maxdepth: 7
-
-   about
-   install
-   usage
-   tomoScanApp
-   demo
-   api
-   credits
+`Tomoscan reference <https://tomoscan.readthedocs.io>`_
 
 BEATS Tomoscan
 ---------------
