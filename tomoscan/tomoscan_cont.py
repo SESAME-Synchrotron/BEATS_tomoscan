@@ -143,6 +143,11 @@ class TomoScanCont(TomoScan):
         This method calculates some parameters needed for the continuous scans.
         """
         self.set_exposure_time()
+        # try: 
+        #     self.camera_fps = self.control_pvs['ResultingFPS'].get(timeout=1)
+        # except:
+        #     log.error("Unable to get Camera FPS")
+        #     self.abort_scan()
         # Camera response time calculation: 
         counter = 0
         self.set_trigger_mode("FreeRun", 1)
@@ -183,7 +188,7 @@ class TomoScanCont(TomoScan):
     
     def go_start_position(self): 
         # Put the motor at appropriate start position to accelarate and be in a steady speed.
-
+        frame_time = 1/self.camera_fps
         motorACCLTime = self.control_pvs['RotationAccelTime'].get()
         # Get the distance needed for acceleration = 1/2 a t^2 = 1/2 * v * t.
         accel_dist = motorACCLTime / 2.0 * float(self.motor_speed) 
@@ -201,7 +206,7 @@ class TomoScanCont(TomoScan):
         else:
             self.start_position = self.rotation_start - taxi_dist 
             self.rotation_stop = (self.rotation_start + (self.num_angles - 1) * self.rotation_step)
-            self.end_position = self.rotation_stop + taxi_dist * (self.camera_response_time / self.exposure_time) 
+            self.end_position = self.rotation_stop + taxi_dist * (self.camera_response_time / frame_time) 
             log.info("Start position: {}, Stop position: {}".format(self.start_position, self.end_position))
             self.epics_pvs['RotationSpeed'].put(self.epics_pvs['RotInternalMaxSpeed'].get())
             self.epics_pvs["Rotation"].put(self.start_position, wait =True)
@@ -221,3 +226,4 @@ class TomoScanCont(TomoScan):
         frame_time = self.compute_frame_time()
         collection_time = frame_time * self.num_angles
         self.wait_camera_done(collection_time + 30.0)
+        self.epics_pvs['RotationStop'].put(1) # Stop motor once projections are done. 
