@@ -4,7 +4,7 @@
 BEATS Dashboard
 ================
 
-This dashboard has been developed to help in the starting tomoscan scanning process by allowing the user to monitor and control everything associated with tomoscan. 
+This dashboard has been developed to help in the starting tomoscan scanning process by allowing the user to monitor and control everything associated with tomoscan.
 
 To access the BEATS Dashboard, type the following command:
 ::
@@ -99,36 +99,36 @@ To change the detector type or scanning technique, the current process (TomoScan
 
 ------------------------------------------------------------------------------------
 
-.. warning:: 
-	
+.. warning::
+
 	Make sure the TCPServerSocket.py is running on the server.
 
-.. warning:: 
-	
+.. warning::
+
 	There is an interlocking between (Start, Stop, Restart) for all operations, depending on the status of the IOCs, whether they are running or not.
 
-.. warning:: 
-	
+.. warning::
+
 	If one of the common IOCs is stopped (except SSCAN IOC), the other controlling sections will be disabled until all the common IOCs are running.
 
-.. warning:: 
-	
+.. warning::
+
 	If the combined stopper shutter has a fault or the PSS is interlocked, the DAQ Tomoscan will be available only in *Testing Mode*.
 
-.. note:: 
-	
+.. note::
+
 	In the scanning techniques section, the python server (start button) is disabled until the tomoscan IOC is started.
 
-.. warning:: 
-	
+.. warning::
+
 	There is an interlocking between the scanning techniques. This means that if any other scanning is started while the first one is still running, the first scanning will be automatically halted.
 
-.. warning:: 
-	
+.. warning::
+
 	If the detector's IOC is stopped and you select any detector type, you cannot start the scan until the IOC is running.
 
-.. note:: 
-	
+.. note::
+
 	If the GUI is unexpectedly closed and then reopened, selecting one of the detectors will show the current choice if one of the other sections is hidden or disabled.
 
 
@@ -140,8 +140,8 @@ Single Shot Image
 The fundamental idea behind a single shot image is to capture one or more frames based on the capturing type chosen.
 To begin this process, once opened, its features will be disabled as shown in the figure.4, and you must type the detector's prefix (TEST-PCO: or FLIR:) to be able to proceed as shown in the figure.5.
 
-.. note:: 
-	
+.. note::
+
 	The Single Shot Image main window button will be disabled if any tomoscan mode is running.
 
 
@@ -160,7 +160,7 @@ To begin this process, once opened, its features will be disabled as shown in th
 
 	*Figure 4: Single Shot Image -Available Prefixes-*
 
-The redout and collect sections, which contain the detector's parameters, become active once you type the prefix. 
+The redout and collect sections, which contain the detector's parameters, become active once you type the prefix.
 
 The available capture modes are as follows:
 
@@ -178,13 +178,14 @@ Both clicking the "Acquire" button or using the "Space" key will initiate the ac
 
 		*Figure 5: Single Shot Image -Main Parameters-*
 
-.. note:: 
-	
+.. note::
+
 	To save the image, you have to determine the path and define the image name only *without any extension*. Moreover you will be alerted if the path is not valid.
 
-.. note:: 
-	
+.. note::
+
 	The acquiring process is shown in the main terminal as figure below. Moreover, the *Status yellow field* shows the last log.
+
 	.. figure:: /img/singleShotImageTerminal.png
 		:align: center
 		:alt: SingleShotImageTerminal
@@ -196,8 +197,8 @@ Both clicking the "Acquire" button or using the "Space" key will initiate the ac
 
 The idea behind this mode is to collect multiple images for each motion step. more info can be found here: `SSCAN reference <https://epics-modules.github.io/sscan/>`_
 
-The main *write fields* parameters of SSCAN section are: 
-	- File name 
+The main *write fields* parameters of SSCAN section are:
+	- File name
 	- File format (the main format is h5 file)
 	- Next file number
 
@@ -205,27 +206,27 @@ The figure below will appear after clicking on the desired SSCAN dimension; you 
 	.. figure:: /img/SSCANMainWindow.png
 		:align: center
 		:scale: 75 %
-		:alt: SSCAN 
+		:alt: SSCAN
 
 		*Figure 6: Single Shot Image -Acquiring Process-*
 
-.. note:: 
-	
+.. note::
+
 	The trigger PVs to start acquiring for both detectors are:
 	- for PCO: TEST-PCO:cam1:Acquire
 	- for FLIR: FLIR:cam1:TriggerSoftware
 
-.. note:: 
-	
+.. note::
+
 	Very Important!
 	You must ensure that the data from the detector are gathered; the value for the *Capturing?* field should be (Capture yellow Colored instead of Done).
 
-.. note:: 
-	
+.. note::
+
 	The file extension of SSCAN outout is binary format (.mda), to read it you have to convert it to txt file.
 	::
 		******Script*****
- 
+
  ***** saving data
 
 check dev docs
