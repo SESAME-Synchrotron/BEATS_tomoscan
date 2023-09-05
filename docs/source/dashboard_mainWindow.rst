@@ -147,6 +147,7 @@ To begin this process, once opened, its features will be disabled as shown in th
 
 .. figure:: /img/singleShotImage.png
 	:align: center
+	:scale: 75 %
 	:alt: SingleShotImageMainWindow
 
 	*Figure 4: Single Shot Image -Main Window-*
@@ -154,6 +155,7 @@ To begin this process, once opened, its features will be disabled as shown in th
 
 .. figure:: /img/singleShotImagePrefix.png
 	:align: center
+	:scale: 75 %
 	:alt: SingleShotImagePrefix
 
 	*Figure 4: Single Shot Image -Available Prefixes-*
@@ -171,6 +173,7 @@ Both clicking the "Acquire" button or using the "Space" key will initiate the ac
 
 	.. figure:: /img/singleShotImageStart.png
 		:align: center
+		:scale: 75 %
 		:alt: SingleShotImageStart
 
 		*Figure 5: Single Shot Image -Main Parameters-*
@@ -201,6 +204,7 @@ The main *write fields* parameters of SSCAN section are:
 The figure below will appear after clicking on the desired SSCAN dimension; you can start SSCAN up to 4 dimensions.
 	.. figure:: /img/SSCANMainWindow.png
 		:align: center
+		:scale: 75 %
 		:alt: SSCAN 
 
 		*Figure 6: Single Shot Image -Acquiring Process-*
@@ -219,6 +223,9 @@ The figure below will appear after clicking on the desired SSCAN dimension; you 
 .. note:: 
 	
 	The file extension of SSCAN outout is binary format (.mda), to read it you have to convert it to txt file.
-	******Script*****
+	::
+		******Script*****
  
  ***** saving data
+
+check dev docs
