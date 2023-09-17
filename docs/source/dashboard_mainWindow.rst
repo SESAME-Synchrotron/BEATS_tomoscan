@@ -225,7 +225,7 @@ The figure below will appear after clicking on the desired SSCAN dimension; you 
 
 	The file extension of SSCAN outout is binary format (.mda), to read it you have to convert it to txt file.
 	::
-		cd Desktop
+		cd Desktop/SSCAN_Data
 		./SSCAN -f (filename)
 
 .. note::
