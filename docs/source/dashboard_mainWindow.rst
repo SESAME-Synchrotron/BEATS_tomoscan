@@ -214,7 +214,7 @@ The figure below will appear after clicking on the desired SSCAN dimension; you 
 
 	The trigger PVs to start acquiring for both detectors are:
 	- for PCO: TEST-PCO:cam1:Acquire
-	- for FLIR: FLIR:cam1:TriggerSoftware
+	- for FLIR: FLIR:cam1:Acquire
 
 .. note::
 
