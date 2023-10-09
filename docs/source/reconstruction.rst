@@ -4,7 +4,7 @@ Tomographic reconstruction at BEATS
 
 This section contains examples of tomographic reconstruction pipelines using `TomoPy <https://tomopy.readthedocs.io/en/stable/>`_.
 
-.. Examples can be run in your browser using the Binder link at the top of the page.
+.. Examples can be run in your browser using the Binder link at the top of the page..
 
 .. note::
     Reconstruction pipelines at BEATS can be also executed from the command line, or as `Slurm <https://slurm.schedmd.com/documentation.html>`_ jobs on ``Rum@sesame.org.jo``.
