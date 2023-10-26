@@ -158,7 +158,7 @@ To begin this process, once opened, its features will be disabled as shown in th
 	:scale: 75 %
 	:alt: SingleShotImagePrefix
 
-	*Figure 4: Single Shot Image -Available Prefixes-*
+	*Figure 5: Single Shot Image -Available Prefixes-*
 
 The redout and collect sections, which contain the detector's parameters, become active once you type the prefix.
 
@@ -176,7 +176,7 @@ Both clicking the "Acquire" button or using the "Space" key will initiate the ac
 		:scale: 75 %
 		:alt: SingleShotImageStart
 
-		*Figure 5: Single Shot Image -Main Parameters-*
+		*Figure 6: Single Shot Image -Main Parameters-*
 
 .. note::
 
@@ -190,12 +190,19 @@ Both clicking the "Acquire" button or using the "Space" key will initiate the ac
 		:align: center
 		:alt: SingleShotImageTerminal
 
-		*Figure 6: Single Shot Image -Acquiring Process-*
+		*Figure 7: Single Shot Image -Acquiring Process-*
 
 2. SSCAN
 ..........
 
 The idea behind this mode is to collect multiple images for each motion step. more info can be found here: `SSCAN reference <https://epics-modules.github.io/sscan/>`_
+
+.. figure:: /img/singleShotImageSscan.png
+	:align: center
+	:scale: 75 %
+	:alt: SSCANMainParameters
+
+	*Figure 8: SSCAN -Main Parameters-*
 
 The main *write fields* parameters of SSCAN section are:
 	- File name
@@ -206,15 +213,15 @@ The figure below will appear after clicking on the desired SSCAN dimension; you 
 	.. figure:: /img/SSCANMainWindow.png
 		:align: center
 		:scale: 75 %
-		:alt: SSCAN
+		:alt: SSCANMainWindow
 
-		*Figure 6: Single Shot Image -Acquiring Process-*
+		*Figure 9: SSCAN -Main Window-*
 
 .. note::
 
 	The trigger PVs to start acquiring for both detectors are:
 	- for PCO: TEST-PCO:cam1:Acquire
-	- for FLIR: FLIR:cam1:TriggerSoftware
+	- for FLIR: FLIR:cam1:Acquire
 
 .. note::
 
@@ -225,8 +232,12 @@ The figure below will appear after clicking on the desired SSCAN dimension; you 
 
 	The file extension of SSCAN outout is binary format (.mda), to read it you have to convert it to txt file.
 	::
-		******Script*****
+		cd /home/control/Desktop/SSCAN_Data
+		./SSCAN -f (file name)  e.g. ./SSCAN -f test1.mda
 
- ***** saving data
+.. note::
 
-check dev docs
+	The data of SSCAN (output h5 files) are located in shared folder.
+	::
+		cd /home/control/Desktop/SSCAN
+		cd PCO_Data or FLIR_Data
