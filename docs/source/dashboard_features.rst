@@ -9,6 +9,7 @@ At the moment, the BEATS dashboard has the following features:
 * Control and monitor the IOCs and scanning methodology (Tomoscan) based on the camera type.
 * Online logging (last log).
 * Shutters Status Monitoring.
+* Single Shot Image GUI, and SSCAN tool.
 * Public documentation targeting end-users (how-to).
 
 Scanning tool | future plan
