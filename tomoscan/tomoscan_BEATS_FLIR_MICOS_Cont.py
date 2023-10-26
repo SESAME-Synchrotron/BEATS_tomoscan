@@ -24,7 +24,7 @@ import threading
 import re 
 import json
 import shutil
-
+import subprocess
 from datetime import timedelta
 from tomoscan import data_management as dm
 from tomoscan import TomoScanCont
@@ -73,7 +73,7 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
         # Set standard file template on file writer
         self.epics_pvs['FPFileTemplate'].put("%s%s_%3.3d.h5", wait=True)
 
-        PV(self.pvlist['PVs']['ZMQPVs']['FlirZMQ']).put(1)
+        PV(self.pvlist['PVs']['ZMQPVs']['FlirZMQ']).put(1, wait = True)
 
         # Disable over writing warning
         self.epics_pvs['OverwriteWarning'].put('Yes')
@@ -183,6 +183,31 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
         - Calls the base class method.
         - Opens the front-end shutter.
         """
+
+        repeat = 0
+        while PV("BEATS:WaitWriterDone").get() != 0: # 0:writer is ready to start new file 1: not ready
+            if repeat == 0: 
+                log.warning("Waiting writer to be ready.")
+                self.epics_pvs['ScanStatus'].put('Waiting writer to be ready')
+                repeat = 1
+            CLIMessage("BEATS Writer | Wating to be ready", "IG")
+            time.sleep(0.1) # checks every .5 second 
+
+        scriptsPath = '/home/control/DAQ/operation/BEATS_Dashboard/Scripts/' 
+        stopCommand = [scriptsPath + 'BEATS_GUI_Bash_Stop', '--process', 'FLIR_WriterServerCont']
+        startCommand = [scriptsPath + 'BEATS_GUI_Bash_Start', '--process', 'FLIR_WriterServerCont']
+        xtermCommandStart = [scriptsPath + 'writer_flir_cont_start.sh']
+        xtermCommandStop = [scriptsPath + 'writer_flir_cont_stop.sh']
+        try:
+            subprocess.run(xtermCommandStop)
+            time.sleep(2)
+            subprocess.run(stopCommand, check=True)
+            subprocess.run(startCommand, check=True)
+            time.sleep(1)
+            subprocess.run(xtermCommandStart, check=True)
+        except subprocess.CalledProcessError as e:
+            CLIMessage(f"Error running the script: {e}", "E")
+
         self.systemInitializations()
         # Check SED file name regex
         repeats = 0

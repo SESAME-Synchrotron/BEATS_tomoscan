@@ -71,7 +71,7 @@ class TomoScanCont(TomoScan):
 
     def begin_scan(self):
         """Performs the operations needed at the very start of a scan.
-
+        
         This does the following:
         - Calls the base class method.
         - Set the HDF plugin.
@@ -202,6 +202,7 @@ class TomoScanCont(TomoScan):
 
         if self.camera_response_time <= motorACCLTime:
             log.error("Camera response time is less than motorACCLTime")
+            log.error("Camera response time: {}, motro ACC time: {}".format(camera_response_time, motorACCLTime))
             self.abort_scan()
         else:
             self.start_position = self.rotation_start - taxi_dist 
