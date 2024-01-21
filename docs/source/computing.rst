@@ -13,7 +13,7 @@ The data analysis workstation is used for several purposes including:
 The list of software available on the workstation is listed below.
 
 Useful commands:
-^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~
 Start `alrecon <https://github.com/gianthk/alrecon/tree/master>`_ CT reconstruction environment::
     conda activate tomopy
     solara run alrecon.pages --host localhost
@@ -37,6 +37,12 @@ The software in the table below can be used to inspect and process 3D image data
 | Alrecon   | https://github.com/gianthk/alrecon/tree/master  | yes         | Web app for CT reconstruction                              |
 | Jupyter   | https://jupyter.org/                            | yes         | Interface for Python reconstruction pipelines (notebooks)  |
 +-----------+-------------------------------------------------+-------------+------------------------------------------------------------+
+
+Load reconstructed volume with ImageJ:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Reconstructions at SESAME BEATS are generally saved as a stack of ``.TIFF`` images contained in a reconstruction folder. To load a reconstruction in ImageJ use the command ``File › Import › Image Sequence``.
+.. note::
+    Select the option ``Use Virtual Stack`` when you import large image sequences!
 
 rum - BEATS reconstruction cluster
 ----------------------------------
