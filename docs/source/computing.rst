@@ -2,6 +2,9 @@
 BEATS Computing Infrastructure 
 ===============================
 
+DAQ workstation
+---------------
+
 Data analysis workstation
 -------------------------
 The data analysis workstation is used for several purposes including:
@@ -69,3 +72,13 @@ Access the reconstruction cluster ``rum@sesame.org.jo`` with::
     ssh -X beatsbs@rum.sesame.org.jo
 
 .. highlight:: none
+
+Data dispenser PC
+-----------------
+
+Dragonfly VizServer
+-------------------
+
+SESAME data portal
+------------------
+
