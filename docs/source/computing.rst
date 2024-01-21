@@ -15,17 +15,20 @@ The list of software available on the workstation is listed below.
 Useful commands:
 ~~~~~~~~~~~~~~~~
 
+.. highlight:: bash
+   :linenothreshold: 1
+
 Start `alrecon <https://github.com/gianthk/alrecon/tree/master>`_ CT reconstruction environment::
 
     conda activate tomopy
     solara run alrecon.pages --host localhost
-
 
 Start reconstruction pipeline on Jupyter Lab. Available pipelines are described in section :doc:`reconstruction`::
 
     conda activate tomopy
     jupyter lab
 
+.. highlight:: none
 
 Data analysis software
 ----------------------
@@ -53,14 +56,16 @@ Load reconstructed volume with ImageJ:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Reconstructions at SESAME BEATS are generally saved as a stack of ``.TIFF`` images contained in a reconstruction folder. To load a reconstruction in ImageJ use the command ``File › Import › Image Sequence``.
 
-
 .. note::
-    Select the option ``Use Virtual Stack`` when you import large image sequences!
-
+   Select the option ``Use Virtual Stack`` when you import large image sequences!
 
 rum - BEATS reconstruction cluster
 ----------------------------------
 
+.. highlight:: bash
+
 Access the reconstruction cluster ``rum@sesame.org.jo`` with::
 
     ssh -X beatsbs@rum.sesame.org.jo
+
+.. highlight:: none
