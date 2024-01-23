@@ -21,8 +21,8 @@ The beamline control GUI allows to control the in-vacuum instrumentation in the 
     - Attenuator system.
     - Double Multilayer Monochromator.
 
-In addition, the ``beats-qt`` GUI contains:
+In addition, the ``beats-qt`` GUI allows to:
     1. A display of the machine status and parameters.
-    2. (:ref:`Vacuum GUI button <vacuum>`). The vacuum GUI is used to open the shutters of the beamline.
-    3. (:ref:`Experimental GUI button <experimental>`). This GUI controls the sample manipulator and detection systems.
+    2. Launch the BEATS :ref:`Beamline vacuum GUI`. The vacuum GUI is used to open the shutters of the beamline.
+    3. Launch the BEATS :ref:`Experimental GUI`. This GUI controls the sample manipulator and detection systems.
 

@@ -30,5 +30,5 @@ Beamline essentials
 
 Please take a look at the following sections of the BEATS beamline manual to familiarize with the beamline operation. In particular, take a look at:
 
-    * the `Hutch search procedure`_, and at
+    * the :ref:`Hutch Search Procedure`, and at
     * the  :doc:`reconstruction` section.

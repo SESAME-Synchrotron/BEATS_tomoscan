@@ -12,10 +12,19 @@ Setup your experiment
 
 Prepare your experiment following these steps:
 
-1. Mount your sample on top of endstation #1
-2. Turn on the alignment lasers
-3. Use the laptop close to the endstation to:
+#. Mount your sample on top of the tomography endstation (Figure 1 RIGHT)
+#. Turn on the alignment lasers
+#. Use the laptop close to the endstation to:
 
-   3.1. Pre-align sample on the intersection of the laser planes (you can verify this also moving the ROT stage)
-   3.2. Pre-align the detector scintillator on the same line
-   3.3. Set the distance between sample and detector to the desired value
+   #. Pre-align sample on the intersection of the laser planes (you can verify this also moving the ROT stage)
+   #. Pre-align the detector scintillator on the same line
+   #. Set the distance between sample and detector to the desired value
+
+Experimental GUI
+----------------
+
+.. figure:: /img/exp_station.png
+	:align: center
+	:alt: BEATS experimental GUI
+
+	*Figure 2: BEATS experimental GUI.*
