@@ -10,5 +10,3 @@ provided by the TomoAlign package.
     scripts/auto_focus
     scripts/find_focus
     scripts/auto_align
-    `Script auto_focus.py <https://github.com/SESAME-Synchrotron/BEATS_tomoscan/blob/master/docs/source/tomoalign/scripts2/auto_focus.html>`_
-
