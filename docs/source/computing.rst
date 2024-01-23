@@ -33,6 +33,8 @@ Start reconstruction pipeline on Jupyter Lab. Available pipelines are described 
 
 .. highlight:: none
 
+.. _software:
+
 Data analysis software
 ----------------------
 The software in the table below can be used to inspect and process 3D image data (sinograms and CT reconstructions) at SESAME BEATS.
@@ -55,9 +57,15 @@ The software in the table below can be used to inspect and process 3D image data
 | Jupyter   | https://jupyter.org/                            | yes         | Interface for Python reconstruction pipelines (notebooks)  |
 +-----------+-------------------------------------------------+-------------+------------------------------------------------------------+
 
+.. _imagej:
+
 Load reconstructed volume with ImageJ:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Reconstructions at SESAME BEATS are generally saved as a stack of ``.TIFF`` images contained in a reconstruction folder. To load a reconstruction in ImageJ use the command ``File › Import › Image Sequence``.
+Reconstructions at SESAME BEATS are generally saved as a stack of ``.TIFF`` images contained in a reconstruction folder. To load a reconstruction in ImageJ use the command ``File › Import › Image Sequence``. You can follow `this video <https://www.youtube.com/watch?v=rmQwHGap2ko>`_ for a detailed explanation on how to import image sequences.
+
+.. figure:: /img/imagej_image_sequence.jpg
+   :align: center
+   :alt: Import image sequence in ImageJ
 
 .. note::
    Select the option ``Use Virtual Stack`` when you import large image sequences!

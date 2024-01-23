@@ -11,8 +11,9 @@ Content
    :maxdepth: 1
    
    About <home_about>
-   Quickstart <quickstart>
    General information <general>
+   Prepare for beamtime <prepare>
+   Quickstart <quickstart>
    Data acquisition <daq>
    Tomographic reconstruction <reconstruction>
    Safety <safety>
