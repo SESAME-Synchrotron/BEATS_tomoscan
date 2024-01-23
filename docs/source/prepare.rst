@@ -15,7 +15,7 @@ Please bring your soap/shampoo, and lotions. Towels are available in the guestho
 Visualize and inspect your 3D data
 ----------------------------------
 
-To use your beamtime efficiently, you must be able to inspect the recorded data. We expect you to know how to do basic operations in ImageJ! Take a look at the `imagej`_ section for instructions on how to install and load reconstructions in ImageJ. ImageJ is also a powerful tool for image processing and analysis of your datasets after the beamtime! If you need more tools, visit our list of 3D image analysis and visualization `software`_.
+To use your beamtime efficiently, you must be able to inspect the recorded data. We expect you to know how to do basic operations in ImageJ! For instructions on how to install and use ImageJ see the section :ref:`Load reconstructed volume with ImageJ`. ImageJ is also a powerful tool for image processing and analysis of your datasets after the beamtime! If you need more tools, visit our list of 3D :ref:`Data analysis software`.
 
 Bring enough storage
 --------------------
@@ -31,4 +31,4 @@ Beamline essentials
 Please take a look at the following sections of the BEATS beamline manual to familiarize with the beamline operation. In particular, take a look at:
 
     * the `Hutch search procedure`_, and at
-    * the CT :doc:`reconstruction`:: section.
+    * the  :doc:`reconstruction` section.
