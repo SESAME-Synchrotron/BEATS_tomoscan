@@ -11,4 +11,4 @@ The contents and software described in this section is kindly provided by the `T
     Installation <tomoalign/installation>
     Focusing the camera <tomoalign/focus>
     Alignment: Camera tilt and rotation axis centering <tomoalign/alignment>
-    Scripts reference <tomoalign/scripts>
+    .. Scripts reference <tomoalign/scripts>
