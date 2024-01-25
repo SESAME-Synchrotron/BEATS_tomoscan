@@ -30,7 +30,7 @@ Sample mount
 
 .. figure:: /img/beats_sample_mount.png
     :align: center
-    :alt: tomo_user
+    :alt: Sample mounting at BEATS
 
 	*Figure 2: (LEFT) Detail of sample tomography stage. (RIGHT) The sample plate has 9 M4 holes that can be used for custom sample support.*
 
