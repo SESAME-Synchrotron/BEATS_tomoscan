@@ -14,7 +14,7 @@ Content
    General information <general>
    Prepare for beamtime <prepare>
    Quickstart <quickstart>
-   Alignment <alignment>
+   Alignment <tomoalign>
    Data acquisition <daq>
    Tomographic reconstruction <reconstruction>
    Safety <safety>

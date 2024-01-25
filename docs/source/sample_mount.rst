@@ -11,7 +11,7 @@ Setup your experiment
 	*Figure 1: BEATS experimental station. Two laser lines are used to pre-align sample and detector on the beam.*
 
 Preliminary steps
-~~~~~~~~~~~~~~~~~
+-----------------
 
 #. Mount your sample on top of the tomography endstation (Figure 1 RIGHT)
 #. Turn on the alignment lasers
