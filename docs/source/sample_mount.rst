@@ -10,7 +10,8 @@ Setup your experiment
 
 	*Figure 1: BEATS experimental station. Two laser lines are used to pre-align sample and detector on the beam.*
 
-Prepare your experiment following these steps:
+Preliminary steps
+~~~~~~~~~~~~~~~~~
 
 #. Mount your sample on top of the tomography endstation (Figure 1 RIGHT)
 #. Turn on the alignment lasers
@@ -23,11 +24,13 @@ Prepare your experiment following these steps:
 Sample mount
 ------------
 
-Samples can be mounted on the tomography rotation stage with M4 screws as shown below:
+Samples can be mounted on the tomography rotation stage with M4 screws as shown Figure 2:
 
-.. image:: ../img/beats_sample_mount.png
-   :align: center
-   :alt: tomo_user
+.. figure:: /img/beats_sample_mount.png
+    :align: center
+    :alt: tomo_user
+
+	*Figure 2: (LEFT) Detail of sample tomography stage. (RIGHT) The sample plate has 9 M4 holes that can be used for custom sample support.*
 
 A set of standard kinematic mounts from Newport is also available: `M-BK-1A <https://www.newport.com/p/M-BK-1A>`_ (download -> `drawing <https://www.newport.com/medias/sys_master/images/images/h7a/h3c/8933922308126/BK-1-S.pdf>`_).
 
@@ -46,7 +49,11 @@ Sample alignment
 | • **TOMO_X**: 60.0 mm
 | • **TOMO_Y**: 47.0 mm
 
+Sample alignment procedure
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Load the sample on the kinematic mount (for automatic alignemt of the endstation with :doc:`tomoalign` use the tungsten wire available at the beamline as sample) then:
+
 #. Perform the :doc:`hutch_search`
 #. Open the shutters using the :doc:`vacuum`
 #. Use the :ref:`Experimental GUI` to move the sample up/down until the sample is in the field of view of detector.
