@@ -1,5 +1,5 @@
-Setup your experiment
-=====================
+Set up your experiment
+======================
 
 .. warning::
 	**Collision danger**: Only perform this operation together with the beamline staff. You must always pay attention to the position of endstation, detectors and sample, while performing the alignment. **Always move small steps when endstation and detector are close to each other!** 
