@@ -6,27 +6,7 @@ On the importance of a good alignment
 
 The relative alignment between the sample rotation axis and the X-ray detection
 system is of crucial importance for the reconstruction of tomographic image
-data. More precisely, the projection of the sample rotation axis along the
-direction of the X-ray beam onto the grid of camera or detector pixels must
-fulfil two conditions for an ideal reconstruction:
-
-#. The projected rotation axis must be exactly perpendicular to the individual
-   rows of detector pixels. This condition ensures that upon rotation of the
-   sample, each point in space within the sample will only ever be projected
-   into the same row of pixels, changing only the pixel column coordinate
-   during the rotation. If this condition is fulfilled, the tomographic
-   reconstruction problem can be trivially parallelized into a set of
-   reconstruction problems of individual axial slices for each detector pixel
-   row. In other words, the whole information about a given point in space
-   within the sample is collected in that single row of pixels, while it would
-   be distributed over several pixel rows for a misaligned rotation axis.
-
-#. The projected rotation axis should be horizontally centered on the
-   detector's field of view. This ensures that those volume elements of the
-   sample that are located within half the detector's field of view from the
-   rotation axis will be visible for all projection images at all angles, thus
-   delivering valid reconstruction data. For a non-perfect centering, the valid
-   region of reconstruction shrinks proportionally to the centering offset.
+data.
 
 The centering problem is illustrated schematically in
 :numref:`fig_axis_alignment`. In the following paragraphs, the principles
@@ -43,20 +23,13 @@ behind the automatic alignment procedure will be discussed.
 Preparing the alignment sample
 ------------------------------
 
-To be able to automatically perform an alignment of the sample rotation axis
-with respect to the camera requires a robust way of measuring said alignment
-reliably. We have chosen a very simple method that requires only minimal
-preparation, works with a simple alignment sample, and is capable of coping
-with a variety of different experimental settings (X-ray energy, magnification,
-etc.).
-
 The alignment sample consists of a simple long and thin vertical piece of wire
-made from some heavily absorbing material to produce a well visible attenuation
+made from some heavily absorbing material (tungsten) to produce a well visible attenuation
 contrast over a wide energy range. One such sample is shown in
 :numref:`fig_alignment_wire` (left).
 
 .. _`fig_alignment_wire`:
-.. figure:: images/alignment_wire.png
+.. figure:: images/alignment_wire_beats.png
    :align: center
    :width: 100 %
    :figwidth: 60 %
@@ -89,29 +62,7 @@ To determine the alignment of a given configuration of the setup, a flat-field
 image without the alignment sample is acquired first, followed by the two
 projection images of the wire sample at a sample rotation angle of zero and 180
 degrees. The data processing then follows these steps, the results of which are
-illustrated in :numref:`fig_alignment_calculation`:
-
-#. Each of the two projection images is flat-field corrected and then
-   automatically segmented via an automatic Otsu thresholding, where the same
-   threshold is used for both images (white areas in the figure).
-
-#. For each of the segmented projection images (where the wire is set to a
-   value of one and the background to zero), the pixel row-wise center of mass
-   (COM) of the binary intensity distribution is calculated. This yields the
-   COM line for each of the wire projections independently (magenta lines).
-
-#. The average of the two individual COM lines determines the row-wise estimate
-   of the rotation center position (dark green data points).
-
-#. A robust line fitting using a RANSAC outlier rejection algorithm to remove
-   spurious contributions to the overall trend of the data (due to, for
-   example, faulty segmentation results because of a dirty scintillator) to the
-   average COM line gives the current estimate for the location and orientation
-   of the rotation axis (light green line).
-
-#. From this line fit, the inclination angle and the centering offset with
-   respect to the target center line are calculated.
-
+illustrated in :numref:`fig_alignment_calculation`.
 
 .. _`fig_alignment_calculation`:
 .. figure:: images/alignment_calculation.png

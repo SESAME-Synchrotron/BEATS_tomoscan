@@ -1,31 +1,6 @@
 Installation
 ============
 
-Installation at TOMCAT
-----------------------
-
-The tomoalign package should already be installed at the TOMCAT beamline for
-general use. The installation location is::
-
-    /sls/X02DA/applications/tomoalign
-
-This directory simply contains a clone of the git repository. Additionally, all
-of the common scripts for alignment procedures are directly linked to from the
-beamline's binary directory ``/sls/X02DA/bin`` so they can be called directly
-from the command line on any beamline console.
-
-If you intend to import the tomoalign package from a custom script, you may
-have to either add the beamline installation location to the ``PYTHONPATH`` or
-clone the repository locally and then add it to the python search path. For the
-former approach, something like this might do the trick:
-
-.. code-block:: python
-   :linenos:
-
-   import sys
-   sys.path.insert(0, '/sls/X02DA/applications/tomoalign')
-   import tomoalign
-
 Local installation
 ------------------
 To install the tomoalign package locally, simply clone the repository in a
