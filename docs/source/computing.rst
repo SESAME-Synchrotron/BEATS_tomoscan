@@ -5,18 +5,20 @@ BEATS Computing Infrastructure
 DAQ workstation
 ---------------
 
+The data acquisition (DAQ) workstation is used to control the beamline and scan settings. Visit the section :doc:`daq` for more information.
+
 Data analysis workstation
 -------------------------
 The data analysis workstation is used for several purposes including:
 
     * Inspection of sinograms and CT reconstruction
-    * Submit reconstruction jobs on ``rum@sesame.org.jo``
+    * Submit reconstruction jobs on the cluster ``rum@sesame.org.jo``
     * 3D image visualization and processing
 
-The list of software available on the workstation is listed below.
+The list of software available on the workstation is listed in the section on :ref:'Data analysis software' below.
 
-Useful commands:
-~~~~~~~~~~~~~~~~
+Useful commands
+~~~~~~~~~~~~~~~
 
 .. highlight:: bash
    :linenothreshold: 1
@@ -59,12 +61,12 @@ Load reconstructed volume with ImageJ
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Reconstructions at SESAME BEATS are generally saved as a stack of ``.TIFF`` images contained in a reconstruction folder. To load a reconstruction in ImageJ use the command ``File › Import › Image Sequence``. You can follow `this video <https://www.youtube.com/watch?v=rmQwHGap2ko>`_ for a detailed explanation on how to import image sequences.
 
-.. figure:: /img/imagej_image_sequence.jpg
+.. figure:: /img/imagej_image_sequence.png
    :align: center
    :alt: Import image sequence in ImageJ
 
 .. note::
-   Select the option ``Use Virtual Stack`` when you import large image sequences!
+   Always select the option ``Use Virtual Stack`` when you import large image stacks in ImageJ!
 
 rum - BEATS reconstruction cluster
 ----------------------------------
