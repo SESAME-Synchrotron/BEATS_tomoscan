@@ -16,28 +16,11 @@ Tomography endstation 1
 Detectors
 ---------
 
-The detectors available at the beamline are listed in the table below. The table shows the magnification, pixelsize and Field Of View (FOV) obtained with each combination of detector and camera.
+**Table of the detectors installed at the beamline:** `click here <https://sesamejo-my.sharepoint.com/:x:/g/personal/gianluca_iori_sesame_org_jo/EfMv7hKjU_1Arg0BC3-QUDIBYHvE0BDPINgDJTGhQt6CaQ?e=aXMe6j>`_.
 
-.. csv-table:: BEATS detectors and cameras
-   :file: tab/BEATS_detectors.csv
-   :widths: 30, 70
-   :header-rows: 1
-
-+----------------------------------+------------+--------+------+-----+-------------+------+------+------------------------------+-------+-------+-------+-------+------+------------------------------------+------+------+------------------+------+------+-------------------------------------+------+-------------+------------------+------+------+------+-------------------+
-| CAMERA                           |            |        |      |     |             |      |      | ESRF Hasselblad (White beam) |       |       |       |       |      | OptiquePeter Twin Mic (White beam) |      |      |                  |      |      | OptiquePeter microscope (Mono beam) |      |             |                  |      |      |      |                   |
-+==================================+============+========+======+=====+=============+======+======+==============================+=======+=======+=======+=======+======+====================================+======+======+==================+======+======+=====================================+======+=============+==================+======+======+======+===================+
-| model                            | pixel size | pixels |      |     | sensor area |      |      | 0.48                         |       | 1     |       | 2.10  |      | 5                                  |      | 7.5  |                  | 10   |      | 4                                   |      | 10          |                  | 20   |      | X    | MAGNIFICATION     |
-|                                  |            |        |      |     | [mm]        |      |      | 0.108                        |       | 0.227 |       | 0.227 |      | 0.21                               |      | 0.21 |                  | 0.28 |      | 0.16                                |      | (0.3 / 0.4) |                  | 0.75 |      |      | N.A.              |
-|                                  | [um]       | HOR    | VER  | MP  | HOR         | VER  | DIAG | HOR                          | VER   | HOR   | VER   | HOR   | VER  | HOR                                | VER  | HOR  | VER              | HOR  | VER  | HOR                                 | VER  | HOR         | VER              | HOR  | VER  |      |                   |
-|  PCO.edge 5.5                    | 6.5        | 2560   | 2160 | 5.5 | 16.6        | 14.0 | 21.8 | 34.94                        | 29.48 | 16.64 | 14.04 | 7.92  | 6.69 | 3.33                               | 2.81 | 2.22 | 1.87             | 1.66 | 1.40 | 4.16                                | 3.51 | 1.66        | 1.40             | 0.83 | 0.70 | [mm] | FOV               |
-|                                  |            |        |      |     |             |      |      | 13.65                        |       | 6.50  |       | 3.10  |      | 1.30                               |      | 0.87 |                  | 0.65 |      | 1.63                                |      | 0.65        |                  | 0.33 |      | [um] | object pixel size |
-| Oryx FLIR        ORX-10G-71S7M-C | 4.5        | 3208   | 2200 | 7.1 | 14.4        | 9.9  | 17.5 | 30.32                        | 20.79 | 14.44 | 9.90  | 6.87  | 4.71 | 2.89                               | 1.98 | 1.92 | 1.32             | 1.44 | 0.99 | 3.61                                | 2.48 | 1.44        | 0.99             | 0.72 | 0.50 | [mm] | FOV               |
-|                                  |            |        |      |     |             |      |      | 9.45                         |       | 4.50  |       | 2.14  |      | 0.90                               |      | 0.60 |                  | 0.45 |      | 1.13                                |      | 0.45        |                  | 0.23 |      | [um] | object pixel size |
-| Scintillators                    |            |        |      |     |             |      |      | LuAG:Ce 250um; 34 x 21       |       |       |       |       |      | GGG:Eu 30um; 8x8                   |      |      | LSO:Tb 15um; 8x8 |      |      | GGG:Eu 30um; 8x8                    |      |             | LSO:Tb 15um; 8x8 |      |      |      |                   |
-|                                  |            |        |      |     |             |      |      | LuAG:Ce 350um; 34 x 21       |       |       |       |       |      |                                    |      |      |                  |      |      |                                     |      |             |                  |      |      |      |                   |
-|                                  |            |        |      |     |             |      |      | LuAG:Ce 500um; 34 x 21       |       |       |       |       |      |                                    |      |      |                  |      |      |                                     |      |             |                  |      |      |      |                   |
-|                                  |            |        |      |     |             |      |      | LuAG:Ce 1mm; 34 x 21         |
-+----------------------------------+------------+--------+------+-----+-------------+------+------+------------------------------+
+THe table lists all detectors available at the beamline and shows the magnification, pixelsize and Field Of View (FOV) obtained with each combination of detector and camera.
+THe second sheet contains a calculator of the optimal scintillator thickness.
 
 Cameras
 -------
+
