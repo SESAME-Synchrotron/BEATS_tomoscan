@@ -31,12 +31,12 @@ In addition, the ``beats-qt`` GUI allows to:
 Change the beamline energy
 --------------------------
 
-THe beamline energy can be changed using the `Energy CLI <https://xray-energy.readthedocs.io/en/latest/usage.html`_.
+THe beamline energy can be changed using the `Energy CLI <https://xray-energy.readthedocs.io/en/latest/usage.html>`_.
 
 .. highlight:: bash
    :linenothreshold: 1
 
-Start the `Energy CLI <https://xray-energy.readthedocs.io/en/latest/usage.html`_::
+Start the `Energy CLI <https://xray-energy.readthedocs.io/en/latest/usage.html>`_::
 
    cd /home/control/energy/iocBoot/iocEnergy_2BM
    python3 -i start_energy.py
