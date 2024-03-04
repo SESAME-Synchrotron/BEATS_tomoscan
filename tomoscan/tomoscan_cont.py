@@ -3,16 +3,16 @@
    Classes
    -------
    TomoScanCont
-     Derived class for tomography scanning with EPICS implementing continuous software based scan
+     Derived class for tomography scanning with EPICS implementing continuous software based scan (developed in SESAME by DCA Team)
 """
 
 import time
-import os
 import math
 import numpy as np
-from tomoscan import TomoScan
+
 from tomoscan import log
-from epics import PV
+from tomoscan import TomoScan
+
 from SEDSS.CLIMessage import CLIMessage
 
 
@@ -71,7 +71,7 @@ class TomoScanCont(TomoScan):
 
     def begin_scan(self):
         """Performs the operations needed at the very start of a scan.
-        
+
         This does the following:
         - Calls the base class method.
         - Set the HDF plugin.
@@ -81,9 +81,9 @@ class TomoScanCont(TomoScan):
         super().begin_scan()
         time.sleep(0.1)
 
-        log.info("Calculate continous scan parameters")
-        if self.num_angles > 0: 
-            self.set_cont_scan_parameters() 
+        log.info('Calculate continuous scan parameters')
+        if self.num_angles > 0:
+            self.set_cont_scan_parameters()
 
     def end_scan(self):
         """Performs the operations needed at the very end of a scan.
@@ -124,7 +124,7 @@ class TomoScanCont(TomoScan):
         - Starts the camera acquiring in software trigger mode.
         - Update scan status.
         """
-       
+
         # Assign the continuous scan angular position to theta[]
         self.theta = self.rotation_start + np.arange(self.num_angles) * self.rotation_step
 
@@ -132,7 +132,7 @@ class TomoScanCont(TomoScan):
         super().collect_projections()
 
         if self.num_angles > 0:
-            log.info('start BEATS Continuous scan')
+            log.info('start scanning ...')
             self.rotate()
             self.acquire_projections()
         else:
@@ -140,91 +140,100 @@ class TomoScanCont(TomoScan):
 
     def set_cont_scan_parameters(self):
         """
-        This method calculates some parameters needed for the continuous scans.
+        This method calculates some parameters needed for the software continuous scan.
+        - Trying to collect one frame in order to :
+            * compute camera response time
+            * get camera FPS
         """
+
         self.set_exposure_time()
-        # try: 
-        #     self.camera_fps = self.control_pvs['ResultingFPS'].get(timeout=1)
-        # except:
-        #     log.error("Unable to get Camera FPS")
-        #     self.abort_scan()
-        # Camera response time calculation: 
-        counter = 0
-        self.set_trigger_mode("FreeRun", 1)
-        camera_counter = self.epics_pvs["CamArrayCounter"].get()
+        self.set_trigger_mode('FreeRun', 1)
+        camera_counter = self.epics_pvs['CamArrayCounter'].get()
         self.camera_response_time = time.time()
-        self.epics_pvs["CamAcquire"].put("Acquire")
-        while self.epics_pvs["CamArrayCounter"].get() == camera_counter: 
+        self.epics_pvs['CamAcquire'].put('Acquire')
+        while self.epics_pvs['CamArrayCounter'].get() == camera_counter:
             pass
         timeNow = time.time()
         self.camera_response_time = timeNow - self.camera_response_time
-        log.info("Camera response time: {}".format(self.camera_response_time))
-        
-        try: 
-            self.camera_fps = self.control_pvs['ResultingFPS'].get(timeout=1)
-        except:
-            log.error("Unable to get Camera FPS")
-            self.abort_scan()
-        
-        log.info("Camera FPS: {}".format(self.camera_fps))
+        log.info('Camera response time: {}'.format(self.camera_response_time))
 
-        self.epics_pvs["CamAcquire"].put("Done")
-        self.set_trigger_mode("Internal", self.num_angles)
+        try:
+            self.camera_fps = self.control_pvs['ResultingFPS'].get(timeout=1, use_monitor=False)
+        except:
+            log.error('Unable to get Camera FPS')
+            self.abort_scan()
+
+        log.info('Camera FPS: {}'.format(self.camera_fps))
+
+        self.epics_pvs['CamAcquire'].put('Done')
+        self.set_trigger_mode('Internal', self.num_angles)
 
         self.set_motor_speed()
-        self.go_start_position() 
+        self.go_start_position()
 
     def set_motor_speed(self):
-        # Compute the time for each frame.
-        ### =========== frame_time = self.exposure_time
-        frame_time = 1/self.camera_fps
-        log.info("Frame time: {}".format(frame_time))
+        """
+        - Compute frame time
+        - Set motor speed
+        """
 
-        # Set motor speed.
+        frame_time = 1 / self.camera_fps
+        log.info('Frame time: {}'.format(frame_time))
+
         self.motor_speed = self.rotation_step / frame_time
-        self.epics_pvs["RotationSpeed"].put(self.motor_speed, wait =True) 
+        self.epics_pvs['RotationSpeed'].put(self.motor_speed, wait =True)
         self.epics_pvs['CalculatedRotSpeed'].put(self.motor_speed, wait =True)
-        log.info("Rotation speed: {}".format(self.motor_speed))
-    
-    def go_start_position(self): 
-        # Put the motor at appropriate start position to accelarate and be in a steady speed.
-        frame_time = 1/self.camera_fps
-        motorACCLTime = self.control_pvs['RotationAccelTime'].get()
+        log.info('Rotation speed: {}'.format(self.motor_speed))
+
+    def go_start_position(self):
+        """
+        Set the appropriate (start, end) positions to (accelerate, decelerate) and be in a steady speed.
+        """
+
+        frame_time = 1 / self.camera_fps
+
         # Get the distance needed for acceleration = 1/2 a t^2 = 1/2 * v * t.
-        accel_dist = motorACCLTime / 2.0 * float(self.motor_speed) 
-        
-        # Make taxi distance an integer number of measurement.
-        # Add 4.5 to ensure that we are really up to speed.
+        motorACCLTime = self.control_pvs['RotationAccelTime'].get()
+        accel_dist = motorACCLTime / 2.0 * float(self.motor_speed)
+
+        # Make taxi distance an integer number of measurement (add margin 5 steps to ensure that we are really up to speed).
         if self.rotation_step > 0:
-            taxi_dist = math.ceil(accel_dist / self.rotation_step + 5) * self.rotation_step 
+            taxi_dist = math.ceil(accel_dist / self.rotation_step + 5) * self.rotation_step
         else:
-            taxi_dist = math.floor(accel_dist / self.rotation_step - 5) * self.rotation_step 
+            taxi_dist = math.floor(accel_dist / self.rotation_step - 5) * self.rotation_step
 
         if self.camera_response_time <= motorACCLTime:
-            log.error("Camera response time is less than motorACCLTime")
-            log.error("Camera response time: {}, motro ACC time: {}".format(camera_response_time, motorACCLTime))
+            log.error('Camera response time is less than motorACCLTime')
+            log.error('Camera response time: {}, motor ACC time: {}'.format(self.camera_response_time, motorACCLTime))
             self.abort_scan()
         else:
-            self.start_position = self.rotation_start - taxi_dist 
+            self.start_position = self.rotation_start - taxi_dist
             self.rotation_stop = (self.rotation_start + (self.num_angles - 1) * self.rotation_step)
-            self.end_position = self.rotation_stop + taxi_dist * (self.camera_response_time / frame_time) 
-            log.info("Start position: {}, Stop position: {}".format(self.start_position, self.end_position))
+            self.end_position = self.rotation_stop + taxi_dist * (self.camera_response_time / frame_time)
+            log.info('Start position: {}, Stop position: {}'.format(self.start_position, self.end_position))
             self.epics_pvs['RotationSpeed'].put(self.epics_pvs['RotInternalMaxSpeed'].get())
-            self.epics_pvs["Rotation"].put(self.start_position, wait =True)
+            self.epics_pvs['Rotation'].put(self.start_position, wait =True)
             self.epics_pvs['RotationSpeed'].put(self.motor_speed, wait =True)
 
     def rotate(self):
+        """
+        Start motor movement
+        """
 
-        log.info("Rotation thread started")
-        self.epics_pvs["Rotation"].put(self.end_position)
+        log.info('Rotation thread started')
+        self.epics_pvs['Rotation'].put(self.end_position)
 
     def acquire_projections(self):
+        """
+        Start acquiring projections
+        """
 
-        log.info("Acquiring projection thread started")
-        self.set_trigger_mode("Internal", self.num_angles)
-        self.epics_pvs["CamAcquire"].put("Acquire")
+        log.info('Acquiring projection thread started')
+        self.set_trigger_mode('Internal', self.num_angles)
+        self.epics_pvs['CamAcquire'].put('Acquire')
         time.sleep(0.5)
         frame_time = self.compute_frame_time()
         collection_time = frame_time * self.num_angles
         self.wait_camera_done(collection_time + 30.0)
-        self.epics_pvs['RotationStop'].put(1) # Stop motor once projections are done. 
+
+        self.epics_pvs['RotationStop'].put(1)       # Stop motor once projections are done.

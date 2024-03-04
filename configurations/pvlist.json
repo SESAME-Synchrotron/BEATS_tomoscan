@@ -6,19 +6,35 @@
 			"SEDTimeStamp":"BEATS:SEDTimeStamp",
 			"imagesNumSaved":"BEATS:WRITER:NumSaved",
 			"writerStatus":"BEATS:WRITER:Status",
+			"writerWritingDone":"BEATS:WaitWriterDone",
 			"writerFileTrigger":"BEATS:WRITER:NewFileTrigger",
-			"writerFileCreated":"BEATS:WRITER:FileCreated", 
-			"writerImagesNumCaptured":"BEATS:WRITER:NumCapture"	
+			"writerFileCreated":"BEATS:WRITER:FileCreated",
+			"writerImagesNumCaptured":"BEATS:WRITER:NumCapture"
 		},
 
 		"ZMQPVs":{
 			"FlirZMQ":"FLIR:ZMQ1:EnableCallbacks",
 			"PcoZMQ":"TEST-PCO:ZMQ1:EnableCallbacks"
+		},
+		"PROCPVs":{
+			"PCO":{
+				"pluginEnabled":"TEST-PCO:Proc1:EnableCallbacks_RBV",
+				"filterEnabled":"TEST-PCO:Proc1:EnableFilter_RBV",
+				"numFilter":"TEST-PCO:Proc1:NumFilter_RBV",
+				"resetFilter":"TEST-PCO:Proc1:ResetFilter",
+				"autoResetFilter":"TEST-PCO:Proc1:AutoResetFilter",
+				"filterCallbacks":"TEST-PCO:Proc1:FilterCallbacks",
+				"ZMQPort":"TEST-PCO:ZMQ1:NDArrayPort"
+			}
 		}
 	},
 
 	"paths":{
-		"SEDBasePath":"/PETRA/SED/BEATS/IH"
+		"SEDBasePath":"/PETRA/SED/BEATS/IH",
+		"SEDTop":"/PETRA/SED",
+		"todayProposal":"/opt/epics/support/BEATS_tomoscan/metadata/Scanning_Tool.csv",
+		"schProposals":"/opt/epics/support/BEATS_tomoscan/metadata/BEATSScheduledProposals.csv",
+		"scripts":"~/DAQ/operation/BEATS_Dashboard/Scripts/"
 	},
 
 	"XMLFiles":{
