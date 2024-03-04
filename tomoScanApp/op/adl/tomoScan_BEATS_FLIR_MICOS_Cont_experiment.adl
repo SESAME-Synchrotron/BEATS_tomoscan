@@ -1,13 +1,13 @@
 
 file {
-	name="/opt/epics/synApps/support/BEATS_tomoscan/tomoScanApp/op/adl/tomoScan_BEATS_FLIR_MICOS_Cont_experiment.adl"
-	version=030117
+	name="/opt/epics/support/BEATS_tomoscan/tomoScanApp/op/adl/tomoScan_BEATS_FLIR_MICOS_Cont_experiment.adl"
+	version=030111
 }
 display {
 	object {
-		x=76
-		y=98
-		width=595
+		x=716
+		y=313
+		width=600
 		height=213
 	}
 	clr=14
@@ -113,208 +113,186 @@ text {
 }
 composite {
 	object {
-		x=31
+		x=200
 		y=49
-		width=545
-		height=150
+		width=390
+		height=149
 	}
 	"composite name"=""
 	children {
-		composite {
+		"text entry" {
 			object {
-				x=186
+				x=200
 				y=49
 				width=390
-				height=149
+				height=20
 			}
-			"composite name"=""
-			children {
-				"text entry" {
-					object {
-						x=186
-						y=49
-						width=390
-						height=20
-					}
-					control {
-						chan="$(P)$(R)UserName"
-						clr=14
-						bclr=51
-					}
-					format="string"
-					limits {
-					}
-				}
-				"text entry" {
-					object {
-						x=186
-						y=74
-						width=390
-						height=20
-					}
-					control {
-						chan="$(P)$(R)UserInstitution"
-						clr=14
-						bclr=51
-					}
-					format="string"
-					limits {
-					}
-				}
-				"text entry" {
-					object {
-						x=186
-						y=100
-						width=390
-						height=20
-					}
-					control {
-						chan="$(P)$(R)UserEmail"
-						clr=14
-						bclr=51
-					}
-					format="string"
-					limits {
-					}
-				}
-				"text entry" {
-					object {
-						x=186
-						y=127
-						width=390
-						height=20
-					}
-					control {
-						chan="$(P)$(R)ProposalNumber"
-						clr=14
-						bclr=51
-					}
-					format="string"
-					limits {
-					}
-				}
-				"text entry" {
-					object {
-						x=186
-						y=152
-						width=390
-						height=20
-					}
-					control {
-						chan="$(P)$(R)ProposalTitle"
-						clr=14
-						bclr=51
-					}
-					format="string"
-					limits {
-					}
-				}
-				"text entry" {
-					object {
-						x=186
-						y=178
-						width=390
-						height=20
-					}
-					control {
-						chan="$(P)$(R)UserInfoUpdate"
-						clr=14
-						bclr=51
-					}
-					format="string"
-					limits {
-					}
-				}
+			control {
+				chan="$(P)$(R)UserName"
+				clr=14
+				bclr=51
+			}
+			format="string"
+			limits {
 			}
 		}
-		composite {
+		"text entry" {
 			object {
-				x=31
-				y=49
-				width=150
-				height=150
+				x=200
+				y=74
+				width=390
+				height=20
 			}
-			"composite name"=""
-			children {
-				text {
-					object {
-						x=91
-						y=49
-						width=90
-						height=20
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix="User name"
-					align="horiz. right"
-				}
-				text {
-					object {
-						x=71
-						y=74
-						width=110
-						height=20
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix="Institution"
-					align="horiz. right"
-				}
-				text {
-					object {
-						x=71
-						y=103
-						width=110
-						height=20
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix="User e-mail"
-					align="horiz. right"
-				}
-				text {
-					object {
-						x=41
-						y=128
-						width=140
-						height=20
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix=" Proposal #"
-					align="horiz. right"
-				}
-				text {
-					object {
-						x=31
-						y=153
-						width=150
-						height=20
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix="Title"
-					align="horiz. right"
-				}
-				text {
-					object {
-						x=81
-						y=179
-						width=100
-						height=20
-					}
-					"basic attribute" {
-						clr=14
-					}
-					textix="User info update"
-					align="horiz. right"
-				}
+			control {
+				chan="$(P)$(R)UserInstitution"
+				clr=14
+				bclr=51
+			}
+			format="string"
+			limits {
+			}
+		}
+		"text entry" {
+			object {
+				x=200
+				y=100
+				width=390
+				height=20
+			}
+			control {
+				chan="$(P)$(R)UserEmail"
+				clr=14
+				bclr=51
+			}
+			format="string"
+			limits {
+			}
+		}
+		"text entry" {
+			object {
+				x=200
+				y=127
+				width=390
+				height=20
+			}
+			control {
+				chan="$(P)$(R)ProposalNumber"
+				clr=14
+				bclr=51
+			}
+			format="string"
+			limits {
+			}
+		}
+		"text entry" {
+			object {
+				x=200
+				y=152
+				width=390
+				height=20
+			}
+			control {
+				chan="$(P)$(R)ProposalTitle"
+				clr=14
+				bclr=51
+			}
+			format="string"
+			limits {
+			}
+		}
+		"text entry" {
+			object {
+				x=200
+				y=178
+				width=390
+				height=20
+			}
+			control {
+				chan="$(P)$(R)UserInfoUpdate"
+				clr=14
+				bclr=51
+			}
+			format="string"
+			limits {
 			}
 		}
 	}
+}
+text {
+	object {
+		x=91
+		y=49
+		width=90
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="User name"
+	align="horiz. right"
+}
+text {
+	object {
+		x=71
+		y=74
+		width=110
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Institution"
+	align="horiz. right"
+}
+text {
+	object {
+		x=71
+		y=103
+		width=110
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="User e-mail"
+	align="horiz. right"
+}
+text {
+	object {
+		x=41
+		y=128
+		width=140
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix=" Proposal #"
+	align="horiz. right"
+}
+text {
+	object {
+		x=31
+		y=153
+		width=160
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="Experiment type {IH, User}"
+	align="horiz. right"
+}
+text {
+	object {
+		x=81
+		y=179
+		width=100
+		height=20
+	}
+	"basic attribute" {
+		clr=14
+	}
+	textix="User info update"
+	align="horiz. right"
 }
