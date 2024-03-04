@@ -11,11 +11,14 @@ Content
    :maxdepth: 1
    
    About <home_about>
-   Quickstart <quickstart>
    General information <general>
+   Prepare for beamtime <prepare>
+   Quickstart <quickstart>
+   Alignment <tomoalign>
    Data acquisition <daq>
    Tomographic reconstruction <reconstruction>
    Safety <safety>
+   Beamline hardware <hardware>
    BEATS computing infrastructure <computing>
 ..   Beamline control <control>
 

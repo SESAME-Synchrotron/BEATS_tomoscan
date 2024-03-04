@@ -1,3 +1,5 @@
+.. _Hutch search procedure:
+
 Hutch Search Procedure
 ======================
 

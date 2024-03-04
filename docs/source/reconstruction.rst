@@ -7,7 +7,7 @@ This section contains examples of tomographic reconstruction pipelines using `To
 .. Examples can be run in your browser using the Binder link at the top of the page..
 
 .. note::
-    Reconstruction pipelines at BEATS can be also executed from the command line, or as `Slurm <https://slurm.schedmd.com/documentation.html>`_ jobs on ``Rum@sesame.org.jo``.
+    Reconstruction pipelines at BEATS can be also executed from the command line, or as `Slurm <https://slurm.schedmd.com/documentation.html>`_ jobs on ``rum@sesame.org.jo``.
     The header of each example shows the shell command to launch the pipeline as a script.
     Visit the page :doc:`computing` for more information.
 
