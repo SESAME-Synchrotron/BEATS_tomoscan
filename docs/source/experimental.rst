@@ -4,8 +4,22 @@ Scan setup
 Start streaming data
 --------------------
 
-1. Open the dashboard GUI <dashboard>
-   1.1. 
+1. Launch the BEATS dashboard GUI <dashboard_mainWindow>
+
+To access the BEATS Dashboard, type the following command:
+::
+
+	$ BEATS_DAQ_Control_Monitor
+
+
+the main GUI will appear:
+
+.. figure:: /img/dashboard.png
+	:align: center
+	:alt: BEATS_Dashboard GUI
+
+	*Figure 1: BEATS Dashboard main window*
+
 
 
 Endstation alignment
