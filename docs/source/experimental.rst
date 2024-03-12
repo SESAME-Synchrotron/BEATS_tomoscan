@@ -4,7 +4,8 @@ Scan setup
 Start streaming data
 --------------------
 
-1. Launch the BEATS dashboard GUI <dashboard_mainWindow>
+Launch the :doc:`dashboard_mainWindow`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To access the BEATS Dashboard, type the following command:
 ::
