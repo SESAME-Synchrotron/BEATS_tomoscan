@@ -1,49 +1,38 @@
-""" Tomography scanning tool for BEATS @SESAME 
-The source of this code is the derived class for 
+"""
+Tomography scanning tool for BEATS @SESAME
+The source of this code is the derived class for
 tomography step scanning with EPICS at BEATS beamline
+"""
 
-Notes: 
-
-Action List: 
-1. To adapt BEATS shutter in the future, currently virtual shutter is being used. 
-2. To adapt motion system in the future, currently motorSim is being used.
-
+"""
    Classes
    -------
-    TomoScanBEATSPcoMicosStep 
-     
+    TomoScanBEATSPcoMicosStep
 """
 import time
+from datetime import timedelta
 import os
-import h5py 
 import sys
-import traceback
-import numpy as np
-from epics import PV
-import threading
-import re 
 import json
 import shutil
-import subprocess 
+import subprocess
 import socket
-from datetime import timedelta
-from tomoscan import data_management as dm
+from epics import PV
+
 from tomoscan.tomoscan_step import TomoScanSTEP
 from tomoscan import log
+
 from SEDSS.CLIMessage import CLIMessage
 from SEDSS.UIMessage import UIMessage
 from SEDSS.SEDSupport import fileName
+from SEDSS.SEDFileManager import readFile, path
+from SEDSS.SEDValueValidate import CSVProposal
 
 
 EPSILON = .001
 
-
-class SampleXError(Exception):
-    '''Exception raised when SampleX is not equal to SampleInX
-    '''
-
 class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
-    """Derived class used for tomography scanning with EPICS for BEATS 
+    """Derived class used for tomography scanning with EPICS for BEATS
 
     Parameters
     ----------
@@ -58,14 +47,14 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         super().__init__(pv_files, macros)
 
         self.configFile = configFile
-        # read json pvlist (hard coded PVs)        
+        # read json pvlist (hard coded PVs)
         file = open(configFile)
         self.pvlist = json.load(file)
-        self.systemInitializations()      
-        log.setup_custom_logger("./tomoscan.log")
-    
+        self.systemInitializations()
+        log.setup_custom_logger('./tomoscan.log')
+
     def systemInitializations(self):
-        # set TomoScan xml files        
+        # set TomoScan xml files
         self.epics_pvs['CamNDAttributesFile'].put(self.pvlist['XMLFiles']['detectorAttributes']['PcoMicosStepAttr'])
         self.epics_pvs['FPXMLFileName'].put(self.pvlist['XMLFiles']['layout']['PcoMicosStepLayout'])
 
@@ -73,12 +62,12 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         self.epics_pvs['FPAutoIncrement'].put('Yes')
 
         # Set standard file template on file writer
-        self.epics_pvs['FPFileTemplate'].put("%s%s_%3.3d.h5", wait=True)
+        self.epics_pvs['FPFileTemplate'].put('%s%s_%3.3d.h5', wait=True)
 
         PV(self.pvlist['PVs']['ZMQPVs']['PcoZMQ']).put(1, wait=True)
 
         # Disable over writing warning
-        self.epics_pvs['OverwriteWarning'].put('Yes')   
+        self.epics_pvs['OverwriteWarning'].put('Yes')
 
     def open_shutter(self):
         """Opens the combined stopper shutter to collect flat fields or projections.
@@ -87,9 +76,10 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
 
         - Opens the combined stopper shutter.
         """
+
         if self.epics_pvs['Testing'].get():
             log.warning('In testing mode, so not opening shutters.')
-        else: 
+        else:
             if not self.epics_pvs['OpenShutter'] is None:
                 pv = self.epics_pvs['OpenShutter']
                 value = self.epics_pvs['OpenShutterValue'].get(as_string=True)
@@ -103,14 +93,15 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
 
     def close_shutter(self):
         """Closes the combined stopper shutter to collect dark fields.
-        
+
         This does the following:
 
         - Closes the combined stopper shutter.
         """
+
         if self.epics_pvs['Testing'].get():
             log.warning('In testing mode, so not opening shutters.')
-        else: 
+        else:
             if not self.epics_pvs['CloseShutter'] is None:
                 pv = self.epics_pvs['CloseShutter']
                 value = self.epics_pvs['CloseShutterValue'].get(as_string=True)
@@ -126,9 +117,9 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         """Control of Sample X position
         """
         if(abs(self.epics_pvs['SampleInX'].value-self.epics_pvs['SampleX'].value)>1e-4) or abs(self.epics_pvs['SampleInY'].value-self.epics_pvs['SampleY'].value)>1e-4:
-            log.error('SampleInX/SampleInZ is not the same as current SampleTopX/SampleTopZ')            
+            log.error('SampleInX/SampleInZ is not the same as current SampleTopX/SampleTopZ')
             self.epics_pvs['ScanStatus'].put('Sample position error')
-            self.epics_pvs['StartScan'].put(0)        
+            self.epics_pvs['StartScan'].put(0)
             return
         super().step_scan()
 
@@ -145,8 +136,8 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
             This is used to set the ``NumImages`` PV of the camera.
         """
 
-        self.epics_pvs['CamAcquire'].put('Done') ###
-        self.wait_pv(self.epics_pvs['CamAcquire'], 0) ###
+        self.epics_pvs['CamAcquire'].put('Done')
+        self.wait_pv(self.epics_pvs['CamAcquire'], 0)
         log.info('set trigger mode: %s', trigger_mode)
 
         if trigger_mode == 'FreeRun':
@@ -157,54 +148,80 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         elif trigger_mode == 'Internal':
             self.epics_pvs['CamTriggerMode'].put(0, wait=True)
             self.wait_pv(self.epics_pvs['CamTriggerMode'], 0)
-            self.epics_pvs['CamImageMode'].put('Multiple')            
+            self.epics_pvs['CamImageMode'].put('Multiple')
             self.epics_pvs['CamNumImages'].put(num_images, wait=True)
 
         elif trigger_mode == 'Software':
             self.epics_pvs['CamTriggerMode'].put(0, wait=True)
             self.wait_pv(self.epics_pvs['CamTriggerMode'], 1)
             self.epics_pvs['CamTriggerSource'].put('Software', wait=True)
-            self.epics_pvs['CamImageMode'].put('Multiple')            
+            self.epics_pvs['CamImageMode'].put('Multiple')
             self.epics_pvs['CamNumImages'].put(num_images, wait=True)
 
         else: # set camera to external triggering
-            # These are just in case the scan aborted with the camera in another state 
-            self.epics_pvs['CamTriggerMode'].put(4, wait=True)     # VN: For PG we need to switch to On to be able to switch to readout overlap mode                                                              
-            self.epics_pvs['CamImageMode'].put('Multiple')            
+            # These are just in case the scan aborted with the camera in another state
+            self.epics_pvs['CamTriggerMode'].put(4, wait=True)     # VN: For PG we need to switch to On to be able to switch to readout overlap mode
+            self.epics_pvs['CamImageMode'].put('Multiple')
             self.epics_pvs['CamNumImages'].put(self.num_angles, wait=True)
             self.prepareTriggeringSource()
-    
+
     def prepareTriggeringSource (self):
-        # PV("FG:SetFunctionCH1").put("SQU") # square function 
-        # PV("FG:SetWaveformPeriodCH1").put(0.02) # waveform period
-        # PV("FG:SetBurstPeriodCH1").put(0.021) # Burst period. 
-        # PV("FG:SetSquareDutyCycleCH1").put(10) # duty cycle 10%
-        # PV("FG:SetBurst1").put(1) # enable burst 
-        # PV("FG:SetSquareAmplitudeCH1").put(5) # 5 volt 
-        # PV("FG:SetSquareOffsetCH1").put(2.5) # offset 2.5 volt, signal 0 - 5 volt on, off
-        # PV("FG:SetBurstTrigSourceCH1").put(0) # manual trigger source 
-        # PV("FG:SetBurstIdleCH1").put(3) # Bottom 
-        # PV("FG:SetOutputStateCH1").put(1) # enable output.
+
         self.IP = self.pvlist['RPTrigServ']['IP']
         self.PORT = self.pvlist['RPTrigServ']['PORT']
-        
-    def initSEDPathFile(self): 
+
+    def initSEDPathFile(self):
         """
-        This method is used to set the experimental file name in compliance 
+        This method is used to set the experimental file name in compliance
         with SESAME Experimental Data (SED) Writer (SEDW)
         """
-        # =================== SED file name and path section ==========================
-        
+
         SEDPathPV = self.pvlist['PVs']['writerSuppPVs']['SEDPath']
         SEDFileNamePV = self.pvlist['PVs']['writerSuppPVs']['SEDFileName']
         SEDTimeStampPV = self.pvlist['PVs']['writerSuppPVs']['SEDTimeStamp']
-        
+
+        top = self.pvlist['paths']['SEDTop']
+        schToday= os.path.expanduser(self.pvlist['paths']['todayProposal'])
+        schProposals = os.path.expanduser(self.pvlist['paths']['schProposals'])
+
+        self.breakFlag = 0
+
+        while True:
+            type = self.epics_pvs['ProposalTitle'].get(as_string=True).strip().upper()
+            if type == 'IH':
+                self.SEDPath = path(top, beamline='BEATS').getIHPath() + '/' + self.SEDFileName
+                break
+            elif type == 'USER':
+                try:
+                    proposal = int(self.epics_pvs['ProposalNumber'].get().strip())
+                    if isinstance(proposal, int) and len(str(proposal)) == 8:
+                        if not CSVProposal(schToday, proposal).lookup():
+                            if CSVProposal(schProposals, proposal).lookup():
+                                pass
+                            else:
+                                self.breakFlag = 1
+                                break
+                        self.SEDPath = path(top, beamline='BEATS', proposal=proposal, semester=readFile(schProposals).getProposalInfo(proposal, type='sem')).getPropPath() + '/' + self.SEDFileName
+                        break
+                    else:
+                        self.epics_pvs['ScanStatus'].put(f'ProposalID:{proposal}, please enter a valid proposal number')
+                        CLIMessage('please enter a valid proposal number', 'IR')
+                except:
+                    self.epics_pvs['ScanStatus'].put('please enter a valid proposal number')
+                    CLIMessage(f'ProposalID:{proposal}, please enter a valid proposal number', 'IR')
+            else:
+                self.epics_pvs['ScanStatus'].put('please enter a valid experiment type, {IH, User}')
+                CLIMessage('please enter a valid experiment type, {IH, User}', 'IR')
+            time.sleep(0.2)
+
+        if self.breakFlag:
+            CLIMessage('Wrong proposal ID or not scheduled, Proposal ID verification', "E")
+            sys.exit()
+
         PV(SEDTimeStampPV).put(self.SEDTimeStamp, wait=True)
         PV(SEDFileNamePV).put(self.SEDFileName, wait=True)
         PV(SEDPathPV).put(self.SEDPath, wait=True)
-
         self.epics_pvs['FilePath'].put(self.SEDPath, wait=True)
-        #==============================================================================
 
     def begin_scan(self):
         """Performs the operations needed at the very start of a scan.
@@ -218,15 +235,15 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         """
 
         repeat = 0
-        while PV("BEATS:WaitWriterDone").get() != 0: # 0:writer is ready to start new file 1: not ready
-            if repeat == 0: 
-                log.warning("Waiting writer to be ready.")
+        while PV(self.pvlist['PVs']['writerSuppPVs']['writerWritingDone']).get() != 0: # 0 : writer is ready to start new file, 1 : not ready
+            if repeat == 0:
+                log.warning('Waiting writer to be ready.')
                 self.epics_pvs['ScanStatus'].put('Waiting writer to be ready')
                 repeat = 1
-            CLIMessage("BEATS Writer | Wating to be ready", "IG")
-            time.sleep(0.1) # checks every .5 second 
+            CLIMessage('BEATS Writer | Wating to be ready', 'IG')
+            time.sleep(0.1)
 
-        scriptsPath = '/home/control/DAQ/operation/BEATS_Dashboard/Scripts/' 
+        scriptsPath = os.path.expanduser(self.pvlist['paths']['scripts'])
         stopCommand = [scriptsPath + 'BEATS_GUI_Bash_Stop', '--process', 'PCO_WriterServerStep']
         startCommand = [scriptsPath + 'BEATS_GUI_Bash_Start', '--process', 'PCO_WriterServerStep']
         xtermCommandStart = [scriptsPath + 'writer_pco_step_start.sh']
@@ -239,34 +256,48 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
             time.sleep(1)
             subprocess.run(xtermCommandStart, check=True)
         except subprocess.CalledProcessError as e:
-            CLIMessage(f"Error running the script: {e}", "E")
+            CLIMessage(f'Error running the script: {e}', 'E')
 
         self.systemInitializations()
-        # Check SED file name regex        
+        # Check SED file name regex
         repeats = 0
-        while fileName.SED_h5re(self.epics_pvs["FileName"].get(as_string=True)): 
-            if repeats == 0: 
-                # UIMessage("File Name","The file name is not valid","The file directory is auto generated, please insert the file name without (spaces, extensions, and special characters except dashes)").showWarning()
-                log.error("SED file name is not valid")
+        while fileName.SED_h5re(self.epics_pvs['FileName'].get(as_string=True)):
+            if repeats == 0:
+                log.error('SED file name is not valid')
                 self.epics_pvs['ScanStatus'].put('spaces, extensions, paths, and special characters except dashes are not allowed)')
                 repeats = 1
-            CLIMessage("The file directory is auto generated, please insert the file name without (spaces, extensions, and special characters except dashes)", "IR")
-            time.sleep(0.5) # checks every .5 second 
+            CLIMessage('The file directory is auto generated, please insert the file name without (spaces, extensions, and special characters except dashes)', 'IR')
+            time.sleep(0.5)
 
-        self.SEDBasePath = self.pvlist['paths']['SEDBasePath'] # this path should be in compliance with the path in SEDW
-        self.SEDPath, self.SEDFileName, self.SEDTimeStamp = fileName.SED_fileName(self.SEDBasePath, self.epics_pvs["FileName"].get(as_string=True), "BEATS") 
-            
+        self.SEDBasePath = self.pvlist['paths']['SEDBasePath']
+        self.SEDPath, self.SEDFileName, self.SEDTimeStamp = fileName.SED_fileName(self.SEDBasePath, self.epics_pvs['FileName'].get(as_string=True), 'BEATS')
+
         self.control_pvs['RotationHLM'].put(99999, wait = True)
-        self.control_pvs['RotationLLM'].put(-99999, wait = True)  
+        self.control_pvs['RotationLLM'].put(-99999, wait = True)
 
         log.info('begin scan')
         self.initSEDPathFile()
         # Call the base class method
         super().begin_scan()
 
+        # prepare the parameters if NDPluginProcess is being used
+        if PV(self.pvlist['PVs']['PROCPVs']['PCO']['pluginEnabled']).get() and PV(self.pvlist['PVs']['PROCPVs']['PCO']['filterEnabled']).get() and PV(self.pvlist['PVs']['PROCPVs']['PCO']['ZMQPort']).get(as_string=True) == "PROC1":
+            
+            PV(self.pvlist['PVs']['PROCPVs']['PCO']['autoResetFilter']).put(1, wait=True)
+            PV(self.pvlist['PVs']['PROCPVs']['PCO']['resetFilter']).put(1, wait=True)
+
+            if PV(self.pvlist['PVs']['PROCPVs']['PCO']['filterCallbacks']).get():
+                writerTotalImages = int(self.total_images) / int(PV(self.pvlist['PVs']['PROCPVs']['PCO']['numFilter']).get())
+            else:
+                writerTotalImages = self.total_images
+
+        else:
+            PV(self.pvlist['PVs']['PROCPVs']['PCO']['ZMQPort']).put('PCO1', wait=True)
+            writerTotalImages = self.total_images
+
         # Write h5 file by SED writer.
-        PV(self.pvlist['PVs']['writerSuppPVs']['writerImagesNumCaptured']).put(self.total_images)
-        
+        PV(self.pvlist['PVs']['writerSuppPVs']['writerImagesNumCaptured']).put(writerTotalImages)
+
         self.writerCheck()
 
         if not self.epics_pvs['UseExposureShutter'].get():
@@ -274,43 +305,43 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
             log.info('Exposure shutter not used')
             log.info('open exposure shutter')
 
-    def writerCheck(self): 
+    def writerCheck(self):
         repeat = 0
-        while PV(self.pvlist['PVs']['writerSuppPVs']['writerStatus']).get() != 1: 
-            if repeat == 0: 
-                log.error("BEATS Writer is not running!!!")
+        while PV(self.pvlist['PVs']['writerSuppPVs']['writerStatus']).get() != 1:
+            if repeat == 0:
+                log.error('BEATS Writer is not running!!!')
                 self.epics_pvs['ScanStatus'].put('BEATS Writer is not running!!!')
                 repeat = 1
-            CLIMessage("BEATS Writer is not running!! Start the writer server to continue the scan AUTOMATICALLY", "IR")
-            time.sleep(0.5) # checks every .5 second 
-        
+            CLIMessage('BEATS Writer is not running!! Start the writer server to continue the scan AUTOMATICALLY', 'IR')
+            time.sleep(0.5)
+
         repeat = 0
-        while PV(self.pvlist['PVs']['writerSuppPVs']['writerFileTrigger']).get() != 0: 
-            if repeat == 0: 
-                log.warning("Waiting for BEATS writer | there is a file begin written by the writer")
+        while PV(self.pvlist['PVs']['writerSuppPVs']['writerFileTrigger']).get() != 0:
+            if repeat == 0:
+                log.warning('Waiting for BEATS writer | there is a file begin written by the writer')
                 self.epics_pvs['ScanStatus'].put('Waiting for BEATS writer')
                 repeat = 1
-            CLIMessage("BEATS Writer is busey writing a file. The scan will continue AUTOMATICALLY when the writer is ready again", "IO")
+            CLIMessage('BEATS Writer is busey writing a file. The scan will continue AUTOMATICALLY when the writer is ready again', 'IO')
             time.sleep(0.5)
-    
-        # Triggers the writer to generate the file and be ready for ZMQ 
-        PV(self.pvlist['PVs']['writerSuppPVs']['writerFileTrigger']).put(1) 
-        
-        repeat = 0 
+
+        # Triggers the writer to generate the file and be ready for ZMQ
+        PV(self.pvlist['PVs']['writerSuppPVs']['writerFileTrigger']).put(1)
+
+        repeat = 0
         while PV(self.pvlist['PVs']['writerSuppPVs']['writerFileCreated']).get() != 1:
-            if repeat == 0: 
-                log.info("Wating for BEATS Writer to prepare the H5 dxFile.") 
+            if repeat == 0:
+                log.info('Wating for BEATS Writer to prepare the H5 dxFile.')
                 self.epics_pvs['ScanStatus'].put('Creating H5 dxFile')
                 repeat = 1
-            CLIMessage("BEATS Writer | Wating for H5 dxFile creation", "IO")
+            CLIMessage('BEATS Writer | Wating for H5 dxFile creation', 'IO')
             time.sleep(0.5)
 
         time.sleep(0.5)
-        print ("\n")
+        print ('\n')
 
     def update_status(self, start_time):
         """
-        When called updates ``ImagesCollected``, ``ImagesSaved``, ``ElapsedTime``, and ``RemainingTime``. 
+        When called updates ``ImagesCollected``, ``ImagesSaved``, ``ElapsedTime``, and ``RemainingTime``.
 
         Parameters
         ----------
@@ -349,30 +380,18 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         This does the following:
         - Reset rotation position by mod 360.
         - Calls the base class method.
-        - Closes shutter.  
-        - Copy raw data to data analysis computer.      
+        - Closes shutter.
+        - Copy raw data to data analysis computer.
         """
 
         if not self.epics_pvs['UseExposureShutter'].get():
             self.epics_pvs['ExposureShutter'].put(0, wait=True)
             log.info('close exposure shutter')
 
-
-        # if self.return_rotation == 'Yes':
-        #     # Reset rotation position by mod 360 , the actual return 
-        #     # to start position is handled by super().end_scan()
-        #     log.info('wait until the stage is stopped')
-        #     time.sleep(self.epics_pvs['RotationAccelTime'].get()*1.2)                        
-        #     ang = self.epics_pvs['RotationRBV'].get()
-        #     current_angle = np.sign(ang)*(np.abs(ang)%360)
-        #     self.epics_pvs['RotationSet'].put('Set', wait=True)
-        #     self.epics_pvs['Rotation'].put(current_angle, wait=True)
-        #     self.epics_pvs['RotationSet'].put('Use', wait=True)
-
         log.info('end scan')
         # Save the configuration
         # Strip the extension from the FullFileName and add .config
-        full_file_name = self.SEDPath + "/" + self.SEDFileName
+        full_file_name = self.SEDPath + '/' + self.SEDFileName
         log.info('data save location: %s', full_file_name)
         config_file_root = os.path.splitext(full_file_name)[0]
         self.save_configuration(config_file_root + '.config')
@@ -381,6 +400,13 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         super().end_scan()
         # Close shutter
         self.close_shutter()
+
+        ### Only if the proposal ID not valid for users experiments ###
+        try:
+            if self.breakFlag:
+                self.epics_pvs['ScanStatus'].put('Wrong proposal ID or not scheduled, Proposal ID verification')
+        except:
+            pass
 
     def save_configuration(self, file_name):
         """Saves the current configuration PVs to a file.
@@ -392,11 +418,11 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         for key in self.config_pvs:
             config[key] = self.config_pvs[key].get(as_string=True)
         try:
-            out_file = f = open(self.SEDBasePath + "/config.config", mode='w', encoding='utf-8')
+            out_file = f = open(self.SEDBasePath + '/config.config', mode='w', encoding='utf-8')
             json.dump(config, out_file, indent=2)
             out_file.close()
             time.sleep(.1)
-            shutil.move (self.SEDBasePath + "/config.config", file_name)
+            shutil.move (self.SEDBasePath + '/config.config', file_name)
 
         except (PermissionError, FileNotFoundError) as error:
             log.error('Error writing configuration file')
@@ -426,7 +452,7 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
                 time.sleep(.01)
             else:
                 return True
- 
+
     def wait_combined_stopper_shutter_open(self, timeout=-1):
         """Waits for the combined stopper shutter to open, or for ``abort_scan()`` to be called.
 
@@ -452,7 +478,7 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         elapsed_time = 0
         while True:
             if self.epics_pvs['ShutterStatus'].get() == int(value):
-                log.warning("Shutter is open in %f s", elapsed_time)
+                log.warning('Shutter is open in %f s', elapsed_time)
                 return
             if not self.scan_is_running:
                 exit()
@@ -460,11 +486,11 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
             time.sleep(1.0)
             current_time = time.time()
             elapsed_time = current_time - start_time
-            log.warning("Waiting on shutter to open: %f s", elapsed_time)
+            log.warning('Waiting on shutter to open: %f s', elapsed_time)
             # self.epics_pvs['OpenShutter'].put(value, wait=True)
             if timeout > 0:
                 if elapsed_time >= timeout:
-                   exit()
+                    exit()
 
     def collect_projections(self):
             """
@@ -479,7 +505,7 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
             log.info('collect projections')
 
             self.set_trigger_mode('External', self.num_angles)
-               
+
             # Start the camera
             self.epics_pvs['CamAcquire'].put('Acquire')
             # Need to wait a short time for AcquireBusy to change to 1
@@ -490,22 +516,20 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
 
             start_time = time.time()
             stabilization_time = self.epics_pvs['StabilizationTime'].get()
-            log.info("stabilization time %f s", stabilization_time)
+            log.info('stabilization time %f s', stabilization_time)
 
             if self.epics_pvs['UseExposureShutter'].get():
                 for k in range(self.num_angles):
-                    if(self.scan_is_running):
+                    if self.scan_is_running:
                         log.info('angle %d: %f', k, self.theta[k])
-                        self.epics_pvs['Rotation'].put(self.theta[k], wait=True)            
+                        self.epics_pvs['Rotation'].put(self.theta[k], wait=True)
                         time.sleep(stabilization_time)
                         log.info('open exposure shutter')
                         self.epics_pvs['ExposureShutter'].put(1, wait=True)
                         time.sleep(0.01)
-                        # self.epics_pvs['CamTriggerSoftware'].put(1)    
-                        # PV("FG:BurstTrigCH1").put(1)
                         s = socket.socket()
                         s.connect((self.IP, int(self.PORT)))
-                        x=time.time()   
+                        x=time.time()
                         log.info('Sending trigger #%d', k)
                         s.send(str(x).encode('utf-8'))
                         time.sleep(self.epics_pvs['ExposureTime'].get())
@@ -514,31 +538,23 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
                         log.info('close exposure shutter')
                         self.wait_pv(self.epics_pvs['CamNumImagesCounter'], k+1, 60)
                         self.update_status(start_time)
-            else:   
+            else:
                 for k in range(self.num_angles):
-                    if(self.scan_is_running):
+                    if self.scan_is_running:
                         log.info('angle %d: %f', k, self.theta[k])
-                        self.epics_pvs['Rotation'].put(self.theta[k], wait=True)            
+                        self.epics_pvs['Rotation'].put(self.theta[k], wait=True)
                         time.sleep(stabilization_time)
-                        #log.info('open exposure shutter')
-                        # self.epics_pvs['ExposureShutter'].put(1, wait=True)
-                        # time.sleep(0.01)
-                        # self.epics_pvs['CamTriggerSoftware'].put(1)    
-                        # PV("FG:BurstTrigCH1").put(1)
                         s = socket.socket()
                         s.connect((self.IP, int(self.PORT)))
-                        x=time.time()   
+                        x=time.time()
                         log.info('Sending trigger #%d', k)
                         s.send(str(x).encode('utf-8'))
-                        #time.sleep(self.epics_pvs['ExposureTime'].get())
-                        # self.epics_pvs['ExposureShutter'].put(0, wait=True)
                         s.close()
-                        #log.info('close exposure shutter')
                         self.wait_pv(self.epics_pvs['CamNumImagesCounter'], k+1, 60)
                         self.update_status(start_time)
-            
+
             # wait until the last frame is saved (not needed)
-            time.sleep(0.5)        
+            time.sleep(0.5)
             self.update_status(start_time)
 
     def wait_combined_stopper_shutter_close(self, timeout=-1):
@@ -566,7 +582,7 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         elapsed_time = 0
         while True:
             if self.epics_pvs['ShutterStatus'].get() == int(value):
-                log.warning("Shutter is close in %f s", elapsed_time)
+                log.warning('Shutter is close in %f s', elapsed_time)
                 return
             if not self.scan_is_running:
                 exit()
@@ -574,7 +590,7 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
             time.sleep(1.0)
             current_time = time.time()
             elapsed_time = current_time - start_time
-            log.warning("Waiting on shutter to close: %f s", elapsed_time)
+            log.warning('Waiting on shutter to close: %f s', elapsed_time)
             # self.epics_pvs['CloseShutter'].put(value, wait=True)
             if timeout > 0:
                 if elapsed_time >= timeout:
