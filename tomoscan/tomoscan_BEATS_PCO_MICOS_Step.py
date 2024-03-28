@@ -69,6 +69,10 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         # Disable over writing warning
         self.epics_pvs['OverwriteWarning'].put('Yes')
 
+        # Disable unused plugins
+        PV(self.pvlist['PVs']['TransPVs']['PCO']['enablePlugin']).put(0, wait=True)
+        PV(self.pvlist['PVs']['NexusPVs']['PCO']['enablePlugin']).put(0, wait=True)
+
     def open_shutter(self):
         """Opens the combined stopper shutter to collect flat fields or projections.
 
@@ -76,7 +80,6 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
 
         - Opens the combined stopper shutter.
         """
-
         if self.epics_pvs['Testing'].get():
             log.warning('In testing mode, so not opening shutters.')
         else:
@@ -162,7 +165,7 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
             # These are just in case the scan aborted with the camera in another state
             self.epics_pvs['CamTriggerMode'].put(4, wait=True)     # VN: For PG we need to switch to On to be able to switch to readout overlap mode
             self.epics_pvs['CamImageMode'].put('Multiple')
-            self.epics_pvs['CamNumImages'].put(self.num_angles, wait=True)
+            self.epics_pvs['CamNumImages'].put(num_images, wait=True)
             self.prepareTriggeringSource()
 
     def prepareTriggeringSource (self):
@@ -259,6 +262,7 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
             CLIMessage(f'Error running the script: {e}', 'E')
 
         self.systemInitializations()
+
         # Check SED file name regex
         repeats = 0
         while fileName.SED_h5re(self.epics_pvs['FileName'].get(as_string=True)):
@@ -282,21 +286,23 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
 
         # prepare the parameters if NDPluginProcess is being used
         if PV(self.pvlist['PVs']['PROCPVs']['PCO']['pluginEnabled']).get() and PV(self.pvlist['PVs']['PROCPVs']['PCO']['filterEnabled']).get() and PV(self.pvlist['PVs']['PROCPVs']['PCO']['ZMQPort']).get(as_string=True) == "PROC1":
-            
+
             PV(self.pvlist['PVs']['PROCPVs']['PCO']['autoResetFilter']).put(1, wait=True)
             PV(self.pvlist['PVs']['PROCPVs']['PCO']['resetFilter']).put(1, wait=True)
+            self.useProcPlugin = True
 
             if PV(self.pvlist['PVs']['PROCPVs']['PCO']['filterCallbacks']).get():
-                writerTotalImages = int(self.total_images) / int(PV(self.pvlist['PVs']['PROCPVs']['PCO']['numFilter']).get())
+                self.NFilters = int(PV(self.pvlist['PVs']['PROCPVs']['PCO']['numFilter']).get())
             else:
-                writerTotalImages = self.total_images
+                self.NFilters = 1
 
+            log.info('NDPluginProcess in use, filter type: %s, NFilters: %d s', PV(self.pvlist['PVs']['PROCPVs']['PCO']['filterCallbacks']).get(as_string=True), self.NFilters)
         else:
             PV(self.pvlist['PVs']['PROCPVs']['PCO']['ZMQPort']).put('PCO1', wait=True)
-            writerTotalImages = self.total_images
+            self.useProcPlugin = False
 
         # Write h5 file by SED writer.
-        PV(self.pvlist['PVs']['writerSuppPVs']['writerImagesNumCaptured']).put(writerTotalImages)
+        PV(self.pvlist['PVs']['writerSuppPVs']['writerImagesNumCaptured']).put(self.total_images)
 
         self.writerCheck()
 
@@ -358,12 +364,18 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         num_collected  = self.epics_pvs['CamNumImagesCounter'].value
         num_images     = self.epics_pvs['CamNumImages'].value
         num_saved      = PV(self.pvlist['PVs']['writerSuppPVs']['imagesNumSaved']).get()
-        num_to_save     = self.total_images
+        num_to_save    = self.total_images
+
         current_time = time.time()
         elapsed_time = current_time - start_time
         remaining_time = (elapsed_time * (num_images - num_collected) /
                           max(float(num_collected), 1))
-        collect_progress = str(num_collected) + '/' + str(num_images)
+
+        if self.useProcPlugin:
+            collect_progress = str(int(num_collected / self.NFilters)) + '/' + str(int(num_images / self.NFilters))
+        else:
+            collect_progress = str(num_collected) + '/' + str(num_images)
+
         log.info('Collected %s', collect_progress)
         self.epics_pvs['ImagesCollected'].put(collect_progress)
         save_progress = str(num_saved) + '/' + str(num_to_save)
@@ -493,31 +505,39 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
                     exit()
 
     def collect_projections(self):
-            """
-            This does the following:
-            - Call the superclass collect_projections() function.
-            - Set the trigger mode on the camera.
-            - Set the camera in acquire mode.
-            - Starts the camera acquiring in software trigger mode.
-            - Update scan status.
-            """
+        """
+        This method has been overrided to fit BEATS DAQ System.
 
-            log.info('collect projections')
+        This does the following:
+        - Call the superclass collect_projections() function.
+        - Set the trigger mode on the camera.
+        - Set the camera in acquire mode.
+        - Starts the camera acquiring in software trigger mode.
+        - Update scan status.
+        """
 
+        log.info('collect projections')
+
+        if self.useProcPlugin:
+            self.set_trigger_mode('External', self.num_angles * self.NFilters)
+        else:
             self.set_trigger_mode('External', self.num_angles)
 
-            # Start the camera
-            self.epics_pvs['CamAcquire'].put('Acquire')
-            # Need to wait a short time for AcquireBusy to change to 1
-            time.sleep(2)
-            self.open_shutter()
-            self.epics_pvs['HDF5Location'].put(self.epics_pvs['HDF5ProjectionLocation'].value)
-            self.epics_pvs['FrameType'].put('Projection')
+        # Start the camera
+        self.epics_pvs['CamAcquire'].put('Acquire')
+        # Need to wait a short time for AcquireBusy to change to 1
+        time.sleep(2)
+        self.open_shutter()
+        self.epics_pvs['HDF5Location'].put(self.epics_pvs['HDF5ProjectionLocation'].value)
+        self.epics_pvs['FrameType'].put('Projection')
 
-            start_time = time.time()
-            stabilization_time = self.epics_pvs['StabilizationTime'].get()
-            log.info('stabilization time %f s', stabilization_time)
+        start_time = time.time()
+        stabilization_time = self.epics_pvs['StabilizationTime'].get()
+        log.info('stabilization time %f s', stabilization_time)
+        expTime = self.epics_pvs['ExposureTime'].get()
 
+        if self.useProcPlugin:
+            avgConter = 0
             if self.epics_pvs['UseExposureShutter'].get():
                 for k in range(self.num_angles):
                     if self.scan_is_running:
@@ -526,13 +546,52 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
                         time.sleep(stabilization_time)
                         log.info('open exposure shutter')
                         self.epics_pvs['ExposureShutter'].put(1, wait=True)
-                        time.sleep(0.01)
+                        time.sleep(0.1)
+                        for img in range(self.NFilters):
+                            s = socket.socket()
+                            s.connect((self.IP, int(self.PORT)))
+                            x=time.time()
+                            log.info('Sending trigger #%d', k)
+                            s.send(str(x).encode('utf-8'))
+                            s.close()
+                            avgConter = avgConter+1
+                            self.wait_pv(self.epics_pvs['CamNumImagesCounter'], avgConter, 60)
+                            self.update_status(start_time)
+                        time.sleep(expTime + 0.1)
+                        self.epics_pvs['ExposureShutter'].put(0, wait=True)
+                        log.info('close exposure shutter')
+            else:
+                for k in range(self.num_angles):
+                    if self.scan_is_running:
+                        log.info('angle %d: %f', k, self.theta[k])
+                        self.epics_pvs['Rotation'].put(self.theta[k], wait=True)
+                        time.sleep(stabilization_time)
+                        for img in range(self.NFilters):
+                            s = socket.socket()
+                            s.connect((self.IP, int(self.PORT)))
+                            x=time.time()
+                            log.info('Sending trigger #%d', k)
+                            s.send(str(x).encode('utf-8'))
+                            s.close()
+                            avgConter = avgConter+1
+                            self.wait_pv(self.epics_pvs['CamNumImagesCounter'], avgConter, 60)
+                            self.update_status(start_time)
+        else:
+            if self.epics_pvs['UseExposureShutter'].get():
+                for k in range(self.num_angles):
+                    if self.scan_is_running:
+                        log.info('angle %d: %f', k, self.theta[k])
+                        self.epics_pvs['Rotation'].put(self.theta[k], wait=True)
+                        time.sleep(stabilization_time)
+                        log.info('open exposure shutter')
+                        self.epics_pvs['ExposureShutter'].put(1, wait=True)
+                        time.sleep(0.1)
                         s = socket.socket()
                         s.connect((self.IP, int(self.PORT)))
                         x=time.time()
                         log.info('Sending trigger #%d', k)
                         s.send(str(x).encode('utf-8'))
-                        time.sleep(self.epics_pvs['ExposureTime'].get())
+                        time.sleep(expTime + 0.1)
                         self.epics_pvs['ExposureShutter'].put(0, wait=True)
                         s.close()
                         log.info('close exposure shutter')
@@ -553,9 +612,40 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
                         self.wait_pv(self.epics_pvs['CamNumImagesCounter'], k+1, 60)
                         self.update_status(start_time)
 
-            # wait until the last frame is saved (not needed)
-            time.sleep(0.5)
-            self.update_status(start_time)
+        # wait until the last frame is saved (not needed)
+        time.sleep(0.5)
+        self.update_status(start_time)
+
+    def collect_static_frames(self, num_frames):
+        """Collects num_frames images in "Internal" trigger mode for dark fields and flat fields.
+
+        This method has been overrided to fit BEATS DAQ System.
+
+        Parameters
+        ----------
+        num_frames : int
+            Number of frames to collect.
+        """
+
+        # This is called when collecting dark fields or flat fields
+        log.info('collect static frames: %d', num_frames)
+
+        if self.useProcPlugin:
+            self.set_trigger_mode('Internal', num_frames * self.NFilters)
+        else:
+            self.set_trigger_mode('Internal', num_frames)
+
+        self.epics_pvs['CamAcquire'].put('Acquire')
+        # Wait for detector and file plugin to be ready
+        time.sleep(0.5)
+        frame_time = self.compute_frame_time()
+
+        if self.useProcPlugin:
+            collection_time = frame_time * num_frames * self.NFilters
+        else:
+            collection_time = frame_time * num_frames
+
+        self.wait_camera_done(collection_time + 5.0)
 
     def wait_combined_stopper_shutter_close(self, timeout=-1):
         """Waits for the combined stopper shutter to close, or for ``abort_scan()`` to be called.

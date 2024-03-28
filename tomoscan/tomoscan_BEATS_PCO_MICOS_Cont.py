@@ -70,6 +70,9 @@ class TomoScanBEATSPcoMicosCont(TomoScanCont):
         self.epics_pvs['OverwriteWarning'].put('Yes')
 
         PV(self.pvlist['PVs']['PROCPVs']['PCO']['ZMQPort']).put('PCO1', wait=True)
+        PV(self.pvlist['PVs']['PROCPVs']['PCO']['enablePlugin']).put(0, wait=True)
+        PV(self.pvlist['PVs']['TransPVs']['PCO']['enablePlugin']).put(0, wait=True)
+        PV(self.pvlist['PVs']['NexusPVs']['PCO']['enablePlugin']).put(0, wait=True)
 
     def open_shutter(self):
         """Opens the combined stopper shutter to collect flat fields or projections.

@@ -70,6 +70,11 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
         # Disable over writing warning
         self.epics_pvs['OverwriteWarning'].put('Yes')
 
+        PV(self.pvlist['PVs']['PROCPVs']['FLIR']['ZMQPort']).put('flir', wait=True)
+        PV(self.pvlist['PVs']['PROCPVs']['FLIR']['enablePlugin']).put(0, wait=True)
+        PV(self.pvlist['PVs']['TransPVs']['FLIR']['enablePlugin']).put(0, wait=True)
+        PV(self.pvlist['PVs']['NexusPVs']['FLIR']['enablePlugin']).put(0, wait=True)
+
     def open_shutter(self):
         """Opens the combined stopper shutter to collect flat fields or projections.
 
@@ -218,7 +223,7 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
                 self.epics_pvs['ScanStatus'].put('Waiting writer to be ready')
                 repeat = 1
             CLIMessage('BEATS Writer | Wating to be ready', 'IG')
-            time.sleep(0.1) 
+            time.sleep(0.1)
 
         scriptsPath = os.path.expanduser(self.pvlist['paths']['scripts'])
         stopCommand = [scriptsPath + 'BEATS_GUI_Bash_Stop', '--process', 'FLIR_WriterServerCont']
@@ -244,9 +249,9 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
                 self.epics_pvs['ScanStatus'].put('spaces, extensions, paths, and special characters except dashes are not allowed)')
                 repeats = 1
             CLIMessage('The file directory is auto generated, please insert the file name without (spaces, extensions, and special characters except dashes)', 'IR')
-            time.sleep(0.5) 
+            time.sleep(0.5)
 
-        self.SEDBasePath = self.pvlist['paths']['SEDBasePath'] 
+        self.SEDBasePath = self.pvlist['paths']['SEDBasePath']
         self.SEDPath, self.SEDFileName, self.SEDTimeStamp = fileName.SED_fileName(self.SEDBasePath, self.epics_pvs['FileName'].get(as_string=True), 'BEATS')
 
         """
@@ -291,7 +296,7 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
                 self.epics_pvs['ScanStatus'].put('BEATS Writer is not running!!!')
                 repeat = 1
             CLIMessage('BEATS Writer is not running!! Start the writer server to continue the scan AUTOMATICALLY', 'IR')
-            time.sleep(0.5) 
+            time.sleep(0.5)
 
         repeat = 0
         while PV(self.pvlist['PVs']['writerSuppPVs']['writerFileTrigger']).get() != 0:

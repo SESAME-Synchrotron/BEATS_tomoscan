@@ -18,6 +18,7 @@
 		},
 		"PROCPVs":{
 			"PCO":{
+				"enablePlugin":"TEST-PCO:Proc1:EnableCallbacks",
 				"pluginEnabled":"TEST-PCO:Proc1:EnableCallbacks_RBV",
 				"filterEnabled":"TEST-PCO:Proc1:EnableFilter_RBV",
 				"numFilter":"TEST-PCO:Proc1:NumFilter_RBV",
@@ -25,6 +26,32 @@
 				"autoResetFilter":"TEST-PCO:Proc1:AutoResetFilter",
 				"filterCallbacks":"TEST-PCO:Proc1:FilterCallbacks",
 				"ZMQPort":"TEST-PCO:ZMQ1:NDArrayPort"
+			},
+			"FLIR":{
+				"enablePlugin":"FLIR:Proc1:EnableCallbacks",
+				"pluginEnabled":"FLIR:Proc1:EnableCallbacks_RBV",
+				"filterEnabled":"FLIR:Proc1:EnableFilter_RBV",
+				"numFilter":"FLIR:Proc1:NumFilter_RBV",
+				"resetFilter":"FLIR:Proc1:ResetFilter",
+				"autoResetFilter":"FLIR:Proc1:AutoResetFilter",
+				"filterCallbacks":"FLIR:Proc1:FilterCallbacks",
+				"ZMQPort":"FLIR:ZMQ1:NDArrayPort"
+			}
+		},
+		"TransPVs":{
+			"PCO":{
+				"enablePlugin":"TEST-PCO:Trans1:EnableCallbacks"
+			},
+			"FLIR":{
+				"enablePlugin":"FLIR:Trans1:EnableCallbacks"
+			}
+		},
+		"NexusPVs":{
+			"PCO":{
+				"enablePlugin":"TEST-PCO:Nexus1:EnableCallbacks"
+			},
+			"FLIR":{
+				"enablePlugin":"FLIR:Nexus1:EnableCallbacks"
 			}
 		}
 	},

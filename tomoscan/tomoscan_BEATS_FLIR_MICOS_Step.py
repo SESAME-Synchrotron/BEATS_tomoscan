@@ -70,6 +70,10 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
         # Disable over writing warning
         self.epics_pvs['OverwriteWarning'].put('Yes')
 
+        # Disable unused plugins
+        PV(self.pvlist['PVs']['TransPVs']['FLIR']['enablePlugin']).put(0, wait=True)
+        PV(self.pvlist['PVs']['NexusPVs']['FLIR']['enablePlugin']).put(0, wait=True)
+
     def open_shutter(self):
         """Opens the combined stopper shutter to collect flat fields or projections.
 
@@ -176,7 +180,7 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
         This method is used to set the experimental file name in compliance
         with SESAME Experimental Data (SED) Writer (SEDW)
         """
-        
+
         SEDPathPV = self.pvlist['PVs']['writerSuppPVs']['SEDPath']
         SEDFileNamePV = self.pvlist['PVs']['writerSuppPVs']['SEDFileName']
         SEDTimeStampPV = self.pvlist['PVs']['writerSuppPVs']['SEDTimeStamp']
@@ -299,6 +303,23 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
         # Call the base class method
         super().begin_scan()
 
+        # prepare the parameters if NDPluginProcess is being used
+        if PV(self.pvlist['PVs']['PROCPVs']['FLIR']['pluginEnabled']).get() and PV(self.pvlist['PVs']['PROCPVs']['FLIR']['filterEnabled']).get() and PV(self.pvlist['PVs']['PROCPVs']['FLIR']['ZMQPort']).get(as_string=True) == "PROC1":
+
+            PV(self.pvlist['PVs']['PROCPVs']['FLIR']['autoResetFilter']).put(1, wait=True)
+            PV(self.pvlist['PVs']['PROCPVs']['FLIR']['resetFilter']).put(1, wait=True)
+            self.useProcPlugin = True
+
+            if PV(self.pvlist['PVs']['PROCPVs']['FLIR']['filterCallbacks']).get():
+                self.NFilters = int(PV(self.pvlist['PVs']['PROCPVs']['FLIR']['numFilter']).get())
+            else:
+                self.NFilters = 1
+
+            log.info('NDPluginProcess in use, filter type: %s, NFilters: %d s', PV(self.pvlist['PVs']['PROCPVs']['FLIR']['filterCallbacks']).get(as_string=True), self.NFilters)
+        else:
+            PV(self.pvlist['PVs']['PROCPVs']['FLIR']['ZMQPort']).put('flir', wait=True)
+            self.useProcPlugin = False
+
         # Write h5 file by SED writer.
         PV(self.pvlist['PVs']['writerSuppPVs']['writerImagesNumCaptured']).put(self.total_images)
 
@@ -363,11 +384,17 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
         num_images     = self.epics_pvs['CamNumImages'].value
         num_saved      = PV(self.pvlist['PVs']['writerSuppPVs']['imagesNumSaved']).get()
         num_to_save     = self.total_images
+
         current_time = time.time()
         elapsed_time = current_time - start_time
         remaining_time = (elapsed_time * (num_images - num_collected) /
                           max(float(num_collected), 1))
-        collect_progress = str(num_collected) + '/' + str(num_images)
+
+        if self.useProcPlugin:
+            collect_progress = str(int(num_collected / self.NFilters)) + '/' + str(int(num_images / self.NFilters))
+        else:
+            collect_progress = str(num_collected) + '/' + str(num_images)
+
         log.info('Collected %s', collect_progress)
         self.epics_pvs['ImagesCollected'].put(collect_progress)
         save_progress = str(num_saved) + '/' + str(num_to_save)
@@ -457,6 +484,129 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
                 time.sleep(.01)
             else:
                 return True
+
+    def collect_projections(self):
+        """
+        This method has been overrided to fit BEATS DAQ System.
+
+        This does the following:
+        - Call the superclass collect_projections() function.
+        - Set the trigger mode on the camera.
+        - Set the camera in acquire mode.
+        - Starts the camera acquiring in software trigger mode.
+        - Update scan status.
+        """
+
+        log.info('collect projections')
+
+        if self.useProcPlugin:
+            self.set_trigger_mode('Software', self.num_angles * self.NFilters)
+        else:
+            self.set_trigger_mode('Software', self.num_angles)
+
+        # Start the camera
+        self.epics_pvs['CamAcquire'].put('Acquire')
+        # Need to wait a short time for AcquireBusy to change to 1
+        time.sleep(2)
+        self.open_shutter()
+        self.epics_pvs['HDF5Location'].put(self.epics_pvs['HDF5ProjectionLocation'].value)
+        self.epics_pvs['FrameType'].put('Projection')
+
+        start_time = time.time()
+        stabilization_time = self.epics_pvs['StabilizationTime'].get()
+        log.info('stabilization time %f s', stabilization_time)
+        expTime = self.epics_pvs['ExposureTime'].get()
+
+        if self.useProcPlugin:
+            avgConter = 0
+            if self.epics_pvs['UseExposureShutter'].get():
+                for k in range(self.num_angles):
+                    if self.scan_is_running:
+                        log.info('angle %d: %f', k, self.theta[k])
+                        self.epics_pvs['Rotation'].put(self.theta[k], wait=True)
+                        time.sleep(stabilization_time)
+                        log.info('open exposure shutter')
+                        self.epics_pvs['ExposureShutter'].put(1, wait=True)
+                        time.sleep(0.1)
+                        for img in range(self.NFilters):
+                            self.epics_pvs['CamTriggerSoftware'].put(1)
+                            avgConter = avgConter+1
+                            self.wait_pv(self.epics_pvs['CamNumImagesCounter'], avgConter, 60)
+                            self.update_status(start_time)
+                        time.sleep(expTime + 0.1)
+                        self.epics_pvs['ExposureShutter'].put(0, wait=True)
+                        log.info('close exposure shutter')
+            else:
+                for k in range(self.num_angles):
+                    if self.scan_is_running:
+                        log.info('angle %d: %f', k, self.theta[k])
+                        self.epics_pvs['Rotation'].put(self.theta[k], wait=True)
+                        time.sleep(stabilization_time)
+                        for img in range(self.NFilters):
+                            self.epics_pvs['CamTriggerSoftware'].put(1)
+                            avgConter = avgConter+1
+                            self.wait_pv(self.epics_pvs['CamNumImagesCounter'], avgConter, 60)
+                            self.update_status(start_time)
+        else:
+            if self.epics_pvs['UseExposureShutter'].get():
+                for k in range(self.num_angles):
+                    if self.scan_is_running:
+                        log.info('angle %d: %f', k, self.theta[k])
+                        self.epics_pvs['Rotation'].put(self.theta[k], wait=True)
+                        time.sleep(stabilization_time)
+                        log.info('open exposure shutter')
+                        self.epics_pvs['ExposureShutter'].put(1, wait=True)
+                        time.sleep(0.1)
+                        self.epics_pvs['CamTriggerSoftware'].put(1)
+                        time.sleep(expTime + 0.1)
+                        self.epics_pvs['ExposureShutter'].put(0, wait=True)
+                        log.info('close exposure shutter')
+                        self.wait_pv(self.epics_pvs['CamNumImagesCounter'], k+1, 60)
+                        self.update_status(start_time)
+            else:
+                for k in range(self.num_angles):
+                    if self.scan_is_running:
+                        log.info('angle %d: %f', k, self.theta[k])
+                        self.epics_pvs['Rotation'].put(self.theta[k], wait=True)
+                        time.sleep(stabilization_time)
+                        self.epics_pvs['CamTriggerSoftware'].put(1)
+                        self.wait_pv(self.epics_pvs['CamNumImagesCounter'], k+1, 60)
+                        self.update_status(start_time)
+
+        # wait until the last frame is saved (not needed)
+        time.sleep(0.5)
+        self.update_status(start_time)
+
+    def collect_static_frames(self, num_frames):
+        """Collects num_frames images in "Internal" trigger mode for dark fields and flat fields.
+
+        This method has been overrided to fit BEATS DAQ System.
+
+        Parameters
+        ----------
+        num_frames : int
+            Number of frames to collect.
+        """
+
+        # This is called when collecting dark fields or flat fields
+        log.info('collect static frames: %d', num_frames)
+
+        if self.useProcPlugin:
+            self.set_trigger_mode('Internal', num_frames * self.NFilters)
+        else:
+            self.set_trigger_mode('Internal', num_frames)
+
+        self.epics_pvs['CamAcquire'].put('Acquire')
+        # Wait for detector and file plugin to be ready
+        time.sleep(0.5)
+        frame_time = self.compute_frame_time()
+
+        if self.useProcPlugin:
+            collection_time = frame_time * num_frames * self.NFilters
+        else:
+            collection_time = frame_time * num_frames
+
+        self.wait_camera_done(collection_time + 5.0)
 
     def wait_combined_stopper_shutter_open(self, timeout=-1):
         """Waits for the combined stopper shutter to open, or for ``abort_scan()`` to be called.
