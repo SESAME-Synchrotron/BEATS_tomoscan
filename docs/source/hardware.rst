@@ -24,3 +24,4 @@ The second sheet contains a calculator of the optimal scintillator thickness.
 Cameras
 -------
 
+ToDo: Create a documentation for changing cameras and optics/magnifications.
