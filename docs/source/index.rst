@@ -19,6 +19,7 @@ Content
    Tomographic reconstruction <reconstruction>
    Safety <safety>
    Beamline hardware <hardware>
+   For Beamline Scientists/Trainees <for_staff>
    BEATS computing infrastructure <computing>
 ..   Beamline control <control>
 
