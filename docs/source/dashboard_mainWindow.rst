@@ -47,6 +47,7 @@ Controlling Sections:
 			* TomoScan IOC.
 			* Python Server.
 			* writer Server.
+			* Filter Plugin Feature.
 			* MEDM (TomoScan MEDM)
 
 		-Continuous Scan:
