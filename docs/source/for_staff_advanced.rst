@@ -7,6 +7,8 @@ Non-routine tasks.
 
 ToDo: Create a documentation for changing cameras and optics/magnifications.
 
+Put in filters and observe the beam for the first time. -> adjustment of the beam for the experiment.
+
 after shutdown
 --------------
 
@@ -63,6 +65,60 @@ changing optics/magnification
 Videos + photos
 
 
-cleaning the scintillator
------------------------
+.. class:: hidden
 
+	cleaning the scintillator
+	-----------------------
+
+
+
+Mount proposal folders
+----------------------
+
+.. warning::
+    The following commands are for the beamline staff only.
+
+Mount proposal ``ExpData`` and ``recon`` folders on BL-BEATS-WS01::
+
+   cd ~
+   ./petra_prop_mounter.sh
+
+Check mount points::
+
+   df -h
+
+Unmount proposal folders::
+
+   umount /PETRA/SED/BEATS/SEM_6/20235010
+   umount /PETRA/SED/BEATS/SEM_6_recon/20235010
+
+Mount proposal ``ExpData`` and ``recon`` folders on Win Data Dispenser and Dragonfly VizServer::
+
+   ./petra_prop_recon_smb_mounter.sh
+
+.. highlight:: none
+
+.. note::
+    For proposals belonging to a different semester the scripts ``petra_prop_mounter.sh`` and ``petra_prop_recon_smb_mounter.sh`` must be modified.
+
+
+
+Endstation alignment
+--------------------
+
+.. note::
+	The endstation is aligned by the beamline staff at the start of your beamtime. Generally, you don't need to repeat these operation and you can jump to :ref:`sample alignment<sample alignment>`
+
+1. Endstation pitch
+2. Endstation X-axis
+3. Camera rotation
+4. Detector focus
+
+.. _sample alignment:
+
+
+Sample alignment with X-rays
+----------------------------
+
+1. Sample center of rotation (manual procedure)
+2. Automatic alignment script
