@@ -22,22 +22,23 @@ the main GUI will appear:
 	*Figure 1: BEATS Dashboard main window*
 
 
+.. class:: remove
+	Endstation alignment
+	--------------------
 
-Endstation alignment
---------------------
+	.. note::
+		The endstation is aligned by the beamline staff at the start of your beamtime. Generally, you don't need to repeat these operation and you can jump to :ref:`sample alignment<sample alignment>`
 
-.. note::
-	The endstation is aligned by the beamline staff at the start of your beamtime. Generally, you don't need to repeat these operation and you can jump to :ref:`sample alignment<sample alignment>`
+	1. Endstation pitch
+	2. Endstation X-axis
+	3. Camera rotation
+	4. Detector focus
 
-1. Endstation pitch
-2. Endstation X-axis
-3. Camera rotation
-4. Detector focus
+	.. _sample alignment:
 
-.. _sample alignment:
+.. class:: remove
+	Sample alignment with X-rays
+	----------------------------
 
-Sample alignment with X-rays
-----------------------------
-
-1. Sample center of rotation (manual procedure)
-2. Automatic alignment script
+	1. Sample center of rotation (manual procedure)
+	2. Automatic alignment script

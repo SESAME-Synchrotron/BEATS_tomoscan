@@ -23,6 +23,22 @@ after shutdown
 - experimental hutch: CVD Window 2: water flow for cooling should be >= 3.5, below 3 it gives an interlock
 
 
+Selecting detector, start of IOC, getting initial images
+-------------------------------
+
+FLIR needs to be plugged in
+PCO needs to be switched on on top, its chiller is in "follow-mode".
+
+Refining slit settings and detector posotion
+-------------------------------
+
+
+Potential obstacles
+-------------------------------
+
+could be that wire scanner, diagnostics screen, white beam blocker (WBB), CVD window are "in the beam" and give artefacts
+
+
 Change radiation and energy settings
 -------------------------------
 
@@ -65,10 +81,8 @@ changing optics/magnification
 Videos + photos
 
 
-.. class:: hidden
-
-	cleaning the scintillator
-	-----------------------
+cleaning the scintillator
+-----------------------
 
 
 
@@ -116,9 +130,3 @@ Endstation alignment
 
 .. _sample alignment:
 
-
-Sample alignment with X-rays
-----------------------------
-
-1. Sample center of rotation (manual procedure)
-2. Automatic alignment script
