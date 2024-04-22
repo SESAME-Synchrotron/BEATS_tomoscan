@@ -12,17 +12,41 @@ after shutdown
 
 - do search of the optics hutch
 
-- are all chillers and other devices turned on (e.g. the chiller of the monochromator)
+- are all chillers and other devices turned on (e.g. the chiller of the monochromator), are all symbols in the dashboad green? If everything seems ok click reset to refresh them and see if the shutters can be opened.
 
 - open the gauge valves
 
 - check with Yazeed if any motors need to be homed, especially if there was a power cut
 
+- experimental hutch: CVD Window 2: water flow for cooling should be >= 3.5, below 3 it gives an interlock
 
-Double Multilayer Monochromator
+
+Change radiation and energy settings
 -------------------------------
 
-place energy settings etc here?
+The beamline energy can be changed using the `Energy CLI <https://xray-energy.readthedocs.io/en/latest/usage.html>`_.
+
+.. highlight:: bash
+   :linenothreshold: 1
+
+Start the `Energy CLI <https://xray-energy.readthedocs.io/en/latest/usage.html>`_::
+
+   cd /home/control/energy/iocBoot/iocEnergy_2BM
+   python3 -i start_energy.py
+
+Set energy to 20.0 keV (W/B4C stripe)::
+
+   energy set --energy 20
+
+Set energy to 20.0 keV (Ru/B4C stripe)::
+
+   energy set --energy 19.99
+
+.. highlight:: none
+
+
+
+--- maybe list more settings + filtered radiation?
 
 
 changing detectors
