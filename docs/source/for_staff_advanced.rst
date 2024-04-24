@@ -72,7 +72,23 @@ changing detectors
 
 Videos + photos
 
-How to switch on the cameras.
+How to switch on the cameras. : plug in power supply or simply switch on
+
+
+increase distance between sample and detector to e.g. 1m
+
+Det1/Det3 - optique peter:
+	remove lead box
+	untighten small crews
+	place the camera in a safe place (e.g. a hanging, CLEAN bag)
+	connections
+	
+	Det3 (poly radiation): connect all five available cables
+	Det3 (mono radiation with objectives): connect Foc1/Rot1
+	
+	
+Det2 - Hasselblad:
+	open black housing (heavy, perhaps use the crane)
 
 
 changing optics/magnification
