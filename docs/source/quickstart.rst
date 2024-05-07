@@ -5,7 +5,23 @@ Quick start guide
 Welcome to ID-10 BEATS. Follow the steps below to setup and perform your first scan.
 
 .. note::
-    The beamline is setup for your experiment at the start of the beamtime together with the beamline staff. Most of the times, there will be nothing to change from one scan to the next. Ask the beamline staff before changing any beamline setting.
+    The beamline is setup for your experiment at the start of the beamtime together with the beamline staff. This includes energy adjustment and mounting detector and optics. Most of the times, there will be little to change from one scan to the next, besides aligning the sample. Ask the beamline staff before changing any beamline setting.
+
+Main points of this page include:
+
+.. toctree::
+   :maxdepth: 2
+
+   1. Set up the beamline - link to setup removed
+   2. Set up your experiment <sample_mount>
+   3. Search the hutch <safety/hutch_search>
+   4. Open the shutters <vacuum>
+   5. Set up the scan <experimental>
+   6. Collect data <collect_data>
+   7. Reconstruct your data <quick_reconstruction>
+
+Getting started
+==========
 
 The beamline control GUI allows to control the in-vacuum instrumentation in the beamline front-end, optics hutch, and experimental hutch.
 
@@ -28,7 +44,7 @@ The heartpiece of beamline operation is the ``beats-qt`` GUI.
 	*Figure 1: BEATS beamline control GUI.*
 
 
-It can be started from a linux console on the control computer (e.g. by pressing ctrl + alt + t) and typing
+If it's not already started or gets closed accidentally, it can be started from a linux console on the control computer (e.g. by pressing ctrl + alt + t) and typing
 
 ::
 
@@ -40,19 +56,30 @@ The BEATS beamline GUI allows to
 #. launch the BEATS :ref:`Experimental GUI`. This GUI controls the sample manipulator and detection systems.
 
 
+Beamline vacuum GUI
+===================
 
-.. toctree::
-   :maxdepth: 2
+To be able to acquire meaningful data, you need to have X-rays on your sample. Therefore, the shutters need to be opened at least. Open the shutters only when needed and you want to measure (also to protect your sample). Openening the shutters can only be performed after the hutch has been searched.
 
-   1. Set up the beamline <setup>
-   2. Set up your experiment <sample_mount>
-   3. Search the hutch <safety/hutch_search>
-   4. Open the shutters <vacuum>
-   5. Set up the scan <experimental>
-   6. Collect data <collect_data>
-   7. Reconstruct your data <quick_reconstruction>
-  
-  
+.. figure:: /img/vacuum.png
+	:align: center
+	:alt: BEATS vacuum GUI
+
+	*Figure 1: BEATS vacuum GUI.*
+
+To open the beamline light path, the shutters must be opened in the following order:
+    1. Radiation shutter.
+    2. Photon shutter.
+    3. Combined stopper.
+
+.. note::
+    It is only allowed to open the beamline shutters once the hutches have been searched. You will see a red button besides one of the shutter if opening is not allowed.
+
+.. warning::
+    Before opening the beamline shutters for the first time, verify with your local contact the setup of the beamline (slits, attenuator, ...).
+
+
+
   
 Start streaming data
 --------------------

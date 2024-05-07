@@ -1,11 +1,11 @@
 This section can be removed or replaced.
 
 
-Scan setup
-==========
-
-
 .. class:: remove
+	Scan setup
+	==========
+
+
 	Start streaming data
 	--------------------
 
