@@ -15,13 +15,14 @@ Main points of this page include:
    1. Set up the beamline - link to setup removed
    2. Set up your experiment <sample_mount>
    3. Search the hutch <safety/hutch_search>
-   4. Open the shutters <vacuum>
+   4. Open the shutters - link to vacuum removed
    5. Set up the scan <experimental>
    6. Collect data <collect_data>
    7. Reconstruct your data <quick_reconstruction>
 
 Getting started
-==========
+--------------------
+
 
 The beamline control GUI allows to control the in-vacuum instrumentation in the beamline front-end, optics hutch, and experimental hutch.
 
@@ -57,7 +58,7 @@ The BEATS beamline GUI allows to
 
 
 Beamline vacuum GUI
-===================
+--------------------
 
 To be able to acquire meaningful data, you need to have X-rays on your sample. Therefore, the shutters need to be opened at least. Open the shutters only when needed and you want to measure (also to protect your sample). Openening the shutters can only be performed after the hutch has been searched.
 
