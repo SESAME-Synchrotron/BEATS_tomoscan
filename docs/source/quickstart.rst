@@ -101,4 +101,17 @@ the main GUI will appear:
 	*Figure 1: BEATS Dashboard main window*
 
 For a very detailed description of the procedure go to :doc:`dashboard_mainWindow`!
+
+
+Reconstruct your data
+--------------------
+
+.. toctree::
+   :maxdepth: 2
+
+   7. Reconstruct your data <quick_reconstruction>
+
+
+test
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
