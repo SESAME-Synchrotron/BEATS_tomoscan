@@ -18,6 +18,28 @@ In particular, you might need to adjust the configuration of:
 * adjust the sample on the stage
 * start a scan
 
+The heartpiece of beamline operation is the ``beats-qt`` GUI.
+
+
+
+.. figure:: /img/beats-qt_annotated.png
+	:align: center
+	:alt: BEATS beamline GUI
+
+	*Figure 1: BEATS beamline control GUI.*
+
+It can be started from a linux console on the control computer (e.g. by pressing ctrl + alt + t) and typing
+
+::
+
+	$ beats-qt
+
+The BEATS beamline GUI allows to
+#. display the machine status and parameters.
+#. launch the BEATS :ref:`Beamline vacuum GUI`. The vacuum GUI is used to open the shutters of the beamline.
+#. launch the BEATS :ref:`Experimental GUI`. This GUI controls the sample manipulator and detection systems.
+
+
 
 .. toctree::
    :maxdepth: 2
