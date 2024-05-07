@@ -1,3 +1,5 @@
+This section can be removed or replaced.
+
 Beamline setup
 ==============
 

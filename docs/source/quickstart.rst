@@ -21,12 +21,12 @@ In particular, you might need to adjust the configuration of:
 The heartpiece of beamline operation is the ``beats-qt`` GUI.
 
 
-
 .. figure:: /img/beats-qt_annotated.png
 	:align: center
 	:alt: BEATS beamline GUI
 
 	*Figure 1: BEATS beamline control GUI.*
+
 
 It can be started from a linux console on the control computer (e.g. by pressing ctrl + alt + t) and typing
 
@@ -51,4 +51,26 @@ The BEATS beamline GUI allows to
    5. Set up the scan <experimental>
    6. Collect data <collect_data>
    7. Reconstruct your data <quick_reconstruction>
-   
+  
+  
+  
+Start streaming data
+--------------------
+
+
+To access the BEATS Dashboard, type the following command:
+::
+
+	$ BEATS_DAQ_Control_Monitor
+
+
+the main GUI will appear:
+
+.. figure:: /img/dashboard.png
+	:align: center
+	:alt: BEATS_Dashboard GUI
+
+	*Figure 1: BEATS Dashboard main window*
+
+For a very detailed description of the procedure go to :doc:`dashboard_mainWindow`!
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

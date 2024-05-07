@@ -1,25 +1,30 @@
+This section can be removed or replaced.
+
+
 Scan setup
 ==========
 
-Start streaming data
---------------------
 
-Launch the :doc:`dashboard_mainWindow`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. class:: remove
+	Start streaming data
+	--------------------
 
-To access the BEATS Dashboard, type the following command:
-::
+	Launch the :doc:`dashboard_mainWindow`
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	$ BEATS_DAQ_Control_Monitor
+	To access the BEATS Dashboard, type the following command:
+	::
+
+		$ BEATS_DAQ_Control_Monitor
 
 
-the main GUI will appear:
+	the main GUI will appear:
 
-.. figure:: /img/dashboard.png
-	:align: center
-	:alt: BEATS_Dashboard GUI
+	.. figure:: /img/dashboard.png
+		:align: center
+		:alt: BEATS_Dashboard GUI
 
-	*Figure 1: BEATS Dashboard main window*
+		*Figure 1: BEATS Dashboard main window*
 
 
 .. class:: remove
