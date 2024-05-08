@@ -13,10 +13,10 @@ Main points of this page include:
    :maxdepth: 2
 
    1. Set up the beamline - link to setup removed
-   2. Set up your experiment sample_mount - moved
+   2. Set up your experiment sample_mount <hallo>
    3. Search the hutch <safety/hutch_search> - still there
    4. Open the shutters - link to vacuum removed
-   5. Set up the scan <experimental>
+   5. Set up the scan <experimental> - test
    6. Collect data <collect_data>
    7. Reconstruct your data - moved quick_reconstruction
 
@@ -80,6 +80,13 @@ To open the beamline light path, the shutters must be opened in the following or
     Before opening the beamline shutters for the first time, verify with your local contact the setup of the beamline (slits, attenuator, ...).
 
 
+Search the hutch
+--------------------
+
+.. toctree::
+   :maxdepth: 2
+
+   Search the hutch <safety/hutch_search>
 
   
 Start streaming data
