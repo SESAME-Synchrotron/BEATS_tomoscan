@@ -9,10 +9,20 @@ ToDo: Create a documentation for changing cameras and optics/magnifications.
 
 Put in filters and observe the beam for the first time. -> adjustment of the beam for the experiment.
 
+
+
+
+
 alignment too
 --------------
 
-:ref:`sample alignment<tomoalign>`
+Here should be another reference
+:ref:`sample alignment<sample alignment>`
+
+
+
+
+
 
 after shutdown
 --------------
@@ -28,11 +38,26 @@ after shutdown
 - experimental hutch: CVD Window 2: water flow for cooling should be >= 3.5, below 3 it gives an interlock
 
 
+
+
+
+Changing cameras
+-------------------------------
+
+
+
+
+
 Selecting detector, start of IOC, getting initial images
 -------------------------------
 
 FLIR needs to be plugged in
 PCO needs to be switched on on top, its chiller is in "follow-mode".
+
+
+
+
+
 
 Refining slit settings and detector posotion
 -------------------------------
