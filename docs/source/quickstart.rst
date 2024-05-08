@@ -22,6 +22,7 @@ In particular, you might need to adjust the configuration of:
 
 * One or more of the beamline slits
 * Attenuator system
+* search the hutch and open the shutters
 * adjust the sample on the stage
 * start a scan
 
