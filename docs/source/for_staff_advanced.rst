@@ -9,6 +9,11 @@ ToDo: Create a documentation for changing cameras and optics/magnifications.
 
 Put in filters and observe the beam for the first time. -> adjustment of the beam for the experiment.
 
+alignment too
+--------------
+
+:ref:`sample alignment<tomoalign>`
+
 after shutdown
 --------------
 

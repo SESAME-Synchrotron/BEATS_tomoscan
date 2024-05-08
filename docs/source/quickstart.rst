@@ -2,27 +2,17 @@
 Quick start guide
 =================
 
-Welcome to ID-10 BEATS. Follow the steps below to setup and perform your first scan.
+Welcome to ID-10 BEATS. Below is a coarse overview of the most important steps to setup and perform your first scan. To keep to page simple but provide all information needed, links to in depth descriptions are provided in the corresponding sections.
 
 .. note::
     The beamline is setup for your experiment at the start of the beamtime together with the beamline staff. This includes energy adjustment and mounting detector and optics. Most of the times, there will be little to change from one scan to the next, besides aligning the sample. Ask the beamline staff before changing any beamline setting.
 
-Main points of this page include:
 
-.. toctree::
-   :maxdepth: 2
 
-   1. Set up the beamline - link to setup removed
-   2. Set up your experiment sample_mount <hallo>
-   3. Search the hutch <safety/hutch_search> - still there
-   4. Open the shutters - link to vacuum removed
-   5. Set up the scan <experimental> - test
-   6. Collect data <collect_data>
-   7. Reconstruct your data - moved quick_reconstruction
+
 
 Getting started
 --------------------
-
 
 The beamline control GUI allows to control the in-vacuum instrumentation in the beamline front-end, optics hutch, and experimental hutch.
 
@@ -57,6 +47,9 @@ The BEATS beamline GUI allows to
 #. launch the BEATS :ref:`Experimental GUI`. This GUI controls the sample manipulator and detection systems.
 
 
+
+
+
 Beamline vacuum GUI
 --------------------
 
@@ -80,6 +73,9 @@ To open the beamline light path, the shutters must be opened in the following or
     Before opening the beamline shutters for the first time, verify with your local contact the setup of the beamline (slits, attenuator, ...).
 
 
+
+
+
 Search the hutch
 --------------------
 
@@ -87,6 +83,9 @@ Search the hutch
    :maxdepth: 2
 
    Search the hutch <safety/hutch_search>
+
+
+
 
   
 Start streaming data
@@ -110,6 +109,9 @@ the main GUI will appear:
 For a very detailed description of the procedure go to :doc:`dashboard_mainWindow`!
 
 
+
+
+
 Set up your experiment
 --------------------
 
@@ -118,6 +120,9 @@ Set up your experiment
 
    Set up your experiment <sample_mount>
    
+
+
+
    
 Reconstruct your data
 --------------------
@@ -127,7 +132,5 @@ Reconstruct your data
 
    7. Reconstruct your data <quick_reconstruction>
 
-
-test
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
