@@ -19,6 +19,7 @@ alignment too
 Here should be another reference
 :ref:`sample alignment<sample alignment>`
 
+:doc:`tomoalign`
 
 
 
