@@ -14,7 +14,7 @@ Content
    General information <general>
    Prepare for beamtime <prepare>
    Quickstart <quickstart>
-   Alignment <tomoalign>
+   Alignment <tomoalign> - this should go away to For Beamline Scientists/Trainees
    Data acquisition <daq>
    Tomographic reconstruction <reconstruction>
    Safety <safety>
