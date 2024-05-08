@@ -13,12 +13,12 @@ Main points of this page include:
    :maxdepth: 2
 
    1. Set up the beamline - link to setup removed
-   2. Set up your experiment <sample_mount>
-   3. Search the hutch <safety/hutch_search>
+   2. Set up your experiment sample_mount - moved
+   3. Search the hutch <safety/hutch_search> - still there
    4. Open the shutters - link to vacuum removed
    5. Set up the scan <experimental>
    6. Collect data <collect_data>
-   7. Reconstruct your data <quick_reconstruction>
+   7. Reconstruct your data - moved quick_reconstruction
 
 Getting started
 --------------------
@@ -103,6 +103,15 @@ the main GUI will appear:
 For a very detailed description of the procedure go to :doc:`dashboard_mainWindow`!
 
 
+Set up your experiment
+--------------------
+
+.. toctree::
+   :maxdepth: 2
+
+   Set up your experiment <sample_mount>
+   
+   
 Reconstruct your data
 --------------------
 
