@@ -16,6 +16,7 @@ Local contacts
 | Name          | Role               | Email                       | EXT | Mobile             |
 +===============+====================+=============================+=====+====================+
 | Gianluca Iori | Beamline scientist | gianluca.iori@sesame.org.jo | 364 | +962 (0) 791413956 |
++---------------+--------------------+-----------------------------+-----+--------------------+
 | Philipp Hans  | Beamline scientist | philipp.hans@sesame.org.jo  | 276 | +962 (0) 790527499 |
 +---------------+--------------------+-----------------------------+-----+--------------------+
 
@@ -28,6 +29,7 @@ Call the following people if you face problems with the beamline data acquisitio
 | Name              | Role                        | Email                       | EXT | Mobile       |
 +===================+=============================+=============================+=====+==============+
 | Mustafa Al Zoubi  | Team Supervisor             | Mostafa.zoubi@sesame.org.jo | 333 | 07 99427966  |
++---------------+--------------------+-----------------------------+-----+--------------------+
 | Anas Mohammad     | Experimental Data Engineer  | Anas.mohammad@sesame.org.jo | 334 | 07 7537701   |
 +-------------------+-----------------------------+-----------------------------+-----+--------------+
 
@@ -39,6 +41,7 @@ Call the following people if you face problems with the beamline computers, netw
 | Name                          | Role                                         | Email                         | EXT | Mobile       |
 +===============================+==============================================+===============================+=====+==============+
 | Salman Matalgah               | Team supervisor                              | Salman.matalgah@sesame.org.jo | 222 | 07 98773300  |
++---------------+--------------------+-----------------------------+-----+--------------------+
 | Ibrahim  Foudeh               | Linux System Engineer; Vizserver responsible | ibrahim.foudeh@sesame.org.jo  | 224 | 07 96334772  |
 +-------------------------------+----------------------------------------------+-------------------------------+-----+--------------+
 
@@ -50,6 +53,7 @@ Call the following people if you face problems with the beamline control GUIs or
 | Name         | Role                                     | Email                     | EXT | Mobile        |
 +==============+==========================================+===========================+=====+===============+
 | Anas Abbadi  | Team supervisor                          | Anas.abbadi@sesame.org.jo | 288 | 07 99217203   |
++---------------+--------------------+-----------------------------+-----+--------------------+
 | Rami Khrais  | Control Software Engineer; GUI developer | Rami.khrais@sesame.org.jo | 287 | 07 785894970  |
 +--------------+------------------------------------------+---------------------------+-----+---------------+
 
