@@ -22,6 +22,7 @@ Content
    For Beamline Scientists/Trainees <for_staff_advanced>
    Installation of control software <dashboard_install>
    BEATS computing infrastructure <computing>
+   Contacts / Useful numbers <contacts>
 ..   Beamline control <control>
 
 
