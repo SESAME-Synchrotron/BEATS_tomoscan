@@ -31,7 +31,7 @@ The second sheet contains a calculator of the optimal scintillator thickness.
 	:align: center
 	:alt: BEATS detectors Field Of View
 
-	*Figure 1: BEATS detectors Field Of View (FOV) and pixel size.*
+	*Figure 1: BEATS detectors Field Of View (FOV) and pixel size when the PCO.edge 5.5 camera is used.*
 
 Detector 1 - White beam Twin-Microscope (Optique Peter, France)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
