@@ -22,6 +22,11 @@ Detectors
 
 	*Figure 1: Detectors available at the BEATS beamline.*
 
+**Table of the detectors installed at the beamline:** `click here <https://sesamejo-my.sharepoint.com/:x:/g/personal/gianluca_iori_sesame_org_jo/EfMv7hKjU_1Arg0BC3-QUDIBYHvE0BDPINgDJTGhQt6CaQ?e=aXMe6j>`_.
+
+The table lists all detectors available at the beamline and shows the magnification, pixelsize and Field Of View (FOV) obtained with each combination of detector and camera.
+The second sheet contains a calculator of the optimal scintillator thickness.
+
 .. figure:: /img/BEATS_detectors_FOV.png
 	:align: center
 	:alt: BEATS detectors Field Of View
@@ -60,12 +65,6 @@ Detector 3 - Monochromatic Microscope (Optique Peter, France)
 | 10×      | 1.7 × 1.4 mm2  | 0.65 μm     |
 | 20×      | 0.9 × 0.7 mm2  | 0.33 μm     |
 +----------+----------------+-------------+
-
-
-**Table of the detectors installed at the beamline:** `click here <https://sesamejo-my.sharepoint.com/:x:/g/personal/gianluca_iori_sesame_org_jo/EfMv7hKjU_1Arg0BC3-QUDIBYHvE0BDPINgDJTGhQt6CaQ?e=aXMe6j>`_.
-
-The table lists all detectors available at the beamline and shows the magnification, pixelsize and Field Of View (FOV) obtained with each combination of detector and camera.
-The second sheet contains a calculator of the optimal scintillator thickness.
 
 Cameras
 -------
