@@ -60,6 +60,14 @@ Mount proposal ``ExpData`` and ``recon`` folders on BL-BEATS-WS01::
    cd ~
    ./petra_prop_mounter.sh
 
+Mount proposal ``ExpData`` and ``recon`` folders on ``User-BEATS-Dispenser`` and ``Dragonfly Dispenser 2``::
+
+   ./petra_prop_recon_smb_mounter.sh
+
+Mount proposal ``ExpData`` and ``recon`` folders on ``Dragonfly Dispenser 1`` for remote access::
+
+   ./petra_prop_recon_smb_mounter_vizserver.sh
+
 Check mount points::
 
    df -h
@@ -122,10 +130,10 @@ Access the reconstruction cluster ``rum@sesame.org.jo`` with::
 
 .. highlight:: none
 
-Data dispenser PC
------------------
+Data dispenser PC - ``User-BEATS-Dispenser``
+--------------------------------------------
 
-The data dispencer Windows PC (``BEATS-Data-Dispenser``) can be used to access, visualize, and copy your beamtime data. You can also use this PC to launch the ``Dragonfly VizServer 2``, reserved to the beamline users during their shifts.
+The data dispencer Windows PC (``User-BEATS-Dispenser``) can be used to access, visualize, and copy your beamtime data. You can also use this PC to launch the ``Dragonfly VizServer 2``, reserved to the beamline users during their shifts.
 
 ORS Dragonfly VizServer
 -----------------------
