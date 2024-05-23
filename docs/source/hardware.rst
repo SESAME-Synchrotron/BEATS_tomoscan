@@ -33,7 +33,7 @@ The second sheet contains a calculator of the optimal scintillator thickness.
 	:align: center
 	:alt: BEATS detectors Field Of View
 
-	*Figure 1: BEATS detectors Field Of View (FOV).*
+	*Figure 2: BEATS detectors Field Of View (FOV).*
 
 Detector 1 - White beam Twin-Microscope (Optique Peter, France)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
