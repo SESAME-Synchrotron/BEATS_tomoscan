@@ -5,21 +5,10 @@ Documentation of procedures
 The intention of this section is to enable new beamline staff or trainees as quickly as possible to work autonomously at/with the beamline.
 Non-routine tasks.
 
-ToDo: Create a documentation for changing cameras and optics/magnifications.
+before starting the first time!!!!!
+-----------------------------------
 
 Put in filters and observe the beam for the first time. -> adjustment of the beam for the experiment.
-
-
-
-
-
-alignment too
---------------
-
-Here should be another reference
-:ref:`sample alignment<sample alignment>`
-
-:doc:`tomoalign`
 
 
 
@@ -50,6 +39,7 @@ open small screws, disconnect and store or mount in a save place the detached ca
 
 
 
+
 Selecting detector, start of IOC, getting initial images
 -------------------------------
 
@@ -58,15 +48,23 @@ PCO needs to be switched on on top, its chiller is in "follow-mode".
 
 
 
-Refining slit settings and detector posotion
+
+
+Refining slit settings and detector position
 -------------------------------
 slits 1, 2, 3 need to be adapted to fit the FOV
+
+
+
 
 
 Potential obstacles
 -------------------------------
 
 could be that wire scanner, diagnostics screen, white beam blocker (WBB), CVD window are "in the beam" and give artefacts
+
+
+
 
 
 Change radiation and energy settings
@@ -94,7 +92,10 @@ Set energy to 20.0 keV (Ru/B4C stripe)::
 
 
 
---- maybe list more settings + filtered radiation?
+--- maybe list more settings + filtered radiation? ---- orange suite
+
+
+
 
 
 changing detectors
@@ -122,16 +123,25 @@ Det2 - Hasselblad:
 	open black housing (heavy, perhaps use the crane)
 
 
+
+
+
 changing optics/magnification
 ---------
 
 Videos + photos
 
 
+
+
+
 cleaning the scintillator
 -----------------------
 
 Videos + photos
+
+
+
 
 
 Mount proposal folders
@@ -164,6 +174,9 @@ Mount proposal ``ExpData`` and ``recon`` folders on Win Data Dispenser and Drago
     For proposals belonging to a different semester the scripts ``petra_prop_mounter.sh`` and ``petra_prop_recon_smb_mounter.sh`` must be modified.
 
 
+
+
+
 Endstation alignment
 --------------------
 
@@ -171,3 +184,5 @@ Endstation alignment
    :maxdepth: 2
 
    Tomoalign - pitch, focus, camera rotation <tomoalign>
+
+   Additional (can be deleted after final checks) :ref:`sample alignment<sample alignment>`
