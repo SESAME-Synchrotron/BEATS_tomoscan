@@ -63,6 +63,8 @@ Potential obstacles
 
 could be that wire scanner, diagnostics screen, white beam blocker (WBB), CVD window are "in the beam" and give artefacts
 
+writer server, tomoscan IOC, and python server need to be restarted from time to time (if they start becoming non-responsive); sometimes it also happens after aborting a scan
+
 
 
 
