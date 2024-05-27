@@ -116,10 +116,15 @@ For a very detailed description of the procedure go to :doc:`dashboard_mainWindo
 Set up your experiment
 --------------------
 
+.. note::
+	The endstation is aligned by the beamline staff at the start of your beamtime. Generally, you don't need to repeat these operation and you can jump to :ref:`sample alignment<sample alignment>`
+
+
 .. toctree::
    :maxdepth: 2
 
    Set up your experiment <sample_mount>
+
    
 
 

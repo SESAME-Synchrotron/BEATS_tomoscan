@@ -45,6 +45,7 @@ after shutdown
 Changing cameras
 -------------------------------
 
+open small screws, disconnect and store or mount in a save place the detached camera
 
 
 
@@ -52,16 +53,14 @@ Changing cameras
 Selecting detector, start of IOC, getting initial images
 -------------------------------
 
-FLIR needs to be plugged in
+FLIR needs to be plugged in the power outlet
 PCO needs to be switched on on top, its chiller is in "follow-mode".
-
-
-
 
 
 
 Refining slit settings and detector posotion
 -------------------------------
+slits 1, 2, 3 need to be adapted to fit the FOV
 
 
 Potential obstacles
@@ -103,10 +102,11 @@ changing detectors
 
 Videos + photos
 
-How to switch on the cameras. : plug in power supply or simply switch on
+-> increase distance between sample and detector to e.g. 1m
+-> remove the camera
+-> open screws on the sides
+-> slide detector down (get help if it is too heavy for you alone)
 
-
-increase distance between sample and detector to e.g. 1m
 
 Det1/Det3 - optique peter:
 	remove lead box
@@ -131,6 +131,7 @@ Videos + photos
 cleaning the scintillator
 -----------------------
 
+Videos + photos
 
 
 Mount proposal folders
@@ -163,12 +164,13 @@ Mount proposal ``ExpData`` and ``recon`` folders on Win Data Dispenser and Drago
     For proposals belonging to a different semester the scripts ``petra_prop_mounter.sh`` and ``petra_prop_recon_smb_mounter.sh`` must be modified.
 
 
-
 Endstation alignment
 --------------------
 
-.. note::
-	The endstation is aligned by the beamline staff at the start of your beamtime. Generally, you don't need to repeat these operation and you can jump to :ref:`sample alignment<sample alignment>`
+.. toctree::
+   :maxdepth: 2
+
+   Tomoalign - pitch, focus, camera rotation <tomoalign>
 
 1. Endstation pitch
 2. Endstation X-axis
@@ -177,3 +179,5 @@ Endstation alignment
 
 .. _sample alignment:
 
+
+:doc:`tomoalign`
