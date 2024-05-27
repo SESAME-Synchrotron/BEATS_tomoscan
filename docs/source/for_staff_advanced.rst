@@ -171,13 +171,3 @@ Endstation alignment
    :maxdepth: 2
 
    Tomoalign - pitch, focus, camera rotation <tomoalign>
-
-1. Endstation pitch
-2. Endstation X-axis
-3. Camera rotation
-4. Detector focus
-
-.. _sample alignment:
-
-
-:doc:`tomoalign`
