@@ -5,21 +5,10 @@ Documentation of procedures
 The intention of this section is to enable new beamline staff or trainees as quickly as possible to work autonomously at/with the beamline.
 Non-routine tasks.
 
-ToDo: Create a documentation for changing cameras and optics/magnifications.
+before starting the first time!!!!!
+-----------------------------------
 
 Put in filters and observe the beam for the first time. -> adjustment of the beam for the experiment.
-
-
-
-
-
-alignment too
---------------
-
-Here should be another reference
-:ref:`sample alignment<sample alignment>`
-
-:doc:`tomoalign`
 
 
 
@@ -45,6 +34,8 @@ after shutdown
 Changing cameras
 -------------------------------
 
+open small screws, disconnect and store or mount in a save place the detached camera
+
 
 
 
@@ -52,22 +43,30 @@ Changing cameras
 Selecting detector, start of IOC, getting initial images
 -------------------------------
 
-FLIR needs to be plugged in
+FLIR needs to be plugged in the power outlet
 PCO needs to be switched on on top, its chiller is in "follow-mode".
 
 
 
 
 
-
-Refining slit settings and detector posotion
+Refining slit settings and detector position
 -------------------------------
+slits 1, 2, 3 need to be adapted to fit the FOV
+
+
+
 
 
 Potential obstacles
 -------------------------------
 
 could be that wire scanner, diagnostics screen, white beam blocker (WBB), CVD window are "in the beam" and give artefacts
+
+writer server, tomoscan IOC, and python server need to be restarted from time to time (if they start becoming non-responsive); sometimes it also happens after aborting a scan
+
+
+
 
 
 Change radiation and energy settings
@@ -95,7 +94,10 @@ Set energy to 20.0 keV (Ru/B4C stripe)::
 
 
 
---- maybe list more settings + filtered radiation?
+--- maybe list more settings + filtered radiation? ---- orange suite
+
+
+
 
 
 changing detectors
@@ -103,10 +105,11 @@ changing detectors
 
 Videos + photos
 
-How to switch on the cameras. : plug in power supply or simply switch on
+-> increase distance between sample and detector to e.g. 1m
+-> remove the camera
+-> open screws on the sides
+-> slide detector down (get help if it is too heavy for you alone)
 
-
-increase distance between sample and detector to e.g. 1m
 
 Det1/Det3 - optique peter:
 	remove lead box
@@ -122,14 +125,24 @@ Det2 - Hasselblad:
 	open black housing (heavy, perhaps use the crane)
 
 
+
+
+
 changing optics/magnification
 ---------
 
 Videos + photos
 
 
+
+
+
 cleaning the scintillator
 -----------------------
+
+Videos + photos
+
+
 
 
 
@@ -164,16 +177,14 @@ Mount proposal ``ExpData`` and ``recon`` folders on Win Data Dispenser and Drago
 
 
 
+
+
 Endstation alignment
 --------------------
 
-.. note::
-	The endstation is aligned by the beamline staff at the start of your beamtime. Generally, you don't need to repeat these operation and you can jump to :ref:`sample alignment<sample alignment>`
+.. toctree::
+   :maxdepth: 2
 
-1. Endstation pitch
-2. Endstation X-axis
-3. Camera rotation
-4. Detector focus
+   Tomoalign - pitch, focus, camera rotation <tomoalign>
 
-.. _sample alignment:
-
+   Additional (can be deleted after final checks) :ref:`sample alignment<sample alignment>`
