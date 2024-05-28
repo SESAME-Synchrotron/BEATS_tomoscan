@@ -77,4 +77,31 @@ Detector 3 - Monochromatic Microscope (Optique Peter, France)
 Cameras
 -------
 
-ToDo: Create a documentation for changing cameras and optics/magnifications.
+Each detector can work in combination with one of the following cameras. The EPICS PV in the table is used to stream the detector data in ImageJ using the EPICS AD Viewer plugin (see section :ref:`EPICS AD Viewer` below).
+
++--------+--------------------+-----------------------------+-------------+-----------------+
+| Camera | Model              | EPICS PV                    | Sensor size | Pixel size [µm] |
++========+====================+=============================+=============+=================+
+| CAM 1  | PCO edge.5.5       | ``TEST-PCO:Trans1:image1:`` | 2560 × 2160 | 6.5             |
+| CAM 2  | ORYX FLIR 7.1 GigE | ``FLIR:image1:``            | 3208 × 2200 | 4.5             |
++--------+--------------------+-----------------------------+-------------+-----------------+
+
+Two more visible light cameras are installed and can be accessed with the PVs in the table below.
+
++--------------------+--------------+-------------------+
+| Camera             | Position     | EPICS PV          |
++====================+==============+===================+
+| Sample eye         | Sample stage | ``FLIR3:image1:`` |
+| Diagnostic monitor | Optics hutch | ``FLIR2:image1:`` |
++--------------------+--------------+-------------------+
+
+EPICS AD Viewer
+~~~~~~~~~~~~~~~
+
+To stream camera images within ImageJ go to Plugins -> EPICS AD Viewer. In the ``PVPrefix`` value insert the EPICS PV of the camera you want to access (see tables above).
+
+.. figure:: /img/EPICS_AD_Viewer.png
+	:align: center
+	:alt: AD Viewer plugin
+
+	*Figure 3: ImageJ EPICS AD Viewer plugin.*
