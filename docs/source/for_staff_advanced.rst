@@ -65,6 +65,7 @@ could be that wire scanner, diagnostics screen, white beam blocker (WBB), CVD wi
 
 writer server, tomoscan IOC, and python server need to be restarted from time to time (if they start becoming non-responsive); sometimes it also happens after aborting a scan
 
+At very high energies, owing to total external reflection in the monochromator's layers, filtering of the incoming white beam might be necessary to obtain meaningful data
 
 
 
