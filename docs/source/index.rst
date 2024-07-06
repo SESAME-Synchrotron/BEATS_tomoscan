@@ -14,12 +14,15 @@ Content
    General information <general>
    Prepare for beamtime <prepare>
    Quickstart <quickstart>
-   Alignment <tomoalign>
+   Alignment <tomoalign> - this should go away to For Beamline Scientists/Trainees
    Data acquisition <daq>
    Tomographic reconstruction <reconstruction>
    Safety <safety>
    Beamline hardware <hardware>
+   For Beamline Scientists/Trainees <for_staff_advanced>
+   Installation of control software <dashboard_install>
    BEATS computing infrastructure <computing>
+   Contacts / Useful numbers <contacts>
 ..   Beamline control <control>
 
 

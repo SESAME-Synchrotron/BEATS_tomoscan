@@ -21,7 +21,6 @@ class ScanAbortError(Exception):
     '''Exception raised when user wants to abort a scan.
     '''
 
-
 class CameraTimeoutError(Exception):
     '''Exception raised when the camera times out during a scan.
     '''
@@ -29,7 +28,6 @@ class CameraTimeoutError(Exception):
 class FileOverwriteError(Exception):
     '''Exception raised when a file would be overwritten.
     '''
-
 
 class TomoScan():
     """ Base class used for tomography scanning with EPICS
@@ -87,7 +85,7 @@ class TomoScan():
             log.error('FilePluginPVPrefix must be present in autoSettingsFile')
             sys.exit()
 
-        #Define PVs we will need from the rotation motor, which is on another IOC
+        # Define PVs we will need from the rotation motor, which is on another IOC
         rotation_pv_name = self.control_pvs['Rotation'].pvname
         self.control_pvs['RotationSpeed']          = PV(rotation_pv_name + '.VELO')
         self.control_pvs['RotationMaxSpeed']       = PV(rotation_pv_name + '.VMAX')
@@ -108,8 +106,7 @@ class TomoScan():
         self.control_pvs['RotationLLM']            = PV(rotation_pv_name + '.LLM')
         self.control_pvs['RotationHLM']            = PV(rotation_pv_name + '.HLM')
 
-
-        #Define PVs from the camera IOC that we will need
+        # Define PVs from the camera IOC that we will need
         prefix = self.pv_prefixes['Camera']
         camera_prefix = prefix + 'cam1:'
         self.control_pvs['CamManufacturer']        = PV(camera_prefix + 'Manufacturer_RBV')
@@ -156,13 +153,13 @@ class TomoScan():
             self.control_pvs['CamAcquisitionFrameRate']    = PV(camera_prefix + 'AcquisitionFrameRate')
             self.control_pvs['CamAcquisitionFramePeriod']  = PV(camera_prefix + 'AcquisitionFramePeriod')
             self.control_pvs['CamExposureTime+R']          = PV(camera_prefix + 'ExposureTime+R')
-                         
+
         # Set some initial PV values
         self.control_pvs['CamWaitForPlugins'].put('Yes')
         self.control_pvs['StartScan'].put(0)
-        
+
         prefix = self.pv_prefixes['FilePlugin']
-        self.control_pvs['FPNDArrayPort']     = PV(prefix + 'NDArrayPort')        
+        self.control_pvs['FPNDArrayPort']     = PV(prefix + 'NDArrayPort')
         self.control_pvs['FPFileWriteMode']   = PV(prefix + 'FileWriteMode')
         self.control_pvs['FPNumCapture']      = PV(prefix + 'NumCapture')
         self.control_pvs['FPNumCaptured']     = PV(prefix + 'NumCaptured_RBV')
@@ -191,7 +188,7 @@ class TomoScan():
         self.control_pvs['FPFileWriteMode'].put('Stream')
         self.control_pvs['FPEnableCallbacks'].put('Enable')
 
-        #Define PVs from the MCS or PSO that live on another IOC
+        # Define PVs from the MCS or PSO that live on another IOC
         if 'MCS' in self.pv_prefixes:
             prefix = self.pv_prefixes['MCS']
             self.control_pvs['MCSEraseStart']      = PV(prefix + 'EraseStart')
@@ -205,28 +202,28 @@ class TomoScan():
 
         if 'PvaPlugin' in self.pv_prefixes:
             prefix = self.pv_prefixes['PvaPlugin']
-            self.control_pvs['PVANDArrayPort']     = PV(prefix + 'NDArrayPort')                
-            self.control_pvs['PVAEnableCallbacks'] = PV(prefix + 'EnableCallbacks')        
+            self.control_pvs['PVANDArrayPort']     = PV(prefix + 'NDArrayPort')
+            self.control_pvs['PVAEnableCallbacks'] = PV(prefix + 'EnableCallbacks')
 
         if 'RoiPlugin' in self.pv_prefixes:
             prefix = self.pv_prefixes['RoiPlugin']
-            self.control_pvs['ROINDArrayPort']     = PV(prefix + 'NDArrayPort')        
-            self.control_pvs['ROIScale']           = PV(prefix + 'Scale')        
-            self.control_pvs['ROIBinX']            = PV(prefix + 'BinX')        
+            self.control_pvs['ROINDArrayPort']     = PV(prefix + 'NDArrayPort')
+            self.control_pvs['ROIScale']           = PV(prefix + 'Scale')
+            self.control_pvs['ROIBinX']            = PV(prefix + 'BinX')
             self.control_pvs['ROIBinY']            = PV(prefix + 'BinY')
             self.control_pvs['ROIEnableCallbacks'] = PV(prefix + 'EnableCallbacks')
 
         if 'CbPlugin' in self.pv_prefixes:
             prefix = self.pv_prefixes['CbPlugin']
-            self.control_pvs['CBPortNameRBV']      = PV(prefix + 'PortName_RBV')                    
-            self.control_pvs['CBNDArrayPort']      = PV(prefix + 'NDArrayPort')        
+            self.control_pvs['CBPortNameRBV']      = PV(prefix + 'PortName_RBV')
+            self.control_pvs['CBNDArrayPort']      = PV(prefix + 'NDArrayPort')
             self.control_pvs['CBPreCount']         = PV(prefix + 'PreCount')
             self.control_pvs['CBPostCount']        = PV(prefix + 'PostCount')
-            self.control_pvs['CBCapture']          = PV(prefix + 'Capture')            
+            self.control_pvs['CBCapture']          = PV(prefix + 'Capture')
             self.control_pvs['CBCaptureRBV']       = PV(prefix + 'Capture_RBV')
             self.control_pvs['CBTrigger']          = PV(prefix + 'Trigger')
             self.control_pvs['CBTriggerRBV']       = PV(prefix + 'Trigger_RBV')
-            self.control_pvs['CBCurrentQtyRBV']    = PV(prefix + 'CurrentQty_RBV')            
+            self.control_pvs['CBCurrentQtyRBV']    = PV(prefix + 'CurrentQty_RBV')
             self.control_pvs['CBEnableCallbacks']  = PV(prefix + 'EnableCallbacks')
             self.control_pvs['CBStatusMessage']    = PV(prefix + 'StatusMessage')
 
@@ -241,11 +238,11 @@ class TomoScan():
             self.epics_pvs[epics_pv].add_callback(self.pv_callback)
         for epics_pv in ('MoveSampleIn', 'MoveSampleOut', 'StartScan', 'AbortScan'):
             self.epics_pvs[epics_pv].put(0)
-            
+
         # Synchronize the FilePathExists PV
         self.copy_file_path_exists()
 
-         # Set ^C interrupt to abort the scan
+        # Set ^C interrupt to abort the scan
         signal.signal(signal.SIGINT, self.signal_handler)
 
         # Start the watchdog timer thread
@@ -320,7 +317,6 @@ class TomoScan():
         elif (pvname.find('WriteStatus') != -1) and (value == 1):
             self.abort_scan()
 
-
     def show_pvs(self):
         """Prints the current values of all EPICS PVs in use.
 
@@ -369,7 +365,6 @@ class TomoScan():
     def read_pv_file(self, pv_file_name, macros):
         """Reads a file containing a list of EPICS PVs to be used by TomoScan.
 
-
         Parameters
         ----------
         pv_file_name : str
@@ -390,7 +385,7 @@ class TomoScan():
             line = line.lstrip()
             # Skip lines starting with #
             if line.startswith('#'):
-                continue 
+                continue
             # Skip blank lines
             if line == '':
                 continue
@@ -409,8 +404,6 @@ class TomoScan():
                 self.control_pvs[dictentry] = epics_pv
             if dictentry.find('PVName') != -1:
                 pvname = epics_pv.value
-                #print("PVNAME VALUE::::::::", pvname)
-                #print (dictentry)
                 key = dictentry.replace('PVName', '')
                 self.control_pvs[key] = PV(pvname)
             if dictentry.find('PVPrefix') != -1:
@@ -438,15 +431,14 @@ class TomoScan():
             self.epics_pvs['SampleY'].put(position, wait=True, timeout=600)
 
         if 'SampleOutAngleEnable' in self.epics_pvs:
-            #cur_speed = self.epics_pvs['RotationSpeed'].get()
             if self.epics_pvs['SampleOutAngleEnable'].get() and self.rotation_save != None:
-                if self.max_rotation_speed != None:# max_rotation_speed is not initialized when the scan has not been started            
+                if self.max_rotation_speed != None:     # max_rotation_speed is not initialized when the scan has not been started
                     cur_speed = self.epics_pvs['RotationSpeed'].get()
-                    self.epics_pvs['RotationSpeed'].put(self.epics_pvs['RotInternalMaxSpeed'].get())                                                    
-                self.epics_pvs['Rotation'].put(self.rotation_save, wait=True)          
+                    self.epics_pvs['RotationSpeed'].put(self.epics_pvs['RotInternalMaxSpeed'].get())
+                self.epics_pvs['Rotation'].put(self.rotation_save, wait=True)
                 if self.max_rotation_speed != None:
                     self.epics_pvs['RotationSpeed'].put(cur_speed)
-                                
+
         self.epics_pvs['MoveSampleIn'].put('Done')
 
     def move_sample_out(self):
@@ -460,17 +452,17 @@ class TomoScan():
 
         if 'SampleOutAngleEnable' in self.epics_pvs:
             if self.epics_pvs['SampleOutAngleEnable'].get():
-                if self.max_rotation_speed != None:# max_rotation_speed is not initialized when the scan has not been started
+                if self.max_rotation_speed != None:     # max_rotation_speed is not initialized when the scan has not been started
                     cur_speed = self.epics_pvs['RotationSpeed'].get()
                     self.epics_pvs['RotationSpeed'].put(self.epics_pvs['RotInternalMaxSpeed'].get())
                 angle = self.epics_pvs['SampleOutAngle'].get()
                 log.info('move_sample_out angle: %s', angle)
                 self.rotation_save = self.epics_pvs['Rotation'].get()
-                self.epics_pvs['Rotation'].put(angle, wait=True)  
+                self.epics_pvs['Rotation'].put(angle, wait=True)
                 if self.max_rotation_speed != None:
                     self.epics_pvs['RotationSpeed'].put(cur_speed)
 
-        axis = self.epics_pvs['FlatFieldAxis'].get(as_string=True)        
+        axis = self.epics_pvs['FlatFieldAxis'].get(as_string=True)
         log.info('move_sample_out axis: %s', axis)
         if axis in ('X', 'Both'):
             position = self.epics_pvs['SampleOutX'].value
@@ -552,14 +544,13 @@ class TomoScan():
         exposure_time : float, optional
             The exposure time to use. If None then the value of the ``ExposureTime`` PV is used.
         """
-        camera_model = self.epics_pvs['CamModel'].get(as_string=True)
         manufacturer = self.control_pvs['CamManufacturer'].get(as_string=True)
 
         if not self.scan_is_running:
             if exposure_time is None:
                 exposure_time = self.epics_pvs['ExposureTime'].value
             self.epics_pvs['CamAcquireTime'].put(exposure_time, wait=True, timeout = 10.0)
-            if manufacturer.find("PCO") != -1: 
+            if manufacturer.find('PCO') != -1:
                 self.epics_pvs['CamAcquirePeriod'].put(exposure_time, wait=True, timeout = 10.0)
 
     def set_scan_exposure_time(self, exposure_time=None):
@@ -609,7 +600,7 @@ class TomoScan():
         self.set_scan_exposure_time()
         # Set the file path, file name and file number
         self.epics_pvs['FPFilePath'].put(self.epics_pvs['FilePath'].value, wait=True)
-        self.epics_pvs['FPFileName'].put(self.epics_pvs['FileName'].value, wait=True) 
+        self.epics_pvs['FPFileName'].put(self.epics_pvs['FileName'].value, wait=True)
 
         # Copy the current values of scan parameters into class variables
         self.exposure_time        = self.epics_pvs['ExposureTime'].value
@@ -658,8 +649,6 @@ class TomoScan():
                 if reply == 'No':
                     raise FileOverwriteError
 
-
-
     def end_scan(self):
         """Performs the operations needed at the very end of a scan.
 
@@ -683,7 +672,6 @@ class TomoScan():
             self.epics_pvs['Rotation'].put(self.rotation_start)
         elif self.return_rotation == "Home":
             self.epics_pvs['Rotation'].put(0)
-            # self.epics_pvs['RotationHomF'].put(1) -- limit switchs are disabled. This does not work in our case
         log.info('Scan complete')
         self.epics_pvs['ScanStatus'].put('Scan complete')
         self.epics_pvs['StartScan'].put(0)
@@ -737,14 +725,14 @@ class TomoScan():
             # Collect the post-scan dark fields if required
             if (self.num_dark_fields > 0) and (self.dark_field_mode in ('End', 'Both')):
                 self.collect_dark_fields()
- 
+
         except ScanAbortError:
             log.error('Scan aborted')
         except CameraTimeoutError:
             log.error('Camera timeout')
         except FileOverwriteError:
             log.error('File overwrite aborted')
-        #Make sure we do cleanup tasks from the end of the scan
+        # Make sure we do cleanup tasks from the end of the scan
         finally:
             self.end_scan()
 
@@ -841,13 +829,13 @@ class TomoScan():
         self.epics_pvs['FrameType'].put('Projection')
 
     def abort_scan(self):
-        """Aborts a scan that is running and performs the operations 
+        """Aborts a scan that is running and performs the operations
         needed when a scan is aborted.
 
         This does the following:
 
         - Sets scan_is_running, a flag that is checked in ``wait_camera_done()``.
-          If ``wait_camera_done()`` finds the flag set then it raises a 
+          If ``wait_camera_done()`` finds the flag set then it raises a
           ScanAbortError exception.
 
         - Stops the rotation motor.
@@ -896,7 +884,7 @@ class TomoScan():
         # This is empirical and if needed should adjusted for each camera
         readout_margin = 1.01
         if camera_model == 'Grasshopper3 GS3-U3-23S6M':
-            pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True) 
+            pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True)
             video_mode   = self.epics_pvs['CamVideoMode'].get(as_string=True)
             readout_times = {
                 'Mono8':        {'Mode0': 6.2,  'Mode1': 6.2, 'Mode5': 6.2, 'Mode7': 7.9},
@@ -905,16 +893,16 @@ class TomoScan():
             }
             readout = readout_times[pixel_format][video_mode]/1000.
         if camera_model == 'Grasshopper3 GS3-U3-51S5M':
-            pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True) 
+            pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True)
             readout_times = {
                 'Mono8': 6.18,
                 'Mono12Packed': 8.20,
                 'Mono12p': 8.20,
                 'Mono16': 12.34
             }
-            readout = readout_times[pixel_format]/1000.            
+            readout = readout_times[pixel_format]/1000.
         if camera_model == 'Oryx ORX-10G-51S5M':
-            pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True) 
+            pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True)
             readout_margin = 1.05
             readout_times = {
                 'Mono8': 6.18,
@@ -923,7 +911,7 @@ class TomoScan():
             }
             readout = readout_times[pixel_format]/1000.
         if camera_model == 'Oryx ORX-10G-310S9M':
-            pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True) 
+            pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True)
             readout_times = {
                 'Mono8': 30.0,
                 'Mono12Packed': 30.0,
@@ -943,20 +931,20 @@ class TomoScan():
             }
             readout = readout_times[pixel_format]/1000.
         if camera_model == 'pco.edge CLHS':
-            #pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True)
+            # pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True)
             readout_margin = 1.05
             readout_times = {
                 'Mono16': 10
             }
-            readout = readout_times["Mono16"]/1000.
+            readout = readout_times['Mono16']/1000.
         if camera_model == 'Q-12A180-Fm/CXP-6':
-            pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True) 
+            pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True)
             readout_times = {
                 'Mono8': 5.35
-            }        
+            }
             readout = readout_times[pixel_format]/1000.
         if camera_model == 'Blackfly S BFS-PGE-161S7M':
-            pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True) 
+            pixel_format = self.epics_pvs['CamPixelFormat'].get(as_string=True)
             readout_times = {
                 'Mono8': 83.4,
                 'Mono12Packed': 100.0,
@@ -967,13 +955,13 @@ class TomoScan():
 
         if readout is None:
             log.error('Unsupported combination of camera model, pixel format and video mode: %s %s %s',
-                          camera_model, pixel_format, video_mode)            
+                          camera_model, pixel_format, video_mode)
             return 0
 
         # We need to use the actual exposure time that the camera is using, not the requested time
         exposure = self.epics_pvs['CamAcquireTimeRBV'].value
         # Add some extra time to exposure time for margin.
-        frame_time = exposure * readout_margin        
+        frame_time = exposure * readout_margin
         # If the time is less than the readout time then use the readout time plus 1 ms.
         if frame_time < readout:
             frame_time = readout + .001
@@ -981,7 +969,7 @@ class TomoScan():
 
     def update_status(self, start_time):
         """
-        When called updates ``ImagesCollected``, ``ImagesSaved``, ``ElapsedTime``, and ``RemainingTime``. 
+        When called updates ``ImagesCollected``, ``ImagesSaved``, ``ElapsedTime``, and ``RemainingTime``.
 
         Parameters
         ----------

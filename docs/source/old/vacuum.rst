@@ -1,3 +1,5 @@
+.. class:: remove
+
 Beamline vacuum GUI
 ===================
 

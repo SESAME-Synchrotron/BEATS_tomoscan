@@ -7,10 +7,7 @@
 """
 
 import time
-import os
-import math
 import numpy as np
-from datetime import timedelta
 from tomoscan.tomoscan import TomoScan
 from tomoscan import log
 
@@ -39,8 +36,8 @@ class TomoScanSTEP(TomoScan):
         num_frames : int
             Number of frames to collect.
         """
-        # This is called when collecting dark fields or flat fields
 
+        # This is called when collecting dark fields or flat fields
         log.info('collect static frames: %d', num_frames)
         self.set_trigger_mode('Internal', num_frames)
         self.epics_pvs['CamAcquire'].put('Acquire')
@@ -65,6 +62,7 @@ class TomoScanSTEP(TomoScan):
         Calls ``collect_static_frames()`` with the number of images specified
         by the ``NumFlatFields`` PV.
         """
+
         self.epics_pvs['ExposureShutter'].put(1, wait=True)
         time.sleep(0.01)
         log.info('collect flat fields')
@@ -87,26 +85,25 @@ class TomoScanSTEP(TomoScan):
         super().begin_scan()
 
         self.collect_frames_to_init_det()
-        
+
         # Set angles for the interlaced scan
         self.theta = self.rotation_start + np.arange(self.num_angles) * self.rotation_step
-    
+
     def collect_frames_to_init_det(self):
-           """
-           This method collects some frames ahead of each scan in order 
-           to make the camera ready (i.e. let the camera calculate frame dimensions
-            which might be 0 after restarting the camera IOC). 
-            this is mainely needed for the writer to run in perfect conditions
-           """
-           self.set_exposure_time()
-           # Camera response time calculation: 
-           counter = 0
-           self.set_trigger_mode("Internal", self.num_angles)
-           camera_counter = self.epics_pvs["CamArrayCounter"].get()
-           self.epics_pvs["CamAcquire"].put("Acquire")
-           while self.epics_pvs["CamArrayCounter"].get() == camera_counter: 
-               pass
-           self.epics_pvs["CamAcquire"].put("Done")
+        """
+        This method collects some frames ahead of each scan in order
+        to make the camera ready (i.e. let the camera calculate frame dimensions
+        which might be 0 after restarting the camera IOC).
+        this is mainly needed for the writer to run in perfect conditions
+        """
+
+        self.set_exposure_time()
+        self.set_trigger_mode('Internal', self.num_angles)
+        camera_counter = self.epics_pvs['CamArrayCounter'].get()
+        self.epics_pvs['CamAcquire'].put('Acquire')
+        while self.epics_pvs['CamArrayCounter'].get() == camera_counter:
+            pass
+        self.epics_pvs['CamAcquire'].put('Done')
 
     def end_scan(self):
         """Performs the operations needed at the very end of a scan.
@@ -154,7 +151,7 @@ class TomoScanSTEP(TomoScan):
         super().collect_projections()
 
         self.set_trigger_mode('Software', self.num_angles)
-           
+
         # Start the camera
         self.epics_pvs['CamAcquire'].put('Acquire')
         # Need to wait a short time for AcquireBusy to change to 1
@@ -164,18 +161,18 @@ class TomoScanSTEP(TomoScan):
 
         start_time = time.time()
         stabilization_time = self.epics_pvs['StabilizationTime'].get()
-        log.info("stabilization time %f s", stabilization_time)
+        log.info('stabilization time %f s', stabilization_time)
 
         if self.epics_pvs['UseExposureShutter'].get():
             for k in range(self.num_angles):
-                if(self.scan_is_running):
+                if self.scan_is_running:
                     log.info('angle %d: %f', k, self.theta[k])
-                    self.epics_pvs['Rotation'].put(self.theta[k], wait=True)            
+                    self.epics_pvs['Rotation'].put(self.theta[k], wait=True)
                     time.sleep(stabilization_time)
                     log.info('open exposure shutter')
                     self.epics_pvs['ExposureShutter'].put(1, wait=True)
                     time.sleep(0.01)
-                    self.epics_pvs['CamTriggerSoftware'].put(1)    
+                    self.epics_pvs['CamTriggerSoftware'].put(1)
                     time.sleep(self.epics_pvs['ExposureTime'].get())
                     self.epics_pvs['ExposureShutter'].put(0, wait=True)
                     log.info('close exposure shutter')
@@ -183,53 +180,14 @@ class TomoScanSTEP(TomoScan):
                     self.update_status(start_time)
         else:
             for k in range(self.num_angles):
-                if(self.scan_is_running):
+                if self.scan_is_running:
                     log.info('angle %d: %f', k, self.theta[k])
-                    self.epics_pvs['Rotation'].put(self.theta[k], wait=True)            
+                    self.epics_pvs['Rotation'].put(self.theta[k], wait=True)
                     time.sleep(stabilization_time)
-                    # log.info('open exposure shutter')
-                    # self.epics_pvs['ExposureShutter'].put(1, wait=True)
-                    # time.sleep(0.01)
-                    # time.sleep(stabilization_time)   
-                    # print("1- XXXXXX      XXXXXX", stabilization_time)
-                    self.epics_pvs['CamTriggerSoftware'].put(1) 
-                    # time.sleep(stabilization_time)   
-                    # time.sleep(self.epics_pvs['ExposureTime'].get())
-                    # self.epics_pvs['ExposureShutter'].put(0, wait=True)
-                    # log.info('close exposure shutter')
-                    # print ("********************* calling wait_pv *********************")
+                    self.epics_pvs['CamTriggerSoftware'].put(1)
                     self.wait_pv(self.epics_pvs['CamNumImagesCounter'], k+1, 60)
-                    # print ("********************* wait_pv Done  *********************")
                     self.update_status(start_time)
-        
+
         # wait until the last frame is saved (not needed)
-        time.sleep(0.5)        
-        self.update_status(start_time)                
-
-    # def wait_pv(self, epics_pv, wait_val, timeout=-1):
-    #     """Wait on a pv to be a value until max_timeout (default forever)
-    #        delay for pv to change
-    #     """
-    #     pritn ("====== just entered waiting ============")
-
-    #     time.sleep(.01)
-    #     start_time = time.time()
-    #     while True:
-    #         pv_val = epics_pv.get()
-    #         print ("------------ PV waiting in wait_pv func  --- current val: {} -- it should be {}".format(pv_val, wait_val))
-    #         if isinstance(pv_val, float):
-    #             print ("++++++++++++ PV is not float instant")
-    #             if abs(pv_val - wait_val) < EPSILON:
-    #                 return True
-    #         if pv_val != wait_val:
-    #             if timeout > -1:
-    #                 current_time = time.time()
-    #                 diff_time = current_time - start_time
-    #                 if diff_time >= timeout:
-    #                     log.error('  *** ERROR: DROPPED IMAGES ***')
-    #                     log.error('  *** wait_pv(%s, %d, %5.2f reached max timeout. Return False',
-    #                                   epics_pv.pvname, wait_val, timeout)
-    #                     return False
-    #             time.sleep(.01)
-    #         else:
-    #             return True
+        time.sleep(0.5)
+        self.update_status(start_time)

@@ -2,13 +2,35 @@
 BEATS Computing Infrastructure 
 ===============================
 
-DAQ workstation
----------------
+DAQ workstation - ``BEATS-control-ws``
+--------------------------------------
 
 The data acquisition (DAQ) workstation is used to control the beamline and scan settings. Visit the section :doc:`daq` for more information.
 
-Data analysis workstation
--------------------------
+Useful commands
+~~~~~~~~~~~~~~~
+
+.. highlight:: bash
+   :linenothreshold: 1
+
+Mount ``PETRA``::
+
+   sudo mount -t nfs 10.1.14.100:/PETRA/SED/BEATS/IH /PETRA/SED/BEATS/IH
+
+SMB mount of SSCAN data folder::
+
+   sudo mount -t cifs -o vers=3,username=beats.smb '\\10.1.14.100\pco-flir-ws' /home/control/Desktop/SSCAN
+
+Start the `Energy GUI <https://xray-energy.readthedocs.io/en/latest/>`_::
+
+   cd /home/control/energy/iocBoot/iocEnergy_2BM
+   python3 -i start_energy.py
+
+.. highlight:: none
+
+
+Data analysis workstation - ``BL-BEATS-WS01``
+---------------------------------------------
 The data analysis workstation is used for several purposes including:
 
     * Inspection of sinograms and CT reconstruction
@@ -33,7 +55,36 @@ Start reconstruction pipeline on Jupyter Lab. Available pipelines are described 
     conda activate tomopy
     jupyter lab
 
+Mount proposal ``ExpData`` and ``recon`` folders on BL-BEATS-WS01::
+
+   cd ~
+   ./petra_prop_mounter.sh
+
+Mount proposal ``ExpData`` and ``recon`` folders on ``User-BEATS-Dispenser`` and ``Dragonfly Dispenser 2``::
+
+   ./petra_prop_recon_smb_mounter.sh
+
+Mount proposal ``ExpData`` and ``recon`` folders on ``Dragonfly Dispenser 1`` for remote access::
+
+   ./petra_prop_recon_smb_mounter_vizserver.sh
+
+Check mount points::
+
+   df -h
+
+Unmount proposal folders::
+
+   umount /PETRA/SED/BEATS/SEM_6/20235010
+   umount /PETRA/SED/BEATS/SEM_6_recon/20235010
+
+Mount proposal ``ExpData`` and ``recon`` folders on Win Data Dispenser and Dragonfly VizServer::
+
+   ./petra_prop_recon_smb_mounter.sh
+
 .. highlight:: none
+
+.. note::
+    For proposals belonging to a different semester the scripts ``petra_prop_mounter.sh`` and ``petra_prop_recon_smb_mounter.sh`` must be modified.
 
 Data analysis software
 ----------------------
@@ -79,12 +130,28 @@ Access the reconstruction cluster ``rum@sesame.org.jo`` with::
 
 .. highlight:: none
 
-Data dispenser PC
------------------
+Data dispenser PC - ``User-BEATS-Dispenser``
+--------------------------------------------
 
-Dragonfly VizServer
--------------------
+The data dispencer Windows PC (``User-BEATS-Dispenser``) can be used to access, visualize, and copy your beamtime data. You can also use this PC to launch the ``Dragonfly VizServer 2``, reserved to the beamline users during their shifts.
 
-SESAME data portal
-------------------
+ORS Dragonfly VizServer
+-----------------------
+
+We offer the following 2 seats for image processing using ORS Dragonfly to our users.
+
++-------------+-------------------------------------+--------+-----------------------+----------------------------------------------------------+
+|             | CPU                                 | RAM    | GPU                   | Note                                                     |
++=============+=====================================+========+=======================+==========================================================+
+| VizServer 1 | Intel Xeon Silver 4314 CPU@2.40 GHz | 256 GB | (1×) NVIDIA RTX A6000 | Contact the beamline staff to request access (see below) |
++-------------+-------------------------------------+--------+-----------------------+----------------------------------------------------------+
+| VizServer 2 | Intel Xeon Silver 4314 CPU@2.40 GHz | 256 GB | (1×) NVIDIA RTX A6000 | Reserved for users at the beamline                       |
++-------------+-------------------------------------+--------+-----------------------+----------------------------------------------------------+
+
+BEATS data portal / Dragonfly VizServer 1
+-----------------------------------------
+
+**SESAME BEATS data portal:** visit `https://access.sesame.org.jo/beats <https://access.sesame.org.jo/beats>`_.
+
+On the portal you will find instructions on how to access BEATS data and our Dragonfly VizServer 1.
 
