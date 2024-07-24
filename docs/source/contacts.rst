@@ -13,7 +13,7 @@ Local contacts
 +----------------+--------------------+------------------------------+-----+--------------------+
 | Fareeha Hameed | Beamline scientist | fareeha.hameed@sesame.org.jo | 364 |                    |
 +----------------+--------------------+------------------------------+-----+--------------------+
-| Gianluca Iori  | Beamline scientist | gianluca.iori@sesame.org.jo  |     |                    |
+| Gianluca Iori  | Visiting scientist | gianluca.iori@sesame.org.jo  |     |                    |
 +----------------+--------------------+------------------------------+-----+--------------------+
 
 
