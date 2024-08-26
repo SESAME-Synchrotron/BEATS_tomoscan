@@ -72,7 +72,7 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
 
         PV(self.pvlist['PVs']['PROCPVs']['FLIR']['ZMQPort']).put('flir', wait=True)
         PV(self.pvlist['PVs']['PROCPVs']['FLIR']['enablePlugin']).put(0, wait=True)
-        PV(self.pvlist['PVs']['TransPVs']['FLIR']['enablePlugin']).put(0, wait=True)
+       # PV(self.pvlist['PVs']['TransPVs']['FLIR']['enablePlugin']).put(0, wait=True)
         PV(self.pvlist['PVs']['NexusPVs']['FLIR']['enablePlugin']).put(0, wait=True)
 
     def open_shutter(self):

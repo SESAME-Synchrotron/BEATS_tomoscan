@@ -71,7 +71,7 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
         self.epics_pvs['OverwriteWarning'].put('Yes')
 
         # Disable unused plugins
-        PV(self.pvlist['PVs']['TransPVs']['FLIR']['enablePlugin']).put(0, wait=True)
+       #PV(self.pvlist['PVs']['TransPVs']['FLIR']['enablePlugin']).put(0, wait=True)
         PV(self.pvlist['PVs']['NexusPVs']['FLIR']['enablePlugin']).put(0, wait=True)
 
     def open_shutter(self):
@@ -498,6 +498,7 @@ class TomoScanBEATSFlirMicosStep(TomoScanSTEP):
         """
 
         log.info('collect projections')
+        super().collect_projections()
 
         if self.useProcPlugin:
             self.set_trigger_mode('Software', self.num_angles * self.NFilters)

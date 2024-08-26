@@ -70,7 +70,7 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         self.epics_pvs['OverwriteWarning'].put('Yes')
 
         # Disable unused plugins
-        PV(self.pvlist['PVs']['TransPVs']['PCO']['enablePlugin']).put(0, wait=True)
+       # PV(self.pvlist['PVs']['TransPVs']['PCO']['enablePlugin']).put(0, wait=True)
         PV(self.pvlist['PVs']['NexusPVs']['PCO']['enablePlugin']).put(0, wait=True)
 
     def open_shutter(self):
@@ -515,7 +515,8 @@ class TomoScanBEATSPcoMicosStep(TomoScanSTEP):
         - Starts the camera acquiring in software trigger mode.
         - Update scan status.
         """
-
+        
+        super().collect_projections()
         log.info('collect projections')
 
         if self.useProcPlugin:
