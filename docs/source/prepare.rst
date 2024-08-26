@@ -23,7 +23,7 @@ Bring enough storage
 Following `SESAME’s data policy <https://www.sesame.org.jo/for-users/user-guide/sesame-experimental-data-management-policy>`_, we will do our best to archive and maintain your data for at least 5 years after the experiment.
 
 .. warning::
-    Due to the massive size of tomography datasets, you will not be able to access data remotely after the beamtime. You are responsible for taking a copy of all data with you before leaving SESAME. For this, we ask you to bring external drive(s) with at least 1 TeraByte of free space.
+    Due to the massive size of tomography datasets, you will not be able to access data remotely after the beamtime. You are responsible for taking a copy of all data with you before leaving SESAME. For this, we ask you to bring external drive(s) with at least 4 TeraByte of free space.
 
 Beamline essentials
 -------------------

@@ -60,6 +60,14 @@ Mount proposal ``ExpData`` and ``recon`` folders on BL-BEATS-WS01::
    cd ~
    ./petra_prop_mounter.sh
 
+Mount proposal ``ExpData`` and ``recon`` folders on ``User-BEATS-Dispenser`` and ``Dragonfly Dispenser 2``::
+
+   ./petra_prop_recon_smb_mounter.sh
+
+Mount proposal ``ExpData`` and ``recon`` folders on ``Dragonfly Dispenser 1`` for remote access::
+
+   ./petra_prop_recon_smb_mounter_vizserver.sh
+
 Check mount points::
 
    df -h
@@ -122,12 +130,28 @@ Access the reconstruction cluster ``rum@sesame.org.jo`` with::
 
 .. highlight:: none
 
-Data dispenser PC
------------------
+Data dispenser PC - ``User-BEATS-Dispenser``
+--------------------------------------------
 
-Dragonfly VizServer
--------------------
+The data dispencer Windows PC (``User-BEATS-Dispenser``) can be used to access, visualize, and copy your beamtime data. You can also use this PC to launch the ``Dragonfly VizServer 2``, reserved to the beamline users during their shifts.
 
-SESAME data portal
-------------------
+ORS Dragonfly VizServer
+-----------------------
+
+We offer the following 2 seats for image processing using ORS Dragonfly to our users.
+
++-------------+-------------------------------------+--------+-----------------------+----------------------------------------------------------+
+|             | CPU                                 | RAM    | GPU                   | Note                                                     |
++=============+=====================================+========+=======================+==========================================================+
+| VizServer 1 | Intel Xeon Silver 4314 CPU@2.40 GHz | 256 GB | (1×) NVIDIA RTX A6000 | Contact the beamline staff to request access (see below) |
++-------------+-------------------------------------+--------+-----------------------+----------------------------------------------------------+
+| VizServer 2 | Intel Xeon Silver 4314 CPU@2.40 GHz | 256 GB | (1×) NVIDIA RTX A6000 | Reserved for users at the beamline                       |
++-------------+-------------------------------------+--------+-----------------------+----------------------------------------------------------+
+
+BEATS data portal / Dragonfly VizServer 1
+-----------------------------------------
+
+**SESAME BEATS data portal:** visit `https://access.sesame.org.jo/beats <https://access.sesame.org.jo/beats>`_.
+
+On the portal you will find instructions on how to access BEATS data and our Dragonfly VizServer 1.
 
