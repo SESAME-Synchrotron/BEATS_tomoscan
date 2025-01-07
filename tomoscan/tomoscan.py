@@ -69,6 +69,8 @@ class TomoScan():
         self.file_number = None
         self.file_template = None
         self.camera_fps = None
+        self.IsSampleIn = 0
+        self.IsSampleOut = 0
 
         if not isinstance(pv_files, list):
             pv_files = [pv_files]
@@ -412,6 +414,7 @@ class TomoScan():
                 self.pv_prefixes[key] = pvprefix
 
     def move_sample_in(self):
+
         """Moves the sample to the in beam position for collecting projections.
 
         The in-beam position is defined by the ``SampleInX`` and ``SampleInY`` PVs.
@@ -419,27 +422,40 @@ class TomoScan():
         Which axis to move is defined by the ``FlatFieldAxis`` PV,
         which can be ``X``, ``Y``, or ``Both``.
         """
+        # if 'SampleOutAngleEnable' in self.epics_pvs:
+        if not self.IsSampleIn:
+            if self.epics_pvs['SampleOutAngleEnable'].get():
+                angle = self.epics_pvs['SampleOutAngle'].get()
+                cur_speed = self.epics_pvs['RotationSpeed'].get()
+                if self.rotation_save == None:
+                    self.rotation_save = self.epics_pvs['Rotation'].get()
+                    log.info('Moving sample in at this angle: {} without moving it out previously.'
+                    ' Rotation stage will return back to its original position {} once MOVE SAMPLE IN is done'
+                    ' '.format(angle, self.rotation_save))
 
-        axis = self.epics_pvs['FlatFieldAxis'].get(as_string=True)
-        log.info('move_sample_in axis: %s', axis)
-        if axis in ('X', 'Both'):
-            position = self.epics_pvs['SampleInX'].value
-            self.epics_pvs['SampleX'].put(position, wait=True, timeout=600)
+                self.epics_pvs['RotationSpeed'].put(self.epics_pvs['RotInternalMaxSpeed'].get(), wait=True)
+                self.epics_pvs['Rotation'].put(angle, wait=True)
 
-        if axis in ('Y', 'Both'):
-            position = self.epics_pvs['SampleInY'].value
-            self.epics_pvs['SampleY'].put(position, wait=True, timeout=600)
+            axis = self.epics_pvs['FlatFieldAxis'].get(as_string=True)
+            log.info('move_sample_in axis: %s', axis)
+            if axis in ('X', 'Both'):
+                position = self.epics_pvs['SampleInX'].value
+                self.epics_pvs['SampleX'].put(position, wait=True, timeout=1600)
+                # log.error("Saved position:: {}, move sample X to :: {}". format (position,self.epics_pvs['SampleX'].get()))
 
-        if 'SampleOutAngleEnable' in self.epics_pvs:
-            if self.epics_pvs['SampleOutAngleEnable'].get() and self.rotation_save != None:
-                if self.max_rotation_speed != None:     # max_rotation_speed is not initialized when the scan has not been started
-                    cur_speed = self.epics_pvs['RotationSpeed'].get()
-                    self.epics_pvs['RotationSpeed'].put(self.epics_pvs['RotInternalMaxSpeed'].get())
-                self.epics_pvs['Rotation'].put(self.rotation_save, wait=True)
-                if self.max_rotation_speed != None:
-                    self.epics_pvs['RotationSpeed'].put(cur_speed)
+            if axis in ('Y', 'Both'):
+                position = self.epics_pvs['SampleInY'].value
+                self.epics_pvs['SampleY'].put(position, wait=True, timeout=1600)
 
-        self.epics_pvs['MoveSampleIn'].put('Done')
+
+            self.epics_pvs['MoveSampleIn'].put('Done')
+
+            if self.epics_pvs['SampleOutAngleEnable'].get():
+                self.epics_pvs['Rotation'].put(self.rotation_save)
+                self.epics_pvs['RotationSpeed'].put(cur_speed, wait=True)
+
+            self.IsSampleIn = 1
+            self.IsSampleOut = 0
 
     def move_sample_out(self):
         """Moves the sample to the out of beam position for collecting flat fields.
@@ -450,29 +466,31 @@ class TomoScan():
         which can be ``X``, ``Y``, or ``Both``.
         """
 
-        if 'SampleOutAngleEnable' in self.epics_pvs:
+        # if 'SampleOutAngleEnable' in self.epics_pvs:
+        if not self.IsSampleOut:
             if self.epics_pvs['SampleOutAngleEnable'].get():
-                if self.max_rotation_speed != None:     # max_rotation_speed is not initialized when the scan has not been started
-                    cur_speed = self.epics_pvs['RotationSpeed'].get()
-                    self.epics_pvs['RotationSpeed'].put(self.epics_pvs['RotInternalMaxSpeed'].get())
+                cur_speed = self.epics_pvs['RotationSpeed'].get()
+                self.epics_pvs['RotationSpeed'].put(self.epics_pvs['RotInternalMaxSpeed'].get())
                 angle = self.epics_pvs['SampleOutAngle'].get()
                 log.info('move_sample_out angle: %s', angle)
                 self.rotation_save = self.epics_pvs['Rotation'].get()
                 self.epics_pvs['Rotation'].put(angle, wait=True)
-                if self.max_rotation_speed != None:
-                    self.epics_pvs['RotationSpeed'].put(cur_speed)
+                self.epics_pvs['RotationSpeed'].put(cur_speed, wait=True)
 
-        axis = self.epics_pvs['FlatFieldAxis'].get(as_string=True)
-        log.info('move_sample_out axis: %s', axis)
-        if axis in ('X', 'Both'):
-            position = self.epics_pvs['SampleOutX'].value
-            self.epics_pvs['SampleX'].put(position, wait=True, timeout=600)
+            axis = self.epics_pvs['FlatFieldAxis'].get(as_string=True)
+            log.info('move_sample_out axis: %s', axis)
+            if axis in ('X', 'Both'):
+                position = self.epics_pvs['SampleOutX'].value
+                self.epics_pvs['SampleX'].put(position, wait=True, timeout=1600)
 
-        if axis in ('Y', 'Both'):
-            position = self.epics_pvs['SampleOutY'].value
-            self.epics_pvs['SampleY'].put(position, wait=True, timeout=600)
+            if axis in ('Y', 'Both'):
+                position = self.epics_pvs['SampleOutY'].value
+                self.epics_pvs['SampleY'].put(position, wait=True, timeout=1600)
 
-        self.epics_pvs['MoveSampleOut'].put('Done')
+            self.epics_pvs['MoveSampleOut'].put('Done')
+
+            self.IsSampleIn = 0
+            self.IsSampleOut = 1
 
     def save_configuration(self, file_name):
         """Saves the current configuration PVs to a file.
@@ -591,7 +609,7 @@ class TomoScan():
         It is expected that most derived classes will override this method.  In most cases they
         should first call this base class method, and then perform any beamline-specific operations.
         """
-
+        self.rotation_save = None
         self.scan_is_running = True
         self.epics_pvs['ScanStatus'].put('Beginning scan')
         # Stop the camera since it could be in free-run mode
@@ -667,7 +685,7 @@ class TomoScan():
         should first perform any beamline-specific operations and then call this base class method.
         This ensures that the scan is really complete before ``StartScan`` is set to 0.
         """
-
+        self.rotation_save = None
         if self.return_rotation == 'Yes':
             self.epics_pvs['Rotation'].put(self.rotation_start)
         elif self.return_rotation == "Home":
