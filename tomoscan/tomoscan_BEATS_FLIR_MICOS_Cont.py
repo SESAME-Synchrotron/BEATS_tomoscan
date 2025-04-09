@@ -169,37 +169,40 @@ class TomoScanBEATSFlirMicosCont(TomoScanCont):
 
         self.breakFlag = 0
 
-        while True:
-            type = self.epics_pvs['ProposalTitle'].get(as_string=True).strip().upper()
-            if type == 'IH':
-                self.SEDPath = path(top, beamline='BEATS').getIHPath() + '/' + self.SEDFileName
-                break
-            elif type == 'USER':
-                try:
-                    proposal = int(self.epics_pvs['ProposalNumber'].get().strip())
-                    if isinstance(proposal, int) and len(str(proposal)) == 8:
-                        if not CSVProposal(schToday, proposal).lookup():
-                            if CSVProposal(schProposals, proposal).lookup():
-                                pass
-                            else:
-                                self.breakFlag = 1
-                                break
-                        self.SEDPath = path(top, beamline='BEATS', proposal=proposal, semester=readFile(schProposals).getProposalInfo(proposal, type='sem')).getPropPath() + '/' + self.SEDFileName
-                        break
-                    else:
-                        self.epics_pvs['ScanStatus'].put(f'ProposalID:{proposal}, please enter a valid proposal number')
-                        CLIMessage('please enter a valid proposal number', 'IR')
-                except:
-                    self.epics_pvs['ScanStatus'].put('please enter a valid proposal number')
-                    CLIMessage(f'ProposalID:{proposal}, please enter a valid proposal number', 'IR')
-            else:
-                self.epics_pvs['ScanStatus'].put('please enter a valid experiment type, {IH, User}')
-                CLIMessage('please enter a valid experiment type, {IH, User}', 'IR')
-            time.sleep(0.2)
+        if self.epics_pvs['Testing'].get():
+             self.SEDPath = top + "/" + "BEATS/testDevData"
+        else:
+            while True:
+                type = self.epics_pvs['ProposalTitle'].get(as_string=True).strip().upper()
+                if type == 'IH':
+                    self.SEDPath = path(top, beamline='BEATS').getIHPath() + '/' + self.SEDFileName
+                    break
+                elif type == 'USER':
+                    try:
+                        proposal = int(self.epics_pvs['ProposalNumber'].get().strip())
+                        if isinstance(proposal, int) and len(str(proposal)) == 8:
+                            if not CSVProposal(schToday, proposal).lookup():
+                                if CSVProposal(schProposals, proposal).lookup():
+                                    pass
+                                else:
+                                    self.breakFlag = 1
+                                    break
+                            self.SEDPath = path(top, beamline='BEATS', proposal=proposal, semester=readFile(schProposals).getProposalInfo(proposal, type='sem')).getPropPath() + '/' + self.SEDFileName
+                            break
+                        else:
+                            self.epics_pvs['ScanStatus'].put(f'ProposalID:{proposal}, please enter a valid proposal number')
+                            CLIMessage('please enter a valid proposal number', 'IR')
+                    except:
+                        self.epics_pvs['ScanStatus'].put('please enter a valid proposal number')
+                        CLIMessage(f'ProposalID:{proposal}, please enter a valid proposal number', 'IR')
+                else:
+                    self.epics_pvs['ScanStatus'].put('please enter a valid experiment type, {IH, User}')
+                    CLIMessage('please enter a valid experiment type, {IH, User}', 'IR')
+                time.sleep(0.2)
 
-        if self.breakFlag:
-            CLIMessage('Wrong proposal ID or not scheduled, Proposal ID verification', "E")
-            sys.exit()
+            if self.breakFlag:
+                CLIMessage('Wrong proposal ID or not scheduled, Proposal ID verification', "E")
+                sys.exit()
 
         PV(SEDTimeStampPV).put(self.SEDTimeStamp, wait=True)
         PV(SEDFileNamePV).put(self.SEDFileName, wait=True)
