@@ -68,15 +68,24 @@
 		"detectorAttributes":{
 			"FlirMicosContAttr":"ADZMQ_BEATS_FLIR_MICOS_Cont_DetectorAttributes.xml",
 			"FlirMicosStepAttr":"ADZMQ_BEATS_FLIR_MICOS_Step_DetectorAttributes.xml",
+			"FlirAcsContAttr":"ADZMQ_BEATS_FLIR_ACS_Cont_DetectorAttributes.xml",
+                        "FlirAcsStepAttr":"ADZMQ_BEATS_FLIR_ACS_Step_DetectorAttributes.xml",
 			"PcoMicosContAttr":"ADZMQ_BEATS_PCO_MICOS_Cont_DetectorAttributes.xml",
-			"PcoMicosStepAttr":"ADZMQ_BEATS_PCO_MICOS_Step_DetectorAttributes.xml"
+			"PcoMicosStepAttr":"ADZMQ_BEATS_PCO_MICOS_Step_DetectorAttributes.xml",
+			"PcoAcsContAttr":"ADZMQ_BEATS_PCO_ACS_Cont_DetectorAttributes.xml",
+                        "PcoAcsStepAttr":"ADZMQ_BEATS_PCO_ACS_Step_DetectorAttributes.xml"
 		},
 
 		"layout":{
 			"FlirMicosContLayout":"ADZMQ_BEATS_FLIR_MICOS_Cont_Layout.xml",
 			"FlirMicosStepLayout":"ADZMQ_BEATS_FLIR_MICOS_Step_Layout.xml",
+			"FlirAcsContLayout":"ADZMQ_BEATS_FLIR_ACS_Cont_Layout.xml",
+                        "FlirAcsStepLayout":"ADZMQ_BEATS_FLIR_ACS_Step_Layout.xml",
 			"PcoMicosContLayout":"ADZMQ_BEATS_PCO_MICOS_Cont_Layout.xml",
-			"PcoMicosStepLayout":"ADZMQ_BEATS_PCO_MICOS_Step_Layout.xml"
+			"PcoMicosStepLayout":"ADZMQ_BEATS_PCO_MICOS_Step_Layout.xml",
+			"PcoAcsContLayout":"ADZMQ_BEATS_PCO_ACS_Cont_Layout.xml",
+                        "PcoAcsStepLayout":"ADZMQ_BEATS_PCO_ACS_Step_Layout.xml"
+
 		}
 	},
 

@@ -107,6 +107,7 @@ class TomoScan():
         self.control_pvs['RotationOFF']            = PV(rotation_pv_name + '.OFF')
         self.control_pvs['RotationLLM']            = PV(rotation_pv_name + '.LLM')
         self.control_pvs['RotationHLM']            = PV(rotation_pv_name + '.HLM')
+        self.control_pvs['RotationDesc']           = PV(rotation_pv_name + '.DESC')
 
         # Define PVs from the camera IOC that we will need
         prefix = self.pv_prefixes['Camera']
@@ -585,6 +586,9 @@ class TomoScan():
             exposure_time = self.epics_pvs['ExposureTime'].value
             log.warning('Setting exposure time: %f s', exposure_time)
         self.epics_pvs['CamAcquireTime'].put(exposure_time, wait=True, timeout = 10.)
+        manufacturer = self.control_pvs['CamManufacturer'].get(as_string=True)
+        if manufacturer.find('PCO') != -1:
+            self.epics_pvs['CamAcquirePeriod'].put(exposure_time, wait=True, timeout = 10.0)
 
     def begin_scan(self):
         """Performs the operations needed at the very start of a scan.

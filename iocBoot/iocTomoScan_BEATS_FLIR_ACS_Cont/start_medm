@@ -1,0 +1,1 @@
+medm -x -macro "P=tomoscanBEATS:,R=FlirAcsCont:,BEAMLINE=tomoScan_BEATS_FLIR_ACS_Cont" ../../tomoScanApp/op/adl/tomoScan.adl &

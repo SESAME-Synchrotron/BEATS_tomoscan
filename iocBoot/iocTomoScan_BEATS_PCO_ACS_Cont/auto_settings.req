@@ -1,0 +1,2 @@
+file "tomoScan_settings.req", P=$(P), R=$(R)
+file "tomoScan_BEATS_PCO_ACS_Cont_settings.req", P=$(P), R=$(R)

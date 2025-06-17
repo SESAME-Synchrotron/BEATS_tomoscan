@@ -145,7 +145,7 @@ class TomoScanCont(TomoScan):
             * compute camera response time
             * get camera FPS
         """
-
+        
         self.set_exposure_time()
         self.set_trigger_mode('FreeRun', 1)
         camera_counter = self.epics_pvs['CamArrayCounter'].get()
@@ -185,6 +185,15 @@ class TomoScanCont(TomoScan):
         self.epics_pvs['CalculatedRotSpeed'].put(self.motor_speed, wait =True)
         log.info('Rotation speed: {}'.format(self.motor_speed))
 
+        # time=velo/acc 
+        # LabMotion rotary specs (max speed 540 degree/sec, acceleration fixed at 60 degree/second) 
+        if self.control_pvs['RotationDesc'].get() == 'ACS':
+            self.acclTime = self.motor_speed/60 
+            acceleration = self.motor_speed / self.acclTime 
+            log.info(f'->Acceleration: {acceleration}')
+            self.control_pvs['RotationAccelTime'].put(self.acclTime, wait=True)
+
+
     def go_start_position(self):
         """
         Set the appropriate (start, end) positions to (accelerate, decelerate) and be in a steady speed.
@@ -202,7 +211,7 @@ class TomoScanCont(TomoScan):
         else:
             taxi_dist = math.floor(accel_dist / self.rotation_step - 5) * self.rotation_step
 
-        if self.camera_response_time <= motorACCLTime:
+        if self.camera_response_time <= motorACCLTime and self.control_pvs['RotationDesc'].get() != 'ACS':
             log.error('Camera response time is less than motorACCLTime')
             log.error('Camera response time: {}, motor ACC time: {}'.format(self.camera_response_time, motorACCLTime))
             self.abort_scan()
@@ -224,6 +233,8 @@ class TomoScanCont(TomoScan):
         self.epics_pvs['Rotation'].put(self.end_position)
 
     def acquire_projections(self):
+        # if self.control_pvs['RotationDesc'].get() != 'ACS':
+        #     time.sleep(self.acclTime)
         """
         Start acquiring projections
         """
