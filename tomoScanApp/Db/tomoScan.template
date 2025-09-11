@@ -58,9 +58,63 @@ record(stringout, "$(P)$(R)OpenShutterStatusValue")
    field(VAL,  "$(OPEN_VALUE_STATUS)")
 }
 
-record(stringout, "$(P)$(R)RotInternalMaxSpeedPVName")
+#############################################
+# Interlockss
+#############################################
+#
+record(stringout, "$(P)$(R)RotPressInterlockPVName")
 {
-   field(VAL,  "$(ROT_INTERNAL_MAX_SPEED)")
+   field(VAL,  "$(ROTARY_PRESSURE_INTERLOCK)")
+}
+
+record(stringout, "$(P)$(R)XPressInterlockPVName")
+{
+   field(VAL,  "$(X_PRESSURE_INTERLOCK)")
+}
+
+record(stringout, "$(P)$(R)YPressInterlockPVName")
+{
+   field(VAL,  "$(Y_PRESSURE_INTERLOCK)")
+}
+
+record(stringout, "$(P)$(R)YEnabledPVName")
+{
+   field(VAL,  "$(Y_ENABLED)")
+}
+
+record(stringout, "$(P)$(R)RotEnabledPVName")
+{
+   field(VAL,  "$(ROTARY_ENABLED)")
+}
+
+record(stringout, "$(P)$(R)XEnabledPVName")
+{
+   field(VAL,  "$(X_ENABLED)")
+}
+
+record(stringout, "$(P)$(R)ACSEnablePVName")
+{
+   field(VAL,  "$(ACS_ENABLE)")
+}
+
+record(stringout, "$(P)$(R)XValvePVName")
+{
+   field(VAL,  "$(X_VALVE)")
+}
+
+record(stringout, "$(P)$(R)YValvePVName")
+{
+   field(VAL,  "$(Y_VALVE)")
+}
+
+record(stringout, "$(P)$(R)InterlockResetPVName")
+{
+   field(VAL,  "$(INTERLOCK_RESET)")
+}
+
+record(stringout, "$(P)$(R)EmergncyButtonPVName")
+{
+   field(VAL,  "$(EMERGENCY_BUTTON)")
 }
 
 #############################################
@@ -80,6 +134,11 @@ record(stringout, "$(P)$(R)SampleXPVName")
 record(stringout, "$(P)$(R)SampleYPVName")
 {
    field(VAL,  "$(SAMPLE_Y)")
+}
+
+record(stringout, "$(P)$(R)RotInternalMaxSpeedPVName")
+{
+   field(VAL,  "$(ROT_INTERNAL_MAX_SPEED)")
 }
 
 
@@ -340,6 +399,12 @@ record(waveform,"$(P)$(R)ScanStatus")
 {
    field(FTVL, "UCHAR")
    field(NELM, "256")
+}
+
+record(bo,"$(P)$(R)Projection")
+{
+   field(ZNAM,"No")
+   field(ONAM,"Yes")
 }
 
 record(stringout,"$(P)$(R)ImagesCollected")

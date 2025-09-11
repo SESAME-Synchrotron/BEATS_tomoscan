@@ -23,14 +23,28 @@ $(P)$(R)OpenShutterValue
 $(P)$(R)ShutterStatusPVName
 $(P)$(R)CloseShutterStatusValue
 $(P)$(R)OpenShutterStatusValue
-$(P)$(R)RotInternalMaxSpeedPVName
 #############################################
 # Rotation, sample X and Y translation motors
 #############################################
 $(P)$(R)RotationPVName
 $(P)$(R)SampleXPVName
 $(P)$(R)SampleYPVName
+$(P)$(R)RotInternalMaxSpeedPVName
 
+#########################
+# Stage interlocks 
+#########################
+$(P)$(R)RotPressInterlockPVName
+$(P)$(R)XPressInterlockPVName
+$(P)$(R)YPressInterlockPVName
+$(P)$(R)YEnabledPVName
+$(P)$(R)RotEnabledPVName
+$(P)$(R)XEnabledPVName
+$(P)$(R)ACSEnablePVName
+$(P)$(R)XValvePVName
+$(P)$(R)YValvePVName
+$(P)$(R)InterlockResetPVName
+$(P)$(R)EmergncyButtonPVName
 #########################
 # Data collection control
 #########################
@@ -104,6 +118,7 @@ $(P)$(R)OverwriteWarning
 # Scan status via Channel Access
 ################################
 #controlPV $(P)$(R)ScanStatus
+#controlPV $(P)$(R)Projection
 #controlPV $(P)$(R)ImagesCollected
 #controlPV $(P)$(R)ImagesSaved
 #controlPV $(P)$(R)ElapsedTime

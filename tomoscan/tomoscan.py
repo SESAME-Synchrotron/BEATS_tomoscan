@@ -13,10 +13,10 @@ import signal
 import sys
 import os
 from datetime import timedelta
-import pymsgbox
 from epics import PV
 from tomoscan import log
-
+from tomoscan.motor_utils import MotorUtils 
+from SEDSS.CLIMessage import CLIMessage
 class ScanAbortError(Exception):
     '''Exception raised when user wants to abort a scan.
     '''
@@ -50,27 +50,30 @@ class TomoScan():
         # These variables are set in begin_scan().
         # They are used to prevent reading PVs repeatedly, and so that if the users changes
         # a PV during the scan it won't mess things up.
-        self.exposure_time = None
-        self.rotation_start = None
-        self.rotation_step = None
-        self.rotation_stop = None
-        self.rotation_save = None
+        self.exposure_time       = None
+        self.rotation_start      = None
+        self.rotation_step       = None
+        self.rotation_stop       = None
+        self.rotation_save       = None
         self.rotation_resolution = None
-        self.max_rotation_speed = None
-        self.return_rotation = None
-        self.num_angles = None
-        self.num_dark_fields = None
-        self.dark_field_mode = None
-        self.num_flat_fields = None
-        self.flat_field_mode = None
-        self.total_images = None
-        self.file_path_rbv = None
-        self.file_name_rbv = None
-        self.file_number = None
-        self.file_template = None
-        self.camera_fps = None
-        self.IsSampleIn = 0
-        self.IsSampleOut = 0
+        self.max_rotation_speed  = None
+        self.return_rotation     = None
+        self.num_angles          = None
+        self.num_dark_fields     = None
+        self.dark_field_mode     = None
+        self.num_flat_fields     = None
+        self.flat_field_mode     = None
+        self.total_images        = None
+        self.file_path_rbv       = None
+        self.file_name_rbv       = None
+        self.file_number         = None
+        self.file_template       = None
+        self.camera_fps          = None
+        self.IsSampleIn          = 0
+        self.IsSampleOut         = 0
+        self.RotEnabledStatus    = None
+        self.XEnabledStatus      = None
+        self.YEnabledStatus      = None
 
         if not isinstance(pv_files, list):
             pv_files = [pv_files]
@@ -237,7 +240,9 @@ class TomoScan():
 
         # Configure callbacks on a few PVs
         for epics_pv in ('MoveSampleIn', 'MoveSampleOut', 'StartScan', 'AbortScan', 'ExposureTime',
-                         'FilePath', 'FPFilePathExists', 'FPWriteStatus'):
+                         'FilePath', 'FPFilePathExists', 'FPWriteStatus', 'RotEnabled', 'XEnabled', 
+                         'YEnabled', 'EmergncyButton', 'RotPressInterlock', 'XPressInterlock', 
+                         'YPressInterlock'):
             self.epics_pvs[epics_pv].add_callback(self.pv_callback)
         for epics_pv in ('MoveSampleIn', 'MoveSampleOut', 'StartScan', 'AbortScan'):
             self.epics_pvs[epics_pv].put(0)
@@ -301,9 +306,11 @@ class TomoScan():
         if (pvname.find('MoveSampleIn') != -1) and (value == 1):
             thread = threading.Thread(target=self.move_sample_in, args=())
             thread.start()
+            # self.move_sample_in()
         elif (pvname.find('MoveSampleOut') != -1) and (value == 1):
             thread = threading.Thread(target=self.move_sample_out, args=())
             thread.start()
+            self.move_sample_out()
         elif pvname.find('ExposureTime') != -1:
             thread = threading.Thread(target=self.set_exposure_time, args=(value,))
             thread.start()
@@ -319,17 +326,37 @@ class TomoScan():
             self.abort_scan()
         elif (pvname.find('WriteStatus') != -1) and (value == 1):
             self.abort_scan()
+        elif (pvname.find('R-MOTOR:isEnabled') != -1) and value in (0, 1):
+            if self.epics_pvs['Projection'].get(as_string = True, timeout=1) == 'Yes': 
+                log.error('ACS | Rotation | Pressure Interlock')
+                self.abort_scan()
+        elif (pvname.find('X-MOTOR:isEnabled') != -1) and value in (0, 1):
+            if self.epics_pvs['Projection'].get(as_string = True, timeout=1) == 'Yes': 
+                log.error('ACS | Motor X or Motor Y| Pressure Interlock')
+                self.abort_scan()
+        elif (pvname.find('Y-MOTOR:isEnabled') != -1) and value in (0, 1):
+            if self.epics_pvs['Projection'].get(as_string = True, timeout=1) == 'Yes': 
+                log.error('ACS | Motor Y or Motor X| Pressure Interlock')
+                self.abort_scan()
+        elif (pvname.find('ACS-EM:isPressed') != -1) and value in (0, 1):
+            if self.epics_pvs['Projection'].get(as_string = True, timeout=1) == 'Yes': 
+                log.error('ACS | EM:isPressed | Please Check')
+                self.abort_scan()
+        elif (pvname.find('PRESSURE-R:isOn') != -1) and value in (0, 1):
+            if self.epics_pvs['Projection'].get(as_string = True, timeout=1) == 'Yes': 
+                log.error('ACS | Rotary pressure state is changed during data collection | Please Check')
+                self.abort_scan()
+        elif (pvname.find('CLAMPX:isOn') != -1) and value in (0, 1):
+            if self.epics_pvs['Projection'].get(as_string = True, timeout=1) == 'Yes': 
+                log.error('ACS | Clamp X pressure state is changed during data collection | Please Check')
+                self.abort_scan()
+        elif (pvname.find('RESSURE-Y:isOn') != -1) and value in (0, 1):
+            if self.epics_pvs['Projection'].get(as_string = True, timeout=1) == 'Yes': 
+                log.error('ACS | Y break pressure state is changed during data collection | Please Check')
+                self.abort_scan()
 
     def show_pvs(self):
         """Prints the current values of all EPICS PVs in use.
-
-        The values are printed in three sections:
-
-        - config_pvs : The PVs that are part of the scan configuration and
-          are saved by save_configuration()
-
-        - control_pvs : The PVs that are used for EPICS control and status,
-          but are not saved by save_configuration()
 
         - pv_prefixes : The prefixes for PVs that are used for the areaDetector camera,
           file plugin, etc.
@@ -406,6 +433,7 @@ class TomoScan():
             else:
                 self.control_pvs[dictentry] = epics_pv
             if dictentry.find('PVName') != -1:
+                print (pvname)
                 pvname = epics_pv.value
                 key = dictentry.replace('PVName', '')
                 self.control_pvs[key] = PV(pvname)
@@ -415,7 +443,6 @@ class TomoScan():
                 self.pv_prefixes[key] = pvprefix
 
     def move_sample_in(self):
-
         """Moves the sample to the in beam position for collecting projections.
 
         The in-beam position is defined by the ``SampleInX`` and ``SampleInY`` PVs.
@@ -423,6 +450,7 @@ class TomoScan():
         Which axis to move is defined by the ``FlatFieldAxis`` PV,
         which can be ``X``, ``Y``, or ``Both``.
         """
+        self.release_X_Y_breaks()
         # if 'SampleOutAngleEnable' in self.epics_pvs:
         if not self.IsSampleIn:
             if self.epics_pvs['SampleOutAngleEnable'].get():
@@ -436,27 +464,32 @@ class TomoScan():
 
                 self.epics_pvs['RotationSpeed'].put(self.epics_pvs['RotInternalMaxSpeed'].get(), wait=True)
                 self.epics_pvs['Rotation'].put(angle, wait=True)
+                MotorUtils.waitDMOV(self.epics_pvs['Rotation'].pvname)
 
             axis = self.epics_pvs['FlatFieldAxis'].get(as_string=True)
-            log.info('move_sample_in axis: %s', axis)
             if axis in ('X', 'Both'):
+                log.info('move_sample_in axis: %s', axis)
                 position = self.epics_pvs['SampleInX'].value
-                self.epics_pvs['SampleX'].put(position, wait=True, timeout=1600)
-                # log.error("Saved position:: {}, move sample X to :: {}". format (position,self.epics_pvs['SampleX'].get()))
+                self.epics_pvs['SampleX'].put(position, wait=True)
+                MotorUtils.waitDMOV(self.epics_pvs['SampleX'].pvname)
 
             if axis in ('Y', 'Both'):
+                log.info('move_sample_in axis: %s', axis)
                 position = self.epics_pvs['SampleInY'].value
-                self.epics_pvs['SampleY'].put(position, wait=True, timeout=1600)
+                self.epics_pvs['SampleY'].put(position, wait=True)
+                MotorUtils.waitDMOV(self.epics_pvs['SampleY'].pvname)
 
-
-            self.epics_pvs['MoveSampleIn'].put('Done')
+            log.info('move_sample_in is done')
 
             if self.epics_pvs['SampleOutAngleEnable'].get():
                 self.epics_pvs['Rotation'].put(self.rotation_save)
+                MotorUtils.waitDMOV(self.epics_pvs['Rotation'].pvname)
                 self.epics_pvs['RotationSpeed'].put(cur_speed, wait=True)
 
             self.IsSampleIn = 1
             self.IsSampleOut = 0
+        self.return_back_X_Y_breaks()
+        self.epics_pvs['MoveSampleIn'].put('Done')
 
     def move_sample_out(self):
         """Moves the sample to the out of beam position for collecting flat fields.
@@ -468,6 +501,7 @@ class TomoScan():
         """
 
         # if 'SampleOutAngleEnable' in self.epics_pvs:
+        self.release_X_Y_breaks()
         if not self.IsSampleOut:
             if self.epics_pvs['SampleOutAngleEnable'].get():
                 cur_speed = self.epics_pvs['RotationSpeed'].get()
@@ -476,44 +510,29 @@ class TomoScan():
                 log.info('move_sample_out angle: %s', angle)
                 self.rotation_save = self.epics_pvs['Rotation'].get()
                 self.epics_pvs['Rotation'].put(angle, wait=True)
+                MotorUtils.waitDMOV(str(self.epics_pvs['Rotation'].pvname))
                 self.epics_pvs['RotationSpeed'].put(cur_speed, wait=True)
 
             axis = self.epics_pvs['FlatFieldAxis'].get(as_string=True)
-            log.info('move_sample_out axis: %s', axis)
+            # log.info('move_sample_out axis: %s', axis)
             if axis in ('X', 'Both'):
+                log.info('move_sample_out axis: %s', axis)
                 position = self.epics_pvs['SampleOutX'].value
-                self.epics_pvs['SampleX'].put(position, wait=True, timeout=1600)
+                self.epics_pvs['SampleX'].put(position, wait=True)
+                MotorUtils.waitDMOV(str(self.epics_pvs['SampleX'].pvname))
 
             if axis in ('Y', 'Both'):
+                log.info('move_sample_out axis: %s', axis)
                 position = self.epics_pvs['SampleOutY'].value
-                self.epics_pvs['SampleY'].put(position, wait=True, timeout=1600)
-
-            self.epics_pvs['MoveSampleOut'].put('Done')
+                self.epics_pvs['SampleY'].put(position, wait=True)
+                MotorUtils.waitDMOV(str(self.epics_pvs['SampleY'].pvname))
+            log.info('move_sample_out is done')
 
             self.IsSampleIn = 0
             self.IsSampleOut = 1
+        self.return_back_X_Y_breaks()
+        self.epics_pvs['MoveSampleOut'].put('Done')
 
-    def save_configuration(self, file_name):
-        """Saves the current configuration PVs to a file.
-
-        A new dictionary is created, containing the key for each PV in the ``config_pvs`` dictionary
-        and the current value of that PV.  This dictionary is written to the file in JSON format.
-
-        Parameters
-        ----------
-        file_name : str
-            The name of the file to save to.
-        """
-
-        config = {}
-        for key in self.config_pvs:
-            config[key] = self.config_pvs[key].get(as_string=True)
-        try:
-            out_file = open(file_name, 'w')
-            json.dump(config, out_file, indent=2)
-            out_file.close()
-        except (PermissionError, FileNotFoundError) as error:
-            self.epics_pvs['ScanStatus'].put('Error writing configuration')
 
     def load_configuration(self, file_name):
         """Loads a configuration from a file into the EPICS PVs.
@@ -585,11 +604,65 @@ class TomoScan():
         if exposure_time is None:
             exposure_time = self.epics_pvs['ExposureTime'].value
             log.warning('Setting exposure time: %f s', exposure_time)
-        self.epics_pvs['CamAcquireTime'].put(exposure_time, wait=True, timeout = 10.)
+        self.epics_pvs['CamAcquireTime'].put(exposure_time, wait=True, timeout = 10.0)
         manufacturer = self.control_pvs['CamManufacturer'].get(as_string=True)
         if manufacturer.find('PCO') != -1:
             self.epics_pvs['CamAcquirePeriod'].put(exposure_time, wait=True, timeout = 10.0)
 
+    def check_motors_interlocks(self):
+        motorEnabled = ['RotEnabled', 'XEnabled', 'YEnabled']
+        self.XValveStatus = self.control_pvs['XValve'].get(timeout = 1)
+        self.YValveStatus = self.control_pvs['YValve'].get(timeout = 1)
+        self.release_X_Y_breaks()
+        if self.control_pvs['EmergncyButton'].get(timeout = 1) !=1:
+             repeat = 0
+             while True:
+                    val = self.control_pvs['EmergncyButton'].get()
+                    if int(val) == 1:
+                        break
+                    else:
+                        if repeat == 0: 
+                            self.epics_pvs['ScanStatus'].put(f'HUMAN INTERACTION in needed: Waiting for releasing Emergncy Button')
+                            repeat = 1
+                    CLIMessage('HUMAN INTERACTION: Waiting for releasing Emergency Button at ACS Stage', 'IO')
+                    time.sleep(1)
+
+        if self.control_pvs[motorEnabled[0]].get(timeout = 1) & self.control_pvs[motorEnabled[1]].get(timeout = 1) & self.control_pvs[motorEnabled[2]].get(timeout = 1) != 1:
+            for m in motorEnabled:
+                if self.control_pvs[m].get() != 1:
+                    log.error(f'ACS | {m} | running interlock')
+                    log.error ('Scan can not continue')
+                    repeat = 0
+                    while True:
+                        time.sleep(1)
+                        val = self.control_pvs[m].get()
+                        if int(val) == 1:
+                            break
+                        else:
+                            if repeat == 0: 
+                                self.epics_pvs['ScanStatus'].put(f'Waiting for resolving {m} interlock ')
+                                repeat = 1
+                        CLIMessage(f'HUMAN INTERACTION is needed: Waiting for {m} interlock resolving. Scan will continue AUTOMATICALLY once interlock is resolved', 'IO')
+                        
+        else: 
+            log.info('No interlocks found on stage motors (rotary, X and Y)')
+        self.return_back_X_Y_breaks()
+    
+    def release_X_Y_breaks(self):
+        valves = ['XValve', 'YValve']
+        for v in valves: # put valves in a state that motors can move. 
+            self.epics_pvs[v].put(0, wait=True)
+        log.warning('Temporarily releasing X and Y brakes')
+        self.control_pvs['InterlockReset'].put(1, wait=True) # reset
+        time.sleep(1.5)
+        
+    def return_back_X_Y_breaks(self):
+        valves = ['XValve', 'YValve']
+        self.control_pvs[valves[0]].put(self.XValveStatus, wait=True)
+        self.control_pvs[valves[1]].put(self.YValveStatus, wait=True)
+        log.warning('Return X and Y brakes to thier original breaks')
+        time.sleep(1)
+    
     def begin_scan(self):
         """Performs the operations needed at the very start of a scan.
 
@@ -613,6 +686,8 @@ class TomoScan():
         It is expected that most derived classes will override this method.  In most cases they
         should first call this base class method, and then perform any beamline-specific operations.
         """
+        self.epics_pvs['Projection'].put('No', wait=True)
+        self.check_motors_interlocks()
         self.rotation_save = None
         self.scan_is_running = True
         self.epics_pvs['ScanStatus'].put('Beginning scan')
@@ -760,7 +835,6 @@ class TomoScan():
 
     def run_fly_scan(self):
         """Runs ``fly_scan()`` in a new thread."""
-
         thread = threading.Thread(target=self.fly_scan, args=())
         thread.start()
 
@@ -864,6 +938,8 @@ class TomoScan():
 
         - Stops the file saving plugin.
         """
+
+        log.error('Abort Scan')
 
         self.scan_is_running = False
 

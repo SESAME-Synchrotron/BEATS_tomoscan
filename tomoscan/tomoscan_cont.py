@@ -238,7 +238,7 @@ class TomoScanCont(TomoScan):
         """
         Start acquiring projections
         """
-
+        self.epics_pvs['Projection'].put('Yes', wait=True)
         log.info('Acquiring projection thread started')
         self.set_trigger_mode('Internal', self.num_angles)
         self.epics_pvs['CamAcquire'].put('Acquire')
@@ -246,5 +246,6 @@ class TomoScanCont(TomoScan):
         frame_time = self.compute_frame_time()
         collection_time = frame_time * self.num_angles
         self.wait_camera_done(collection_time + 30.0)
-
+        self.epics_pvs['Projection'].put('No', wait=True)
         self.epics_pvs['RotationStop'].put(1)       # Stop motor once projections are done.
+        

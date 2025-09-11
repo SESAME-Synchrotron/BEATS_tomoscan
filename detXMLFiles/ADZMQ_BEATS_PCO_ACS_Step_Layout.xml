@@ -1,0 +1,30 @@
+<?xml version="1.0" standalone="no" ?>
+<hdf5_layout>
+  <global name="detector_data_destination" ndattribute="/mnt/hdfData" />
+    <group name="exchange">
+      <dataset name="data" source="detector">
+        <!-- FrameType = 0 : /exchange/data -->
+        <attribute name="description" source="constant" value="ImageData" type="string" />
+        <attribute name="axes" source="constant" value="theta:y:x" type="string" />
+        <attribute name="units" source="constant" value="counts" type="string" />
+      </dataset>
+      <dataset name="data_dark" source="detector">
+        <!-- FrameType = 1 : /exchange/data_dark -->
+        <attribute name="description" source="constant" value="DarkData" type="string" />
+        <attribute name="axes" source="constant" value="theta:y:x" type="string" />
+        <attribute name="units" source="constant" value="counts" type="string" />
+      </dataset>
+      <dataset name="data_white" source="detector">
+        <!-- FrameType = 2 : /exchange/data_white -->
+        <attribute name="description" source="constant" value="WhiteData" type="string" />
+        <attribute name="axes" source="constant" value="theta:y:x" type="string" />
+        <attribute name="units" source="constant" value="counts" type="string" />
+      </dataset>
+    
+    </group><!-- /exchange -->
+    
+    
+    <group name="defaults" ndattr_default="true">
+    </group><!-- /defaults -->
+
+</hdf5_layout>

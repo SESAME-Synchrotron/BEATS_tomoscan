@@ -253,8 +253,13 @@ class TomoScanBEATSPcoAcsCont(TomoScanCont):
             CLIMessage('The file directory is auto generated, please insert the file name without (spaces, extensions, and special characters except dashes)', 'IR')
             time.sleep(0.5)
 
+        sscanSts = PV(self.pvlist['PVs']['SSCAN']['Status']).get()
+        index = 0
+        if sscanSts == 1:
+            index = int(PV(self.pvlist['PVs']['SSCAN']['Count']).get()) + 1
+
         self.SEDBasePath = self.pvlist['paths']['SEDBasePath']
-        self.SEDPath, self.SEDFileName, self.SEDTimeStamp = fileName.SED_fileName(self.SEDBasePath, self.epics_pvs['FileName'].get(as_string=True), 'BEATS')
+        self.SEDPath, self.SEDFileName, self.SEDTimeStamp = fileName.SED_fileName(self.SEDBasePath, self.epics_pvs['FileName'].get(as_string=True) + '_' + str(index), 'BEATS')
 
         # self.control_pvs['RotationHLM'].put(9999999, wait = True)
         # self.control_pvs['RotationLLM'].put(-9999999, wait = True)
@@ -360,7 +365,7 @@ class TomoScanBEATSPcoAcsCont(TomoScanCont):
         full_file_name = self.SEDPath + '/' + self.SEDFileName
         log.info('data save location: %s', full_file_name)
         config_file_root = os.path.splitext(full_file_name)[0]
-        self.save_configuration(config_file_root + '.config')
+        # self.save_configuration(config_file_root + '.config')
 
         super().end_scan()
 
@@ -376,31 +381,7 @@ class TomoScanBEATSPcoAcsCont(TomoScanCont):
 
     # adding theta to the experimental file is managed by SEDW
 
-    def save_configuration(self, file_name):
-        """Saves the current configuration PVs to a file.
-
-        A new dictionary is created, containing the key for each PV in the ``config_pvs`` dictionary
-        and the current value of that PV.  This dictionary is written to the file in JSON format.
-
-        Parameters
-        ----------
-        file_name : str
-            The name of the file to save to.
-        """
-
-        config = {}
-        for key in self.config_pvs:
-            config[key] = self.config_pvs[key].get(as_string=True)
-        try:
-            out_file = f = open(self.SEDBasePath + '/config.config', mode='w', encoding='utf-8')
-            json.dump(config, out_file, indent=2)
-            out_file.close()
-            time.sleep(.1)
-            shutil.move (self.SEDBasePath + '/config.config', file_name)
-
-        except (PermissionError, FileNotFoundError) as error:
-            log.error('Error writing configuration file')
-            self.epics_pvs['ScanStatus'].put('Error writing configuration')
+   
 
     def wait_pv(self, epics_pv, wait_val, timeout=-1):
         """Wait on a pv to be a value until max_timeout (default forever)
