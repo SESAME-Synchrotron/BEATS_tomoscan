@@ -306,11 +306,9 @@ class TomoScan():
         if (pvname.find('MoveSampleIn') != -1) and (value == 1):
             thread = threading.Thread(target=self.move_sample_in, args=())
             thread.start()
-            # self.move_sample_in()
         elif (pvname.find('MoveSampleOut') != -1) and (value == 1):
             thread = threading.Thread(target=self.move_sample_out, args=())
             thread.start()
-            self.move_sample_out()
         elif pvname.find('ExposureTime') != -1:
             thread = threading.Thread(target=self.set_exposure_time, args=(value,))
             thread.start()
@@ -450,6 +448,7 @@ class TomoScan():
         Which axis to move is defined by the ``FlatFieldAxis`` PV,
         which can be ``X``, ``Y``, or ``Both``.
         """
+        self.check_motors_interlocks()
         self.release_X_Y_breaks()
         # if 'SampleOutAngleEnable' in self.epics_pvs:
         if not self.IsSampleIn:
@@ -501,6 +500,7 @@ class TomoScan():
         """
 
         # if 'SampleOutAngleEnable' in self.epics_pvs:
+        self.check_motors_interlocks()
         self.release_X_Y_breaks()
         if not self.IsSampleOut:
             if self.epics_pvs['SampleOutAngleEnable'].get():
